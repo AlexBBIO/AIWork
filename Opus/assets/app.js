@@ -8,6 +8,8 @@ const r0 = (x) => Math.round(x);
 const pct = (x) => `${r0(x)}%`;
 const span = ([lo, hi]) => `${r0(lo)}–${r0(hi)}`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+// Tooltip content travels as JSON in data-tip: { title, sub, rows: [{ k, label, value, swatch }], help, note }.
+const tipAttr = (t) => `data-tip="${esc(JSON.stringify(t))}"`;
 const jobs = (k) => (k >= 1000 ? `${(k / 1000).toFixed(k >= 10000 ? 0 : 1)}M` : `${r0(k)}k`);
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const parseDate = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d || 1)); };
@@ -118,7 +120,8 @@ function route() {
   }
   if (id && view === "tasks") state.openArchs.add(id);
   render();
-  const target = id ? document.querySelector(view === "jobs" ? `[data-occ="${CSS.escape(id)}"]` : `[data-arch="${CSS.escape(id)}"]`) : null;
+  const selector = { jobs: `[data-occ="${CSS.escape(id || "")}"]`, tasks: `[data-arch="${CSS.escape(id || "")}"]`, method: `#m-${CSS.escape(id || "")}` }[view];
+  const target = id && selector ? document.querySelector(selector) : null;
   if (target) {
     target.classList.add("target");
     requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
@@ -170,10 +173,15 @@ function setupControls() {
     try { await navigator.clipboard.writeText(url); $("copy-status").textContent = "Link copied."; }
     catch { $("copy-status").textContent = url; }
   });
-  // Tooltips: hide on scroll, on Escape, and on any tap outside a tipped element.
-  window.addEventListener("scroll", hideTip, { passive: true });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
-  document.addEventListener("pointerdown", (e) => { if (!e.target.closest?.("[data-tip]")) hideTip(); });
+  $("hero-search").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = $("hero-query").value.trim();
+    $("occ-search").value = q;
+    state.search = q.toLowerCase();
+    state.closedInSearch.clear();
+    location.hash = "jobs";
+  });
+  setupTips();
   window.addEventListener("resize", () => { if (data && state.view === "overview") renderTimeline(); });
 }
 
@@ -212,19 +220,30 @@ function bands(proj, limit) {
   ];
 }
 const bandText = (proj, limit) => bands(proj, limit).map((x) => `${x.label} ${r0(x.v)}%`).join(", ");
+// What each band means, shown when the pointer is over it.
+function bandHelp(k) {
+  return {
+    now: "Work today's best public model can do to a competent professional's standard, with light review.",
+    f1: `What the next generation adds, expected around ${monthYear(tierDate(1))}.`,
+    f2: `What the generation after adds, expected around ${monthYear(tierDate(2))}.`,
+    open: "Below the ceiling but beyond the next two generations: later models could take it.",
+    human: "Above the ceiling: it needs physical presence, a signature or a relationship, whatever the model.",
+  }[k];
+}
 
-function stackBar(proj, limit, { tall = false, scale = 100, label = "" } = {}) {
+function stackBar(proj, limit, { tall = false, scale = 100, label = "", sub = "", note = "" } = {}) {
   const b = bands(proj, limit);
-  const tip = b.map((x) => `${x.label} ${r0(x.v)}%`).join("|");
   const a11y = label ? `role="img" aria-label="${esc(label)}: ${esc(bandText(proj, limit))}"` : 'aria-hidden="true"';
-  return `<div class="stack${tall ? " tall" : ""}" style="width:${scale}%" data-tip="Breakdown|${esc(tip)}" ${a11y}>${b
-    .map((x) => `<div class="${x.cls || ""}" style="flex:0 0 max(0px, calc(${x.v}% - 2px));${x.color ? `background:${x.color}` : ""}"></div>`)
+  const tip = { title: label || "Breakdown", sub, rows: b.map((x) => ({ k: x.k, label: x.label, value: pct(x.v), swatch: x.k })), help: 1, note };
+  return `<div class="stack${tall ? " tall" : ""}" style="width:${scale}%" ${tipAttr(tip)} ${a11y}>${b
+    .map((x) => `<div data-band="${x.k}" class="${x.cls || ""}" style="flex:0 0 max(0px, calc(${x.v}% - 2px));${x.color ? `background:${x.color}` : ""}"></div>`)
     .join("")}</div>`;
 }
 
 const swatchFor = (x) => `<span class="swatch ${x.cls === "fill-open" ? "open" : x.cls === "fill-struct" ? "human" : ""}" style="${x.color ? `background:${x.color}` : ""}"></span>`;
+// Legend entries explain their band and light it up across the page.
 function legendHTML(withValues) {
-  return bands(model.index.proj, model.index.limit).map((x) => `<span>${swatchFor(x)}${x.label}${withValues ? ` <b>${withValues(x)}</b>` : ""}</span>`).join("");
+  return bands(model.index.proj, model.index.limit).map((x) => `<span class="lg" data-band="${x.k}" ${tipAttr({ title: x.label, note: bandHelp(x.k) })}>${swatchFor(x)}${x.label}${withValues ? ` <b>${withValues(x)}</b>` : ""}</span>`).join("");
 }
 const confChip = (c) => `<span class="chip ${c}">${c} confidence</span>`;
 
@@ -236,30 +255,43 @@ function renderOverview() {
   const first = snaps[0];
   const d1 = tierDate(1), d2 = tierDate(2);
 
-  $("lead-eyebrow").textContent = `Opus revision · Updated ${monthYear(asOf())} · Frontier: ${a.anchor}, ${monthYear(parseDate(a.date))}`;
-  $("lead-h1").innerHTML = `AI can now do about <em>${pct(proj[0])}</em> of U.S. white-collar work.`;
+  $("lead-eyebrow").textContent = `U.S. white-collar work · ${monthYear(asOf())} · ${a.anchor}`;
+  $("lead-h1").textContent = "How much work can AI do?";
+  $("lead-figure").innerHTML = `${r0(proj[0])}<small>%</small>`;
+  $("lead-figure-note").textContent = `of U.S. white-collar working time, ${weightPhrase()}, is in tasks today's best public AI model can do.`;
   $("lead-lede").textContent =
-    (snaps.length > 1 ? `That's up from ${pct(first.m.index.f0)} when ${first.a.anchor} was the frontier in ${monthYear(parseDate(first.a.date))}. ` : "") +
-    `The next two model generations, expected around ${monthYear(d1)} and ${monthYear(d2)}, take it to about ${pct(proj[1])} (range ${span(range.f1)}) and ${pct(proj[2])} (${span(range.f2)}). ` +
+    (snaps.length > 1 ? `Up from ${pct(first.m.index.f0)} when ${first.a.anchor} was the frontier in ${monthYear(parseDate(first.a.date))}. ` : "") +
     `Progress flattens near ${pct(limit)}; the remaining ${pct(100 - limit)} needs a person in the room, a signature, or a relationship. ` +
-    `Figures are ${weightPhrase()} across ${model.occupations.length} occupations and ${jobs(model.totals.employment)} jobs; ${weightPhrase(otherWeight())} it is ${pct(altIndex.f0)}.`;
+    `${weightPhrase(otherWeight())[0].toUpperCase()}${weightPhrase(otherWeight()).slice(1)}, today's figure is ${pct(altIndex.f0)}.`;
+  $("lead-scope").innerHTML = `<span><b>${model.occupations.length}</b>occupations</span>
+    <span><b>${(model.totals.employment / 1000).toFixed(1)} million</b>jobs covered (BLS, May 2025)</span>
+    <span><b>${state.weight === "wage" ? "Wages" : "People"}</b>index weighting · <a href="#method/weights">explained</a></span>`;
 
-  const stat = (label, swatch, value, sub) => `<div class="stat"><span class="stat-label">${swatch}${label}</span><span class="stat-value">${value}</span><span class="stat-sub">${sub}</span></div>`;
-  const sw = (c) => `<span class="swatch" style="background:${c}"></span>`;
   const flattens = flatAt !== null;
-  $("readout").innerHTML =
-    stat("Now", sw("var(--t0)"), `${r0(proj[0])}<small>%</small>`, `${esc(shortModel(a.anchor))}, ${monthYear(parseDate(a.date))}`) +
-    stat("Next generation", sw("var(--t1)"), `${r0(proj[1])}<small>%</small><span class="range">(${span(range.f1)})</span>`, `+${r0(proj[1] - proj[0])} pts, around ${monthYear(d1)}`) +
-    stat("Generation after", sw("var(--t2)"), `${r0(proj[2])}<small>%</small><span class="range">(${span(range.f2)})</span>`, `+${r0(proj[2] - proj[1])} pts, around ${monthYear(d2)}`) +
-    stat("Ceiling", '<span class="swatch line"></span>', `${r0(limit)}<small>%</small>`, `Needs a person: ${pct(100 - limit)}`) +
-    stat("Saturation", '<span class="swatch trend"></span>', flattens ? `~${tierDate(flatAt).getUTCFullYear()}` : `after ${tierDate(HORIZON).getUTCFullYear()}`,
-      flattens ? `About ${pct(proj[flatAt])} by ${monthYear(tierDate(flatAt))}, when gains fall under 1 pt a generation` : "Still gaining over 1 pt a generation at the end of the projection");
+  const pace = recentPace();
+  const line = (n) => {
+    const d = tierDate(n), r = range[`f${n}`], gain = proj[n] - proj[0];
+    const tip = { title: `Frontier+${n}, around ${monthYear(d)}`, sub: n === 1 ? "The next capability step" : "The step after that",
+      rows: [{ k: "v", label: "Forecast", value: pct(proj[n]), swatch: `f${n}` }, { label: "Range", value: `${span(r)}%` }, { label: "From today", value: `+${r0(gain)} pts` }],
+      note: "Each task type closes a fixed share of its remaining gap to the ceiling per generation. The range adds up the task types' ranges, which assumes their errors move together." };
+    return `<div class="forecast-line" tabindex="0" ${tipAttr(tip)}><div><strong>${monthYear(d)}</strong><small>+${r0(gain)} pts from today · range ${span(r)}</small></div><span class="metric">${r0(proj[n])}<small>%</small></span></div>`;
+  };
+  const ceilTip = { title: "Ceiling", rows: [{ label: "Most AI could ever take", value: pct(limit), swatch: "line" }, { k: "human", label: "Needs a person", value: pct(100 - limit), swatch: "human" },
+    ...(flattens ? [{ label: `Index by ${monthYear(tierDate(flatAt))}`, value: pct(proj[flatAt]), swatch: "trend" }] : [])],
+    note: "Each task type's ceiling is the most of it AI could take with unlimited intelligence, given physical presence, legal sign-off and human preference. Saturation is when gains fall under a point a generation." };
+  $("readout").innerHTML = `<p class="eyebrow">If the modeled pace continues</p>
+    <h2 id="readout-h">The next two generations</h2>
+    ${line(1)}${line(2)}
+    <div class="forecast-line ceil" tabindex="0" ${tipAttr(ceilTip)}><div><strong>Ceiling</strong><small>${flattens ? `Flattens by ~${tierDate(flatAt).getUTCFullYear()} near ${pct(proj[flatAt])}` : "Still rising at the end of the projection"} · ${pct(100 - limit)} needs a person</small></div><span class="metric">${r0(limit)}<small>%</small></span></div>
+    <p class="panel-note">Forecasts carry today's pace forward: each task type closes a fixed share of its gap to the ceiling.${pace ? ` Frontier+1 closes ${pct(pace.ahead * 100)} of the remaining gap in ${pace.months} months; the ${pace.months} months before ${shortModel(a.anchor)} closed ${pct(pace.behind * 100)}.` : ""}</p>
+    <p class="panel-link"><a href="#tasks">Inspect the assumptions →</a></p>`;
+  const sw = (c) => `<span class="swatch" style="background:${c}"></span>`;
 
   renderTimeline();
   renderWeek();
 
   const ranked = [...model.occupations].sort((p, q) => q.proj[0] - p.proj[0]);
-  const item = (o, val = pct(o.proj[0]), sub = `${jobs(o.employment)} jobs`) => `<li><a href="#jobs/${o.id}"><span class="title">${esc(o.title)}<br><span class="sub">${sub}</span></span><span class="val">${val}</span>${stackBar(o.proj, o.limit, { label: o.title })}</a></li>`;
+  const item = (o, val = pct(o.proj[0]), sub = `${jobs(o.employment)} jobs`) => `<li><a href="#jobs/${o.id}"><span class="title">${esc(o.title)}<br><span class="sub">${sub}</span></span><span class="val">${val}</span>${stackBar(o.proj, o.limit, { label: o.title, sub: `${jobs(o.employment)} jobs · $${o.wage}k mean pay`, note: "Select to open this job's working week." })}</a></li>`;
   $("most").innerHTML = ranked.slice(0, 6).map((o) => item(o)).join("");
   $("least").innerHTML = ranked.slice(-6).reverse().map((o) => item(o)).join("");
   const gain = (o) => o.proj[2] - o.proj[0];
@@ -278,7 +310,6 @@ function renderOverview() {
     ["", "Coverage", `${model.occupations.length} occupations covering ${jobs(model.totals.employment)} U.S. jobs (BLS OEWS, May 2025) in twelve white-collar groups, each split into ${Math.min(...model.occupations.map((o) => o.tasks.length))} to ${Math.max(...model.occupations.map((o) => o.tasks.length))} tasks. Registered nurses, retail sales and the self-employed are not covered.`],
   ];
   $("glossary").innerHTML = g.map(([s, t, d]) => `<div><dt>${s}${t}</dt><dd>${esc(d)}</dd></div>`).join("");
-  bindTips($("view-overview"));
 }
 
 function renderTimeline() {
@@ -309,7 +340,8 @@ function renderTimeline() {
     <line x1="${m.l}" x2="${W - m.r}" y1="${y(limit)}" y2="${y(limit)}" stroke="var(--ink)" stroke-dasharray="4 4"/>
     <text x="${W - m.r - 4}" y="${y(limit) - 6}" text-anchor="end" class="lbl-strong">Ceiling ${pct(limit)}</text>
     <line x1="${x(asOf())}" x2="${x(asOf())}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)"/>
-    <text x="${x(asOf()) + 5}" y="${y(4)}">Today</text>`;
+    <text x="${x(asOf()) + 5}" y="${y(4)}">Today</text>
+    <line id="tl-guide" class="guide" x1="0" x2="0" y1="${m.t}" y2="${y(0)}"/>`;
 
   // x-axis: a labelled tick each January, a minor tick each July
   for (let d = new Date(Date.UTC(past[0].d.getUTCFullYear(), 0, 1)); d.getTime() <= t1; d = addMonths(d, 6)) {
@@ -329,14 +361,14 @@ function renderTimeline() {
   past.forEach((p, i) => {
     const last = i === past.length - 1;
     const hollow = p.a.kind === "backfill";
-    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${last ? 6 : 4.5}" fill="${hollow ? "var(--surface)" : "var(--t0)"}" stroke="${hollow ? "var(--t0)" : "var(--surface)"}" stroke-width="2"/>`;
+    s += `<circle id="tl-p${i}" class="pt" cx="${x(p.d)}" cy="${y(p.v)}" r="${last ? 6 : 4.5}" fill="${hollow ? "var(--surface)" : "var(--t0)"}" stroke="${hollow ? "var(--t0)" : "var(--surface)"}" stroke-width="2"/>`;
     if (last || !(i === 0 || p.a.milestone) || (narrow && i !== 0)) return;
     s += `<text x="${x(p.d) + (i === 0 ? 0 : -6)}" y="${i === 0 ? y(p.v) + 20 : y(p.v) - 12}" text-anchor="${i === 0 ? "start" : "end"}" class="lbl-model">${esc(p.label)}</text>`;
   });
   s += `<text x="${x(now.d) - 10}" y="${y(now.v) - 12}" text-anchor="end" class="lbl-strong">${narrow ? "" : `${esc(now.label)} · `}${pct(now.v)}</text>`;
   future.forEach((p) => {
     const scored = p.n <= 2;
-    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
+    s += `<circle id="tl-f${p.n}" class="pt" cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
     // Both labels sit under the band, F+1 centred on its point and F+2 starting at its
     // point, so they clear each other, the ceiling line and the trend.
     if (scored) {
@@ -347,24 +379,34 @@ function renderTimeline() {
   const lastF = future[future.length - 1];
   if (!narrow) s += `<text x="${x(lastF.d)}" y="${y(lastF.v) + 18}" text-anchor="end">trend</text>`;
 
-  // Hover targets
+  // Hover and focus targets: each lights its point, shows the guide line, and opens the
+  // snapshot's evidence or the forecast check when selected.
   const pts = [
-    ...past.map((p) => ({ ...p, tip: `${p.a.anchor}|${monthYear(p.d)}|AI can do ${pct(p.v)}${p.a.kind === "backfill" ? "|Backfilled: scored after the fact" : "|Live snapshot"}${p.a.frontier ? `|Frontier then: ${p.a.frontier}` : ""}` })),
-    ...future.map((p) => ({ ...p, tip: `Frontier+${p.n}|Around ${monthYear(p.d)}|${pct(p.v)}${p.n <= 2 ? `, range ${span(p.r)} (forecast)` : " (trend, not a forecast)"}` })),
+    ...past.map((p, i) => ({ ...p, id: `tl-p${i}`, href: `method/${p.a.id}`, tip: {
+      title: p.a.anchor, sub: `${monthYear(p.d)} · ${p.a.kind === "backfill" ? "scored after the fact" : "live snapshot"}`,
+      rows: [{ label: "AI can do", value: pct(p.v), swatch: "now" }, ...(i ? [{ label: "Since the previous snapshot", value: `+${r0(p.v - past[i - 1].v)} pts` }] : [])],
+      note: `${p.a.frontier ? `Frontier then: ${p.a.frontier}. ` : ""}Select for this snapshot's evidence.` } })),
+    ...future.map((p) => ({ ...p, id: `tl-f${p.n}`, href: p.n <= 2 ? "method/forecasts" : null, tip: {
+      title: `Frontier+${p.n}`, sub: `Around ${monthYear(p.d)}`,
+      rows: [{ label: p.n <= 2 ? "Forecast" : "Trend", value: pct(p.v), swatch: p.n <= 2 ? `f${p.n}` : "trend" }, ...(p.r ? [{ label: "Range", value: `${span(p.r)}%` }] : []), { label: "From today", value: `+${r0(p.v - now.v)} pts` }],
+      note: p.n <= 2 ? "Select to see how forecasts are checked against later snapshots." : "A trend, not a forecast: each task type keeps closing its gap at the rate of its last step." } })),
   ];
-  pts.forEach((p) => { s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent" data-tip="${esc(p.tip)}"/>`; });
+  pts.forEach((p) => {
+    const label = `${p.tip.title}, ${p.tip.sub}: ${p.tip.rows.map((r) => `${r.label} ${r.value}`).join(", ")}`;
+    s += `<circle class="hit" cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent" tabindex="0" data-pt="${p.id}" data-x="${x(p.d).toFixed(1)}"${p.href ? ` data-href="${p.href}" role="link"` : ""} aria-label="${esc(label)}" ${tipAttr(p.tip)}/>`;
+  });
   box.innerHTML = s + "</svg>";
 
   $("timeline-h").textContent = `From ${shortModel(past[0].a.anchor)} to saturation`;
-  const pace = recentPace();
-  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are the next two generations with their forecast range.` +
-    (pace ? ` Frontier+1 closes ${pct(pace.ahead * 100)} of the remaining gap to the ceiling in ${pace.months} months; the ${pace.months} months before ${shortModel(now.a.anchor)} closed ${pct(pace.behind * 100)}.` : "") +
-    ` The dashed line carries each task type's gap-closure rate past Frontier+2 and is a trend, not a forecast.`;
-  $("timeline-legend").innerHTML = `<span><span class="dot hollow"></span>Backfilled snapshots</span>
-    <span><span class="dot" style="background:var(--t0)"></span>Live snapshot</span>
-    <span><span class="band"></span>Forecast, next two generations, with range</span>
-    <span><span class="dot trend"></span>Trend projection</span>
-    <span><span class="swatch human"></span>Needs a person</span>`;
+  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are the next two generations with their forecast range; the dashed line carries each task type's gap-closure rate past Frontier+2 and is a trend, not a forecast. Hover, tap or tab to a point for details, and select it for the evidence.`;
+  const lg = (inner, title, note) => `<span class="lg" ${tipAttr({ title, note })}>${inner}${title}</span>`;
+  $("timeline-legend").innerHTML = [
+    lg('<span class="dot hollow"></span>', "Backfilled snapshots", "Scored after the fact from benchmark results, for the frontier of that date only."),
+    lg('<span class="dot" style="background:var(--t0)"></span>', "Live snapshot", "The current assessment, which also carries the two forecasts."),
+    lg('<span class="band"></span>', "Forecast, next two generations, with range", "The shaded band is the forecast range, cut off at today's score and the ceiling."),
+    lg('<span class="dot trend"></span>', "Trend projection", "Each task type keeps closing its gap to the ceiling at the rate of its last step. Not a forecast."),
+    lg('<span class="swatch human"></span>', "Needs a person", bandHelp("human")),
+  ].join("");
 }
 
 // Share of the gap to the ceiling that Frontier+1 closes, against the share closed over the
@@ -391,7 +433,9 @@ function renderWeek() {
   const b = bands(model.index.proj, model.index.limit);
   const hrs = toHours(b.map((x) => x.v));
   $("week").innerHTML = b.map((x, i) => Array.from({ length: hrs[i] }, () =>
-    `<div class="${x.cls || ""}" style="${x.color ? `background:${x.color}` : ""}" data-tip="${esc(x.label)}|${hrs[i]} of ${HOURS} hours"></div>`).join("")).join("");
+    `<div data-band="${x.k}" class="${x.cls || ""}" style="${x.color ? `background:${x.color}` : ""}"></div>`).join("")).join("");
+  $("week").setAttribute("data-tip", JSON.stringify({ title: `An average ${HOURS}-hour week`, sub: `Across all covered jobs, ${weightPhrase()}`,
+    rows: b.map((x, i) => ({ k: x.k, label: x.label, value: `${hrs[i]}h`, swatch: x.k })), help: 1 }));
   $("week").setAttribute("aria-label", b.map((x, i) => `${x.label}: ${hrs[i]} hours`).join(", "));
   $("week-note").textContent = `Each square is one hour of a 40-hour week, averaged across all covered jobs and ${weightPhrase()}. Today's frontier model could handle about ${hrs[0]} of them.`;
   $("week-legend").innerHTML = legendHTML((x) => `${hrs[b.findIndex((y) => y.k === x.k)]}h`);
@@ -430,7 +474,7 @@ function renderJobs() {
         <button type="button" class="row-btn" data-group="${g.id}" aria-expanded="${open}">
           <span class="chev" aria-hidden="true">▶</span>
           <span class="title">${esc(g.name)}<span class="meta">${coverage} · ${pct(g.weight * 100)} of ${weightNoun()} · ${g.count} occupations</span></span>
-          ${stackBar(g.proj, g.limit, { tall: true, label: g.name })}
+          ${stackBar(g.proj, g.limit, { tall: true, label: g.name, sub: `${g.count} occupations · ${pct(g.weight * 100)} of ${weightNoun()}`, note: open ? "Select to collapse the group." : "Select to show its jobs." })}
           <span class="nums"><b>${pct(g.proj[0])}</b> now → ${pct(g.proj[2])}</span>
         </button>
         ${open ? `<div class="occ-list">${members.map((o) => occRow(o, archName)).join("")}</div>` : ""}
@@ -454,7 +498,6 @@ function renderJobs() {
     renderJobs();
     document.querySelector(`[data-occ="${id}"]`)?.focus();
   }));
-  bindTips($("groups"));
 }
 
 function occRow(o, archName, groupLabel) {
@@ -466,14 +509,14 @@ function occRow(o, archName, groupLabel) {
     <button type="button" class="row-btn" data-occ="${o.id}" aria-expanded="${open}">
       <span class="chev" aria-hidden="true">▶</span>
       <span class="title">${esc(o.title)}<span class="meta"><span class="mono">${esc(o.soc)}</span> · ${jobs(o.employment)} jobs · $${o.wage}k mean pay${groupLabel ? ` · ${esc(groupLabel)}` : ""}</span></span>
-      ${stackBar(o.proj, o.limit, { label: o.title })}
+      ${stackBar(o.proj, o.limit, { label: o.title, sub: `${jobs(o.employment)} jobs · $${o.wage}k mean pay`, note: open ? "Select to close the task breakdown." : "Select to see which hours of its week AI can take." })}
       <span class="nums"><b>${pct(o.proj[0])}</b> now → ${pct(o.proj[2])}</span>
     </button>
     ${open ? `<div class="occ-detail">
       <p class="note">In a 40-hour week, AI could handle about <b>${h(o.proj[0])} hours</b> of this job today and ${h(o.proj[2])} hours (range ${h(o.range.f2[0])}–${h(o.range.f2[1])}) two generations from now. About ${h(100 - o.limit)} hours need a person regardless. Bar length is each task's share of the week; the colours show how much of it AI can do. The task mix is an estimate.${lowNote}</p>
       ${o.tasks.map((t) => `<div class="task-row">
         <span class="tname">${esc(t.name)}<span class="ttype">${esc(archName[t.arch])}</span></span>
-        ${stackBar(t.proj, t.limit, { scale: (t.share / maxShare) * 100, label: t.name })}
+        ${stackBar(t.proj, t.limit, { scale: (t.share / maxShare) * 100, label: t.name, sub: `${archName[t.arch]} · ${h(t.share)}h of the week`, note: `Bar length is this task's share of the week; colours split it by when AI can do it.` })}
         <span class="hrs">${h(t.share)}h · ${pct(t.proj[0])}</span>
       </div>`).join("")}
     </div>` : ""}
@@ -482,15 +525,35 @@ function occRow(o, archName, groupLabel) {
 
 /* ---------- Tasks ---------- */
 
+// A task type's track as a tooltip: every snapshot, both forecasts with their ranges and
+// the ceiling; the point nearest the pointer is highlighted.
+function trackTip(r, hist) {
+  return {
+    title: r.name, sub: `${r.share < 0.001 ? "under 0.1" : (r.share * 100).toFixed(1)}% of all work · ${r.confidence} confidence`,
+    rows: [
+      ...hist.map((h, i) => ({ k: `p${i}`, label: h.label, value: String(h.v), swatch: "past" })),
+      { k: "now", label: "Now", value: String(r.f0), swatch: "now" },
+      { k: "f1", label: `Next generation · ${monthYear(tierDate(1))}`, value: `${r.f1} (${span(r.range.f1)})`, swatch: "f1" },
+      { k: "f2", label: `Generation after · ${monthYear(tierDate(2))}`, value: `${r.f2} (${span(r.range.f2)})`, swatch: "f2" },
+      { k: "ceil", label: "Ceiling", value: String(r.ceiling), swatch: "line" },
+    ],
+    note: "Select the row for the evidence and sources.",
+  };
+}
+
 function renderTasks() {
   const a = live();
+  $("arch-count").textContent = model.archetypes.length;
   const pastSnaps = snaps.filter((s) => s.a.id !== a.id);
   const srcById = Object.fromEntries((a.sources || []).map((s) => [s.id, s]));
-  $("dots-legend").innerHTML = `<span><span class="dot" style="background:var(--past)"></span>Earlier Opus snapshots</span>
-    <span><span class="dot" style="background:var(--t0)"></span>Now</span>
-    <span><span class="dot" style="background:var(--t1)"></span>Next generation</span>
-    <span><span class="dot" style="background:var(--t2)"></span>Generation after</span>
-    <span><span class="tick"></span>Ceiling</span>`;
+  const lg = (inner, title, note) => `<span class="lg" ${tipAttr({ title, note })}>${inner}${title}</span>`;
+  $("dots-legend").innerHTML = [
+    lg('<span class="dot" style="background:var(--past)"></span>', "Earlier Opus snapshots", `Scores at each Opus release since ${shortModel(snaps[0].a.anchor)}, scored for the public frontier of the day.`),
+    lg('<span class="dot" style="background:var(--t0)"></span>', "Now", bandHelp("now")),
+    lg('<span class="dot" style="background:var(--t1)"></span>', "Next generation", `The Frontier+1 forecast, around ${monthYear(tierDate(1))}.`),
+    lg('<span class="dot" style="background:var(--t2)"></span>', "Generation after", `The Frontier+2 forecast, around ${monthYear(tierDate(2))}.`),
+    lg('<span class="tick"></span>', "Ceiling", "The most of this task type AI could take with unlimited intelligence."),
+  ].join("") + '<span class="note">Hover a track to step through its points.</span>';
 
   const sorters = {
     share: (p, q) => q.share - p.share,
@@ -508,12 +571,12 @@ function renderTasks() {
       <button type="button" class="row-btn" data-arch="${r.id}" aria-expanded="${open}">
         <span class="chev" aria-hidden="true">▶</span>
         <span class="title">${esc(r.name)}<span class="meta">${r.share < 0.001 ? "under 0.1" : (r.share * 100).toFixed(1)}% of all work ${confChip(r.confidence)}</span></span>
-        <span class="dot-track" data-tip="${esc(`${r.name}|${hist.map((h) => `${h.label} ${h.v}`).join("|")}${hist.length ? "|" : ""}Now ${r.f0} · F+1 ${r.f1} (${span(r.range.f1)}) · F+2 ${r.f2} (${span(r.range.f2)})|Ceiling ${r.ceiling}`)}" role="img" aria-label="${esc(r.name)}: now ${r.f0}, next generation ${r.f1}, generation after ${r.f2}, ceiling ${r.ceiling}">
+        <span class="dot-track" ${tipAttr(trackTip(r, hist))} role="img" aria-label="${esc(r.name)}: now ${r.f0}, next generation ${r.f1}, generation after ${r.f2}, ceiling ${r.ceiling}">
           <span class="line"></span>
           <span class="reach" style="left:${r.f0}%;width:${r.f2 - r.f0}%"></span>
-          <span class="ceil" style="left:calc(${r.ceiling}% - 1px)"></span>
-          ${hist.map((h) => `<i class="past" style="left:${h.v}%"></i>`).join("")}
-          <i style="left:${r.f2}%;background:var(--t2)"></i><i style="left:${r.f1}%;background:var(--t1)"></i><i style="left:${r.f0}%;background:var(--t0)"></i>
+          <span class="ceil" data-k="ceil" data-v="${r.ceiling}" style="left:calc(${r.ceiling}% - 1px)"></span>
+          ${hist.map((h, i) => `<i class="past" data-k="p${i}" data-v="${h.v}" style="left:${h.v}%"></i>`).join("")}
+          <i data-k="f2" data-v="${r.f2}" style="left:${r.f2}%;background:var(--t2)"></i><i data-k="f1" data-v="${r.f1}" style="left:${r.f1}%;background:var(--t1)"></i><i data-k="now" data-v="${r.f0}" style="left:${r.f0}%;background:var(--t0)"></i>
         </span>
         <span class="nums"><b>${r.f0}</b></span>
       </button>
@@ -548,7 +611,6 @@ function renderTasks() {
     renderTasks();
     document.querySelector(`[data-arch="${id}"]`)?.focus();
   }));
-  bindTips($("dots"));
   renderEditor();
 }
 
@@ -599,7 +661,7 @@ function renderMethod() {
     return x ? `<a class="cite ${esc(x.tier || "secondary")}" href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.title)} (${esc(x.tier || "secondary")})">${esc(x.title.split(",")[0])}</a>` : "";
   };
   const highlight = (h) => typeof h === "string" ? `<li>${esc(h)}</li>` : `<li>${esc(h.text)}${h.sources?.length ? ` <span class="cites">${h.sources.map(cite).join("")}</span>` : ""}</li>`;
-  $("snapshots").innerHTML = [...snaps].reverse().map(({ a: s, m }) => `<div class="snap">
+  $("snapshots").innerHTML = [...snaps].reverse().map(({ a: s, m }) => `<div class="snap" id="m-${esc(s.id)}">
     <div class="when">${monthYear(parseDate(s.date))}<span>${esc(s.label || "")}</span></div>
     <div class="what">
       <div><b>${esc(s.anchor)}</b><span class="pill">${s.kind === "backfill" ? "Backfilled" : "Live, with forecasts"}</span></div>
@@ -630,7 +692,7 @@ function renderMethod() {
     ["Weights", ["Wages weights each occupation by employment times mean wage. People weights by headcount. The headline uses wages."]],
     ["Limits", a.caveats || []],
   ];
-  $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("")
+  $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div id="m-${h.toLowerCase().replace(/[^a-z]+/g, "-")}"><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("")
     + (a.report_url ? `<div><h3>Full report</h3><p>The research report behind these scores has the evidence for every score, the derivation of the closure rates and ceilings, and all citations: <a href="${esc(a.report_url)}" target="_blank" rel="noopener">Frontier models absorb codified desk work first</a>.</p></div>` : "");
 
   const cal = a.calibration;
@@ -686,32 +748,126 @@ function renderForecastCheck() {
   }).join("") : `<p class="note">No forecast has come due yet.</p>`;
 }
 
-/* ---------- Tooltip ---------- */
+/* ---------- Tooltips ---------- */
 
-let tipTimer;
-function hideTip() { $("tooltip").hidden = true; clearTimeout(tipTimer); }
+// One delegated handler serves every [data-tip] element: mouse hover follows the pointer,
+// keyboard focus anchors above the element, a tap shows it for a few seconds. Bars, the
+// week grid and legends light up the band under the pointer; task tracks light the
+// nearest point; timeline points light their marker and a guide line.
+let tipEl = null, tipKey, tipTimer;
+let armed = null; // a touch target whose first tap showed its tooltip; the next tap follows it
 
-function bindTips(root) {
-  const tip = $("tooltip");
-  const show = (el, e) => {
-    const [title, ...rows] = el.dataset.tip.split("|");
-    tip.innerHTML = `<b>${esc(title)}</b>${rows.map((r) => `<div class="row">${esc(r)}</div>`).join("")}`;
-    tip.hidden = false;
-    const r = tip.getBoundingClientRect();
-    const px = Math.min(e.clientX + 14, window.innerWidth - r.width - 8);
-    const py = e.clientY + 16 + r.height > window.innerHeight ? e.clientY - r.height - 12 : e.clientY + 16;
-    tip.style.left = `${Math.max(8, px)}px`;
-    tip.style.top = `${py}px`;
-  };
-  root.querySelectorAll("[data-tip]").forEach((el) => {
-    el.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") show(el, e); });
-    el.addEventListener("pointerdown", (e) => {
-      if (e.pointerType === "mouse") return;
-      show(el, e);
-      clearTimeout(tipTimer);
-      tipTimer = setTimeout(hideTip, 4000);
-    });
-    el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hideTip(); });
+function hlKey(el, e) {
+  if (el.classList.contains("dot-track")) {
+    if (!e || e.clientX === undefined) return null;
+    const box = el.getBoundingClientRect();
+    const v = ((e.clientX - box.left) / box.width) * 100;
+    let best = null;
+    for (const d of el.querySelectorAll("[data-k]")) {
+      const dv = Number(d.dataset.v);
+      if (!best || Math.abs(dv - v) < Math.abs(best.v - v)) best = { k: d.dataset.k, v: dv };
+    }
+    return best?.k ?? null;
+  }
+  return e?.target?.closest?.("[data-band]")?.dataset.band ?? el.dataset.band ?? null;
+}
+
+function markHl(el, k, on) {
+  if (el.classList.contains("dot-track")) el.querySelectorAll("[data-k]").forEach((d) => d.classList.toggle("hl", on && d.dataset.k === k));
+  else if (el.classList.contains("lg")) { if (on && k) document.body.dataset.hlBand = k; else delete document.body.dataset.hlBand; }
+  else if (on && k) el.dataset.hl = k; else delete el.dataset.hl;
+  if (el.dataset.pt) {
+    document.getElementById(el.dataset.pt)?.classList.toggle("active", on);
+    const guide = document.getElementById("tl-guide");
+    if (guide) { guide.setAttribute("x1", el.dataset.x); guide.setAttribute("x2", el.dataset.x); guide.classList.toggle("on", on); }
+  }
+}
+
+function renderTip(el, k) {
+  let t;
+  try { t = JSON.parse(el.dataset.tip); } catch { return false; }
+  const notes = [t.help && k ? bandHelp(k) : null, t.note].filter(Boolean);
+  $("tooltip").innerHTML = (t.title ? `<div class="tt-title">${esc(t.title)}</div>` : "")
+    + (t.sub ? `<div class="tt-sub">${esc(t.sub)}</div>` : "")
+    + (t.rows?.length ? `<div class="tt-rows">${t.rows.map((r) => `<div class="tt-row${k && r.k === k ? " hl" : ""}"><span class="swatch ${r.swatch || "none"}"${r.swatch ? "" : ' style="visibility:hidden"'}></span><span>${esc(r.label)}</span><span class="tt-val">${esc(r.value ?? "")}</span></div>`).join("")}</div>` : "")
+    + notes.map((n) => `<div class="tt-note">${esc(n)}</div>`).join("");
+  return true;
+}
+
+function placeTip(e, anchor) {
+  const tip = $("tooltip"), r = tip.getBoundingClientRect(), pad = 8;
+  let left, top;
+  if (anchor) {
+    const a = anchor.getBoundingClientRect();
+    left = a.left + a.width / 2 - r.width / 2;
+    top = a.top - r.height - 10;
+    if (top < pad) top = a.bottom + 10;
+  } else {
+    left = e.clientX + 14;
+    top = e.clientY + 18;
+    if (left + r.width > innerWidth - pad) left = e.clientX - r.width - 14;
+    if (top + r.height > innerHeight - pad) top = e.clientY - r.height - 12;
+  }
+  tip.style.transform = "";
+  tip.style.left = `${Math.max(pad, Math.min(left, innerWidth - r.width - pad))}px`;
+  tip.style.top = `${Math.max(pad, top)}px`;
+}
+
+function showTip(el, e, anchored) {
+  const k = hlKey(el, e);
+  if (el !== tipEl || k !== tipKey) {
+    if (tipEl) markHl(tipEl, tipKey, false);
+    if (!renderTip(el, k)) return;
+    tipEl = el; tipKey = k;
+    markHl(el, k, true);
+  }
+  $("tooltip").classList.add("on");
+  placeTip(e, anchored ? el : null);
+}
+
+function hideTip() {
+  clearTimeout(tipTimer);
+  $("tooltip").classList.remove("on");
+  if (tipEl) markHl(tipEl, tipKey, false);
+  tipEl = null; tipKey = undefined;
+}
+
+function setupTips() {
+  document.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    const el = e.target.closest?.("[data-tip]");
+    if (el) showTip(el, e, false);
+    else if (tipEl && !tipEl.matches(":focus-visible")) hideTip();
+  }, { passive: true });
+  // Touch pointers "leave" on every lift, so only the mouse leaving the page hides the tooltip.
+  document.documentElement.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hideTip(); });
+  // On touch, a tap on a tipped element that does nothing else shows its tooltip for a while;
+  // inside links and buttons the tap keeps doing its job instead.
+  document.addEventListener("pointerdown", (e) => {
+    const el = e.target.closest?.("[data-tip]");
+    if (!el) return hideTip();
+    if (e.pointerType === "mouse" || (el.closest("a, button") && !el.matches("a, button"))) return;
+    armed = el !== tipEl && el.dataset.href ? el : null;
+    showTip(el, e, false);
+    clearTimeout(tipTimer);
+    tipTimer = setTimeout(hideTip, 5000);
+  });
+  document.addEventListener("focusin", (e) => {
+    const el = e.target.closest?.("[data-tip]");
+    if (el && el.matches(":focus-visible")) showTip(el, null, true);
+  });
+  document.addEventListener("focusout", (e) => { if (e.target === tipEl) hideTip(); });
+  window.addEventListener("scroll", hideTip, { passive: true });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hideTip();
+    const go = e.target.closest?.("[data-href]");
+    if (go && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = go.dataset.href; }
+  });
+  document.addEventListener("click", (e) => {
+    const go = e.target.closest?.("[data-href]");
+    if (!go) return;
+    if (armed === go) { armed = null; return; }
+    location.hash = go.dataset.href;
   });
 }
 
