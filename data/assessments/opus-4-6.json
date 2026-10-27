@@ -8,7 +8,7 @@
   "highlights": [
     "METR 11h59m / 1h10m",
     "OSWorld-Verified 72.7%; GDPval-AA +144 Elo over GPT-5.2 and +190 over Opus 4.5",
-    "BigLaw Bench 90.2%, tau2 telecom 99.25%",
+    "BigLaw Bench 90.2% (Harvey), tau2 telecom 99%",
     "FrontierFinance 61.8% vs human experts' 77.2%; RLI 4.17% (Cowork)"
   ],
   "scores": {
@@ -99,5 +99,6 @@
     "physical": {
       "f0": 2
     }
-  }
+  },
+  "frontier": "Contested: Opus 4.6, GPT-5.4 (OSWorld-Verified, GDPval) and Gemini 3.1 Pro (Intelligence Index)"
 }

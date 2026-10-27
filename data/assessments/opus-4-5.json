@@ -6,10 +6,10 @@
   "kind": "backfill",
   "peers": "Gemini 3 Pro (Nov 18), GPT-5.1-Codex-Max (Nov 19), GPT-5.2 (Dec). Three-way frontier: GPT-5.2 led GDPval (70.9%) and SWE-bench Pro (55.6%)",
   "highlights": [
-    "SWE-bench Verified 80.9%, OSWorld 66.3%",
-    "METR 5h20m / 42m; a secondary read of METR's file gives 4h53m at 50%",
+    "SWE-bench Verified 80.9%, OSWorld 66.3% (vendor chart)",
+    "METR 4h53m at 50% / 49m at 80% (5h20m / 42m before METR's March 2026 correction)",
     "RLI 3.75%",
-    "Beat every human candidate on Anthropic's 2-hour engineering take-home"
+    "Scored above every human candidate on Anthropic's 2-hour engineering take-home, within the time limit and with parallel test-time compute"
   ],
   "scores": {
     "draft": {
@@ -99,5 +99,7 @@
     "physical": {
       "f0": 1
     }
-  }
+  },
+  "frontier": "Three-way: Opus 4.5 (agentic coding, computer use), GPT-5.2 (GDPval, SWE-bench Pro), Gemini 3 Pro",
+  "milestone": true
 }

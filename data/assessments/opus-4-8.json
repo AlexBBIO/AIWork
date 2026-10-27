@@ -8,8 +8,8 @@
   "highlights": [
     "SWE-bench Pro 69.2%; OSWorld-Verified 83.4% (partly a harness update)",
     "RLI 8.33%, double Opus 4.6",
-    "GDPval-AA v1 1890 vs GPT-5.5 1769",
-    "APEX-Agents investment-banking analyst 54.4% mean"
+    "GDPval-AA v1 1890",
+    "APEX-Agents investment-banking analyst 54.4% mean in July 2026 (61.5% on Mercor's September re-run)"
   ],
   "scores": {
     "draft": {
@@ -99,5 +99,6 @@
     "physical": {
       "f0": 2
     }
-  }
+  },
+  "frontier": "Public: Opus 4.8 and GPT-5.5; Mythos Preview gated. Fable 5 overtook it twelve days later"
 }
