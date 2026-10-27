@@ -9,51 +9,63 @@
   "groups": [
     {
       "id": "11",
-      "name": "Management"
+      "name": "Management",
+      "employment_bls": 11133
     },
     {
       "id": "13",
-      "name": "Business & Financial Operations"
+      "name": "Business & Financial Operations",
+      "employment_bls": 10537
     },
     {
       "id": "15",
-      "name": "Computer & Mathematical"
+      "name": "Computer & Mathematical",
+      "employment_bls": 5260
     },
     {
       "id": "17",
-      "name": "Architecture & Engineering"
+      "name": "Architecture & Engineering",
+      "employment_bls": 2617
     },
     {
       "id": "19",
-      "name": "Life, Physical & Social Science"
+      "name": "Life, Physical & Social Science",
+      "employment_bls": 1473
     },
     {
       "id": "21",
-      "name": "Community & Social Service"
+      "name": "Community & Social Service",
+      "employment_bls": 2669
     },
     {
       "id": "23",
-      "name": "Legal"
+      "name": "Legal",
+      "employment_bls": 1306
     },
     {
       "id": "25",
-      "name": "Educational Instruction & Library"
+      "name": "Educational Instruction & Library",
+      "employment_bls": 9101
     },
     {
       "id": "27",
-      "name": "Arts, Design, Entertainment & Media"
+      "name": "Arts, Design, Entertainment & Media",
+      "employment_bls": 2046
     },
     {
       "id": "29",
-      "name": "Healthcare Practitioners (selected)"
+      "name": "Healthcare Practitioners (selected)",
+      "employment_bls": 9824
     },
     {
       "id": "41",
-      "name": "Sales (non-retail)"
+      "name": "Sales (non-retail)",
+      "employment_bls": 13424
     },
     {
       "id": "43",
-      "name": "Office & Administrative Support"
+      "name": "Office & Administrative Support",
+      "employment_bls": 17753
     }
   ],
   "occupations": [
@@ -954,8 +966,8 @@
         ["Research case law and statutes", "research", 15],
         ["Draft contracts, briefs and motions", "draft", 25],
         ["Manage client relationships", "relationship", 15],
-        ["Negotiate and argue in court", "sales", 10],
-        ["Meet with colleagues and opposing counsel", "meetings", 10]
+        ["Negotiate settlements and terms", "sales", 5],
+        ["Argue in court, attend hearings and meet counsel", "meetings", 15]
       ]
     },
     {
@@ -975,7 +987,7 @@
     },
     {
       "id": "legal_other",
-      "soc": "23-1020",
+      "soc": "23-1020/2090",
       "group": "23",
       "title": "Judges, Hearing Officers & Other Legal Workers",
       "employment": 145,
@@ -1092,7 +1104,7 @@
     },
     {
       "id": "designers",
-      "soc": "27-1024",
+      "soc": "27-1024/1014",
       "group": "27",
       "title": "Graphic Designers, Special Effects Artists & Animators",
       "employment": 218,
@@ -1149,7 +1161,7 @@
     },
     {
       "id": "physician",
-      "soc": "29-1210",
+      "soc": "29-1210/1240",
       "group": "29",
       "title": "Physicians & Surgeons",
       "employment": 804,
@@ -1179,7 +1191,7 @@
     },
     {
       "id": "med_records",
-      "soc": "29-9021",
+      "soc": "29-9021/2072",
       "group": "29",
       "title": "Medical Records & Health Information Specialists",
       "employment": 233,
@@ -1193,7 +1205,7 @@
     },
     {
       "id": "sales_rep",
-      "soc": "41-4012",
+      "soc": "41-4011/4012",
       "group": "41",
       "title": "Wholesale & Manufacturing Sales Representatives",
       "employment": 1523,
@@ -1208,7 +1220,7 @@
     },
     {
       "id": "fin_sales",
-      "soc": "41-3021",
+      "soc": "41-3021/3031",
       "group": "41",
       "title": "Insurance & Securities Sales Agents",
       "employment": 969,
@@ -1223,7 +1235,7 @@
     },
     {
       "id": "real_estate",
-      "soc": "41-9022",
+      "soc": "41-9021/9022",
       "group": "41",
       "title": "Real Estate Brokers & Sales Agents",
       "employment": 239,
@@ -1399,7 +1411,7 @@
     },
     {
       "id": "billing",
-      "soc": "43-3021",
+      "soc": "43-3021/3051",
       "group": "43",
       "title": "Billing, Posting & Payroll Clerks",
       "employment": 557,
@@ -1493,7 +1505,7 @@
     },
     {
       "id": "loan_clerks",
-      "soc": "43-4131",
+      "soc": "43-4131/4141",
       "group": "43",
       "title": "Loan Interviewers, Clerks & New Accounts Clerks",
       "employment": 202,
@@ -1519,5 +1531,6 @@
       ]
     }
   ],
-  "reference": "May 2025"
+  "reference": "May 2025",
+  "task_basis": "Each occupation's task list condenses the O*NET task statements for its SOC code(s) into 2 to 6 tasks. The share of working time per task is the author's estimate, informed by O*NET task importance and frequency ratings; no survey measures U.S. white-collar time by work activity. Treat the shares as roughly ±5 points."
 }

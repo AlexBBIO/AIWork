@@ -7,9 +7,9 @@
   "peers": "GPT-5 (Aug 2025), Gemini 2.5 Pro. Contested: Opus 4.1 led GDPval, GPT-5 led METR horizon",
   "highlights": [
     "GDPval 47.6% wins-or-ties, best of all models tested",
-    "METR 1h41m at 50% / 19m at 80%, vs GPT-5 3h34m / 32m",
+    "METR 1h40m at 50% / 23m at 80%, vs GPT-5 3h23m / 38m (METR's current results file)",
     "RLI at launch (Oct 2025): best agent 2.5%, GPT-5 1.67%",
-    "After human review and fixes, GPT-5's GDPval speedup shrank to 1.12\u20131.39x"
+    "After human review and fixes, GPT-5's GDPval speedup shrank to 1.12–1.39x"
   ],
   "scores": {
     "draft": {
@@ -99,5 +99,7 @@
     "physical": {
       "f0": 1
     }
-  }
+  },
+  "frontier": "Contested: Opus 4.1 led GDPval, GPT-5 led METR's horizon",
+  "milestone": true
 }

@@ -1,83 +1,174 @@
-// Saturation model. Shared by the site (browser) and scripts/validate.mjs (Node).
+// Saturation model. Shared by the site (browser), scripts/validate.mjs and tests/ (Node).
 //
-// occupation -> tasks (% of time) -> archetype -> saturation score per tier.
-// Each archetype is projected past Frontier+2 by assuming the remaining gap to
-// its limit keeps shrinking at the rate implied by the last two steps.
+// occupation -> tasks (% of working time) -> task type -> score per tier.
+// Tiers: f0 is today's frontier, f1 is Frontier+1, f2 is Frontier+2. Each task type
+// has a ceiling, the most of it AI could take with unlimited intelligence. Past f2
+// the remaining gap to the ceiling keeps closing at the rate implied by the last
+// step (f1 -> f2), unless the assessment states an explicit lower `asymptote` for
+// that type. Nothing is inferred from the shape of the f0 -> f1 -> f2 path itself:
+// with whole-number scores that shape is mostly rounding noise.
 
 export const TIERS = ["f0", "f1", "f2"];
+export const CONFIDENCE = ["high", "medium", "low"];
+export const DEFAULT_UNCERTAINTY = { f1: 5, f2: 8, by_confidence: { high: 0.6, medium: 1, low: 1.4 } };
 
-// Limit an archetype converges to, and the per-generation gap-shrink rate.
-export function projectArchetype({ f0, f1, f2, ceiling }, horizon = 8) {
-  const d1 = f1 - f0;
-  const d2 = f2 - f1;
-  let trend = Infinity; // where the f0->f1->f2 trajectory flattens out on its own
-  if (d1 > 0 && d2 >= 0 && d2 < d1) {
-    const r = d2 / d1;
-    trend = f2 + (d2 * r) / (1 - r);
-  }
-  const limit = Math.max(f2, Math.min(ceiling, trend));
-  const rate = limit - f1 > 0 ? (limit - f2) / (limit - f1) : 0;
+const isDate = (s) => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(Date.parse(s));
+const isScore = (x) => typeof x === "number" && x >= 0 && x <= 100;
+
+export function projectArchetype({ f0, f1, f2, ceiling, asymptote }, horizon = 8) {
+  const limit = Math.max(f2, Math.min(ceiling, asymptote ?? ceiling));
+  const rate = limit > f1 ? (limit - f2) / (limit - f1) : 1;
   const proj = [f0, f1, f2];
   for (let n = 3; n <= horizon; n++) proj.push(limit - (limit - f2) * rate ** (n - 2));
-  return { limit, rate, proj, bound: trend < ceiling ? "intelligence" : "structural", trend };
+  return { limit, rate, proj };
 }
 
+// Half-width of the forecast range for one task type, in points, for f1 and f2.
+export function scoreBand(score, assessment) {
+  const u = { ...DEFAULT_UNCERTAINTY, ...(assessment.uncertainty || {}) };
+  const mult = u.by_confidence?.[score.confidence] ?? 1;
+  return { f1: score.range?.f1 ?? u.f1 * mult, f2: score.range?.f2 ?? u.f2 * mult };
+}
+
+// Checks one assessment against the taxonomy and occupations. Returns a list of errors.
 export function validate({ taxonomy, occupations, assessment }) {
   const errors = [];
   const archIds = new Set(taxonomy.archetypes.map((a) => a.id));
+  if (archIds.size !== taxonomy.archetypes.length) errors.push("taxonomy: duplicate archetype id");
   const groupIds = new Set(occupations.groups.map((g) => g.id));
+  for (const g of occupations.groups) {
+    if (!g.id || !g.name) errors.push(`group ${JSON.stringify(g)}: needs id and name`);
+    if (g.employment_bls !== undefined && !(g.employment_bls > 0)) errors.push(`group ${g.id}: employment_bls must be positive`);
+  }
   const seen = new Set();
   for (const o of occupations.occupations) {
     if (seen.has(o.id)) errors.push(`duplicate occupation id ${o.id}`);
     seen.add(o.id);
+    if (!o.title || !o.soc) errors.push(`${o.id}: needs title and soc`);
     if (!groupIds.has(o.group)) errors.push(`${o.id}: unknown group ${o.group}`);
     if (!(o.employment > 0) || !(o.wage > 0)) errors.push(`${o.id}: employment and wage must be positive`);
-    const sum = o.tasks.reduce((s, t) => s + t[2], 0);
+    if (!Array.isArray(o.tasks) || o.tasks.length < 2 || o.tasks.length > 6) errors.push(`${o.id}: expected 2 to 6 tasks`);
+    const sum = (o.tasks || []).reduce((s, t) => s + t[2], 0);
     if (Math.abs(sum - 100) > 0.01) errors.push(`${o.id}: task shares sum to ${sum}, expected 100`);
-    for (const [name, arch] of o.tasks) if (!archIds.has(arch)) errors.push(`${o.id}: task "${name}" uses unknown archetype ${arch}`);
-  }
-  const backfill = assessment.kind === "backfill";
-  for (const id of archIds) {
-    const s = assessment.scores[id];
-    if (!s) { errors.push(`assessment ${assessment.id}: no score for ${id}`); continue; }
-    if (backfill) {
-      if (typeof s.f0 !== "number" || s.f0 < 0 || s.f0 > 100) errors.push(`${assessment.id} ${id}: f0 must be a number 0-100`);
-      continue;
+    for (const [name, arch, share] of o.tasks || []) {
+      if (!archIds.has(arch)) errors.push(`${o.id}: task "${name}" uses unknown archetype ${arch}`);
+      if (!(share > 0)) errors.push(`${o.id}: task "${name}" needs a positive share`);
     }
-    const v = [s.f0, s.f1, s.f2, s.ceiling];
-    if (v.some((x) => typeof x !== "number" || x < 0 || x > 100)) errors.push(`${id}: scores must be numbers 0-100`);
-    if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) errors.push(`${id}: expected f0 <= f1 <= f2 <= ceiling`);
   }
-  for (const key of Object.keys(assessment.overrides || {})) {
+
+  const a = assessment;
+  const tag = `assessment ${a.id}`;
+  if (!a.id) errors.push("assessment: missing id");
+  if (!isDate(a.date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
+  if (a.updated !== undefined && !isDate(a.updated)) errors.push(`${tag}: updated must be YYYY-MM-DD`);
+  if (!a.anchor) errors.push(`${tag}: missing anchor`);
+  if (!["live", "backfill"].includes(a.kind)) errors.push(`${tag}: kind must be live or backfill`);
+  const live = a.kind === "live";
+  if (live) {
+    if (!(a.cadence_months > 0)) errors.push(`${tag}: live snapshot needs cadence_months > 0`);
+    const fd = a.forecast_dates;
+    if (fd) {
+      if (!isDate(fd.f1) || !isDate(fd.f2)) errors.push(`${tag}: forecast_dates.f1 and .f2 must be YYYY-MM-DD`);
+      else if (!(a.date < fd.f1 && fd.f1 < fd.f2)) errors.push(`${tag}: expected date < forecast_dates.f1 < forecast_dates.f2`);
+    }
+    if (a.uncertainty) {
+      for (const k of ["f1", "f2"]) if (a.uncertainty[k] !== undefined && !(a.uncertainty[k] >= 0)) errors.push(`${tag}: uncertainty.${k} must be >= 0`);
+    }
+  }
+  const sourceIds = new Set();
+  for (const s of a.sources || []) {
+    if (!s.id) errors.push(`${tag}: source "${s.title}" needs an id`);
+    else if (sourceIds.has(s.id)) errors.push(`${tag}: duplicate source id ${s.id}`);
+    sourceIds.add(s.id);
+    if (!s.title || !/^https?:\/\//.test(s.url || "")) errors.push(`${tag}: source ${s.id || s.title} needs title and http(s) url`);
+    if (live && !s.group) errors.push(`${tag}: source ${s.id} needs a group`);
+    if (s.tier !== undefined && !["primary", "independent", "secondary"].includes(s.tier)) errors.push(`${tag}: source ${s.id} tier must be primary, independent or secondary`);
+    if (s.accessed !== undefined && !isDate(s.accessed)) errors.push(`${tag}: source ${s.id} accessed must be YYYY-MM-DD`);
+  }
+  for (const id of archIds) {
+    const s = a.scores?.[id];
+    if (!s) { errors.push(`${tag}: no score for ${id}`); continue; }
+    if (!isScore(s.f0)) errors.push(`${tag} ${id}: f0 must be a number 0-100`);
+    const hasTiers = ["f1", "f2", "ceiling"].some((k) => s[k] !== undefined);
+    if (live || hasTiers) {
+      const v = [s.f0, s.f1, s.f2, s.ceiling];
+      if (!v.every(isScore)) errors.push(`${tag} ${id}: f0, f1, f2 and ceiling must be numbers 0-100`);
+      else if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) errors.push(`${tag} ${id}: expected f0 <= f1 <= f2 <= ceiling`);
+      if (s.asymptote !== undefined && !(isScore(s.asymptote) && s.f2 <= s.asymptote && s.asymptote <= s.ceiling)) errors.push(`${tag} ${id}: asymptote must satisfy f2 <= asymptote <= ceiling`);
+    }
+    if (live) {
+      if (!CONFIDENCE.includes(s.confidence)) errors.push(`${tag} ${id}: confidence must be high, medium or low`);
+      if (!a.evidence?.[id]) errors.push(`${tag} ${id}: missing evidence note`);
+      for (const ref of s.sources || []) if (!sourceIds.has(ref)) errors.push(`${tag} ${id}: unknown source id ${ref}`);
+      if (s.range) for (const k of ["f1", "f2"]) if (s.range[k] !== undefined && !(s.range[k] >= 0)) errors.push(`${tag} ${id}: range.${k} must be >= 0`);
+    }
+  }
+  for (const [key, ov] of Object.entries(a.overrides || {})) {
     const [occ, arch] = key.split(":");
-    if (!seen.has(occ) || !archIds.has(arch)) errors.push(`override ${key}: unknown occupation or archetype`);
+    if (!seen.has(occ) || !archIds.has(arch)) { errors.push(`${tag}: override ${key}: unknown occupation or archetype`); continue; }
+    const m = { ...a.scores[arch], ...ov };
+    if (!(m.f0 <= m.f1 && m.f1 <= m.f2 && m.f2 <= m.ceiling)) errors.push(`${tag}: override ${key}: expected f0 <= f1 <= f2 <= ceiling`);
   }
   return errors;
 }
 
-// weight: "wage" (share of white-collar wage bill) or "employment" (share of jobs).
-// edits: { archetypeId: { f0?, f1?, f2?, ceiling? } } applied on top of the assessment.
+// Checks the set of assessments together: the index, dates and the history of scores.
+export function validateIndex({ taxonomy, index, assessments }) {
+  const errors = [];
+  if (!index.assessments.includes(index.latest)) errors.push(`index: latest "${index.latest}" is not in the assessments list`);
+  const list = index.assessments.map((id) => assessments[id]).filter(Boolean);
+  if (list.length !== index.assessments.length) errors.push("index: an assessment file is missing");
+  const latest = assessments[index.latest];
+  if (latest && latest.kind !== "live") errors.push(`index: latest "${index.latest}" must be a live snapshot`);
+  const dates = list.map((a) => a.date);
+  if (new Set(dates).size !== dates.length) errors.push("index: two snapshots share a date");
+  const byDate = [...list].sort((p, q) => p.date.localeCompare(q.date));
+  if (latest && byDate[byDate.length - 1]?.id !== latest.id) errors.push("index: the latest snapshot is not the most recent by date");
+  for (const arch of taxonomy.archetypes) {
+    let prev = null;
+    for (const a of byDate) {
+      const v = a.scores?.[arch.id]?.f0;
+      if (prev && typeof v === "number" && v < prev.v) errors.push(`${arch.id}: f0 falls from ${prev.v} (${prev.id}) to ${v} (${a.id}); scores should not fall between snapshots`);
+      if (typeof v === "number") prev = { v, id: a.id };
+    }
+  }
+  return errors;
+}
+
+// weight: "wage" (share of the covered wage bill) or "employment" (share of jobs).
+// edits: { archetypeId: { f0?, f1?, f2?, ceiling? } } applied on top of a live assessment.
 export function computeModel({ taxonomy, occupations, assessment, weight = "wage", edits = {}, horizon = 8 }) {
+  const backfill = assessment.kind === "backfill";
   const archetypes = taxonomy.archetypes.map((a) => {
-    // Backfilled snapshots score only today's frontier (f0); later tiers collapse onto it.
-    const s = { ...assessment.scores[a.id], ...(edits[a.id] || {}) };
-    s.f1 ??= s.f0;
-    s.f2 ??= s.f1;
-    s.ceiling ??= 100;
-    return { ...a, f0: s.f0, f1: s.f1, f2: s.f2, ceiling: s.ceiling, ...projectArchetype(s, horizon), share: 0 };
+    const stored = assessment.scores[a.id];
+    // A backfilled snapshot scores only the frontier of its day; any stored f1/f2 are
+    // the forecasts it made while live, kept for the predicted-vs-actual check.
+    const s = backfill
+      ? { f0: stored.f0, f1: stored.f0, f2: stored.f0, ceiling: 100 }
+      : { f0: stored.f0, f1: stored.f1, f2: stored.f2, ceiling: stored.ceiling, asymptote: stored.asymptote, ...(edits[a.id] || {}) };
+    const confidence = CONFIDENCE.includes(stored.confidence) ? stored.confidence : "medium";
+    const band = backfill ? { f1: 0, f2: 0 } : scoreBand({ ...stored, confidence }, assessment);
+    return { ...a, ...s, confidence, band, sources: stored.sources || [], ...projectArchetype(s, horizon), share: 0 };
   });
-  const byId = Object.fromEntries(archetypes.map((a) => [a.id, a]));
+  const byId = Object.fromEntries(archetypes.map((x) => [x.id, x]));
   const overrides = assessment.overrides || {};
 
   const occs = occupations.occupations.map((o) => {
     const tasks = o.tasks.map(([name, arch, share]) => {
+      const base = byId[arch];
       const ov = overrides[`${o.id}:${arch}`];
-      const { proj, limit } = ov ? projectArchetype({ ...byId[arch], ...ov }, horizon) : byId[arch];
-      return { name, arch, share, proj, limit };
+      const { proj, limit } = ov ? projectArchetype({ ...base, ...ov }, horizon) : base;
+      return { name, arch, share, proj, limit, band: base.band, confidence: base.confidence };
     });
-    const proj = Array.from({ length: horizon + 1 }, (_, n) => tasks.reduce((s, t) => s + (t.share / 100) * t.proj[n], 0));
-    const limit = tasks.reduce((s, t) => s + (t.share / 100) * t.limit, 0);
-    return { ...o, tasks, proj, limit, wageBill: o.employment * o.wage };
+    const mix = (f) => tasks.reduce((s, t) => s + (t.share / 100) * f(t), 0);
+    const proj = Array.from({ length: horizon + 1 }, (_, n) => mix((t) => t.proj[n]));
+    return {
+      ...o, tasks, proj,
+      limit: mix((t) => t.limit),
+      band: { f1: mix((t) => t.band.f1), f2: mix((t) => t.band.f2) },
+      lowShare: tasks.filter((t) => t.confidence === "low").reduce((s, t) => s + t.share, 0),
+      wageBill: o.employment * o.wage,
+    };
   });
 
   const raw = (o) => (weight === "employment" ? o.employment : o.wageBill);
@@ -86,25 +177,35 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
     o.weight = raw(o) / total;
     for (const t of o.tasks) byId[t.arch].share += o.weight * (t.share / 100);
   }
+  const agg = (members, f) => members.reduce((s, o) => s + o.weight * f(o), 0);
 
-  const proj = Array.from({ length: horizon + 1 }, (_, n) => occs.reduce((s, o) => s + o.weight * o.proj[n], 0));
-  const limit = occs.reduce((s, o) => s + o.weight * o.limit, 0);
+  const proj = Array.from({ length: horizon + 1 }, (_, n) => agg(occs, (o) => o.proj[n]));
+  const limit = agg(occs, (o) => o.limit);
+  const band = { f1: agg(occs, (o) => o.band.f1), f2: agg(occs, (o) => o.band.f2) };
   // First generation whose gain over the previous one is under one point.
-  let flatAt = proj.findIndex((v, n) => n > 0 && v - proj[n - 1] < 1);
-  if (flatAt === -1) flatAt = horizon;
+  const flat = proj.findIndex((v, n) => n > 0 && v - proj[n - 1] < 1);
+  const flatAt = flat === -1 ? null : flat; // null: still gaining a point or more at the end of the horizon
+  const confidence = { high: 0, medium: 0, low: 0 };
+  for (const x of archetypes) confidence[x.confidence] += x.share * 100;
 
   const groups = occupations.groups.map((g) => {
     const members = occs.filter((o) => o.group === g.id);
-    const w = members.reduce((s, o) => s + o.weight, 0);
-    const gp = proj.map((_, n) => members.reduce((s, o) => s + o.weight * o.proj[n], 0) / (w || 1));
-    return { ...g, weight: w, proj: gp, employment: members.reduce((s, o) => s + o.employment, 0) };
+    const w = members.reduce((s, o) => s + o.weight, 0) || 1;
+    return {
+      ...g, weight: w,
+      proj: proj.map((_, n) => agg(members, (o) => o.proj[n]) / w),
+      limit: agg(members, (o) => o.limit) / w,
+      band: { f1: agg(members, (o) => o.band.f1) / w, f2: agg(members, (o) => o.band.f2) / w },
+      employment: members.reduce((s, o) => s + o.employment, 0),
+      count: members.length,
+    };
   });
 
   return {
     archetypes,
     occupations: occs,
     groups,
-    index: { proj, limit, flatAt, f0: proj[0], f1: proj[1], f2: proj[2] },
+    index: { proj, limit, flatAt, f0: proj[0], f1: proj[1], f2: proj[2], band, confidence },
     totals: {
       employment: occs.reduce((s, o) => s + o.employment, 0),
       wageBill: occs.reduce((s, o) => s + o.wageBill, 0),
