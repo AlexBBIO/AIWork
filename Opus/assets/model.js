@@ -236,3 +236,69 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
     },
   };
 }
+
+/* ---------- Economic value ---------- */
+// Lab revenue against the wage bill of the work AI can do:
+//   revenue(t) = wage bill × index(t) × capture(t)
+// The index is the share of white-collar working time AI can do (the model above).
+// Capture is the share of the wages for that work which labs earn as revenue. It follows
+// a logistic curve from today's level toward a ceiling, starting at a stated annual
+// growth multiple, so it can grow fast early and must slow as it nears the ceiling.
+
+// Capture t years from now.
+export function captureAt(t, { c0, growth, ceiling }) {
+  if (!(c0 > 0) || !(ceiling > c0) || !(growth > 1)) return c0;
+  const k = Math.log(growth) / (1 - c0 / ceiling);
+  return ceiling / (1 + ((ceiling - c0) / c0) * Math.exp(-k * t));
+}
+
+// Linear interpolation over sorted [{ t, v }] points, held flat beyond both ends.
+export function interpolate(points, t) {
+  if (!points.length) return NaN;
+  if (t <= points[0].t) return points[0].v;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1], b = points[i];
+    if (t <= b.t) return a.v + ((b.v - a.v) * (t - a.t)) / (b.t - a.t);
+  }
+  return points[points.length - 1].v;
+}
+
+// Log-linear interpolation of one lab's revenue reports (growth is roughly exponential).
+// Returns null outside the reported span, so labs are only summed where they are covered.
+export function revenueAt(reports, t) {
+  if (!reports.length || t < reports[0].t || t > reports[reports.length - 1].t) return null;
+  for (let i = 1; i < reports.length; i++) {
+    const a = reports[i - 1], b = reports[i];
+    if (t <= b.t) return a.v * Math.pow(b.v / a.v, (t - a.t) / (b.t - a.t || 1));
+  }
+  return reports[0].v;
+}
+
+// Checks data/economics.json. Returns a list of errors.
+export function validateEconomics(econ, sourceIds = new Set()) {
+  const errors = [];
+  if (!econ) return errors;
+  if (!isDate(econ.as_of)) errors.push("economics: as_of must be YYYY-MM-DD");
+  const labs = new Set((econ.labs || []).map((l) => l.id));
+  if (!labs.size) errors.push("economics: no labs");
+  const seen = new Set();
+  for (const r of econ.revenue || []) {
+    const tag = `economics: ${r.lab} ${r.date}`;
+    if (!labs.has(r.lab)) errors.push(`${tag}: unknown lab`);
+    if (!isDate(r.date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
+    if (!(r.run_rate > 0)) errors.push(`${tag}: run_rate must be positive (USD billions)`);
+    if (seen.has(`${r.lab}|${r.date}`)) errors.push(`${tag}: duplicate report`);
+    seen.add(`${r.lab}|${r.date}`);
+    for (const s of r.sources || []) if (sourceIds.size && !sourceIds.has(s)) errors.push(`${tag}: unknown source id ${s}`);
+  }
+  for (const lab of labs) {
+    const dates = (econ.revenue || []).filter((r) => r.lab === lab).map((r) => r.date);
+    if (dates.some((d, i) => i && d < dates[i - 1])) errors.push(`economics: ${lab} reports must be in date order`);
+  }
+  const s = econ.scenarios || {};
+  for (const [id, sc] of Object.entries(s)) {
+    if (!(sc.growth >= 1)) errors.push(`economics: scenario ${id} growth must be >= 1`);
+    if (!(sc.ceiling > 0 && sc.ceiling < 1)) errors.push(`economics: scenario ${id} ceiling must be between 0 and 1`);
+  }
+  return errors;
+}

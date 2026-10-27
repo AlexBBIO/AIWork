@@ -127,3 +127,25 @@ test("snapshot highlights cite sources the live snapshot lists", () => {
   const errs = validateIndex({ taxonomy, index, assessments: { ...assessments, [broken.id]: broken } });
   assert.ok(errs.some((e) => e.includes("unknown source nope")));
 });
+
+test("capture starts at today's level, grows at the stated rate and stays under its ceiling", async () => {
+  const { captureAt } = await import("../assets/model.js");
+  const p = { c0: 0.03, growth: 2.5, ceiling: 0.2 };
+  close(captureAt(0, p), 0.03, 1e-12);
+  const early = captureAt(0.01, p) / captureAt(0, p);
+  close(Math.log(early) / 0.01, Math.log(2.5), 0.01);
+  let prev = 0;
+  for (let t = 0; t <= 30; t += 0.5) { const c = captureAt(t, p); assert.ok(c >= prev && c < 0.2); prev = c; }
+  assert.ok(captureAt(30, p) > 0.199);
+  close(captureAt(5, { ...p, growth: 1 }), 0.03, 1e-12);
+});
+
+test("lab revenue interpolates log-linearly and only inside its reports", async () => {
+  const { revenueAt, interpolate } = await import("../assets/model.js");
+  const reports = [{ t: 0, v: 10 }, { t: 1, v: 40 }];
+  close(revenueAt(reports, 0.5), 20, 1e-9);
+  assert.equal(revenueAt(reports, -0.1), null);
+  assert.equal(revenueAt(reports, 1.1), null);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 1), 2, 1e-12);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 5), 3, 1e-12);
+});

@@ -32,6 +32,7 @@
       <a href="#overview" data-view="overview">Overview</a>
       <a href="#jobs" data-view="jobs">Jobs</a>
       <a href="#tasks" data-view="tasks">Tasks</a>
+      <a href="#value" data-view="value">Value</a>
       <a href="#method" data-view="method">Method</a>
     </nav>
     <div class="measure">
@@ -163,6 +164,57 @@
       <div class="filters"><button type="button" id="reset-edits" class="btn" disabled>Reset to published</button><button type="button" id="copy-link" class="btn" disabled>Copy link to this scenario</button><span class="note" id="copy-status"></span></div>
       <div class="table-scroll"><table class="data" id="arch-table"></table></div>
     </details>
+  </section>
+
+  <!-- Value -->
+  <section id="view-value" class="view" aria-labelledby="value-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="value-h">What is the work worth?</h1>
+      <p class="lede" id="value-lede"></p>
+    </div>
+    <div class="value-stats" id="value-stats"></div>
+
+    <section class="panel" aria-labelledby="funnel-h">
+      <div class="panel-head">
+        <h2 id="funnel-h">From wages to lab revenue</h2>
+        <p class="note" id="funnel-note"></p>
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vpath-h">
+      <div class="panel-head">
+        <h2 id="vpath-h">Lab revenue as a share of white-collar pay</h2>
+        <p class="note" id="vpath-note"></p>
+      </div>
+      <div class="filters value-controls">
+        <div class="ctl"><span id="scen-label">Scenario</span>
+          <div class="seg" role="radiogroup" aria-labelledby="scen-label" id="scen-seg"></div>
+        </div>
+        <label class="ctl slider"><span>Capture growth this year <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="5" step="0.1"></label>
+        <label class="ctl slider"><span>Capture ceiling <b id="ceiling-out"></b></span><input type="range" id="ceiling-in" min="0.05" max="0.5" step="0.01"></label>
+      </div>
+      <div class="chart-box" id="vchart"></div>
+      <div class="legend" id="vchart-legend"></div>
+      <div class="table-scroll"><table class="data value-table" id="value-table"></table></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vgroups-h">
+      <div class="panel-head">
+        <h2 id="vgroups-h">Where the value sits</h2>
+        <p class="note" id="vgroups-note"></p>
+      </div>
+      <div class="vgroups" id="vgroups"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vdata-h">
+      <div class="panel-head">
+        <h2 id="vdata-h">Revenue data and assumptions</h2>
+        <p class="note" id="vdata-note"></p>
+      </div>
+      <div class="table-scroll"><table class="data" id="revenue-table"></table></div>
+      <div class="method-grid" id="value-method"></div>
+    </section>
   </section>
 
   <!-- Method -->

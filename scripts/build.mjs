@@ -3,6 +3,7 @@
 // Usage: node scripts/build.mjs
 import { execFileSync } from "node:child_process";
 import {
+  existsSync,
   cpSync,
   rmSync,
   mkdirSync,
@@ -45,6 +46,9 @@ for (const site of SITES) {
       index.assessments.map((id) => [id, read(`assessments/${id}.json`)]),
     ),
   };
+  // Optional: the economic-value page's revenue data (Opus revision).
+  if (existsSync(join(site.src, "data", "economics.json")))
+    bundle.economics = read("economics.json");
   writeFileSync(join(out, "data", "bundle.json"), JSON.stringify(bundle));
 }
 console.log("✓ built dist/ and dist/Opus/");

@@ -181,6 +181,38 @@ main { padding-block: var(--s-6) var(--s-7); }
   .search-row { max-width: none; }
 }
 
+/* Value page */
+.value-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.vstat { background: var(--surface); padding: var(--s-4) var(--s-5); display: flex; flex-direction: column; gap: var(--s-1); min-width: 0; }
+.vstat .stat-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.vstat-value { font-family: var(--f-display); font-weight: 700; font-stretch: 78%; font-size: clamp(2rem, 4vw, 2.6rem); line-height: 1; color: var(--ink); }
+.vstat:last-child .vstat-value { color: var(--t1); }
+.vstat .stat-sub { font-size: 0.84rem; color: var(--ink-2); }
+.funnel { display: flex; flex-direction: column; gap: var(--s-3); }
+.fn-row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 5rem; gap: var(--s-3); align-items: center; }
+.fn-label { font-weight: 600; font-size: 0.92rem; }
+.fn-label small { display: block; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+.fn-track { display: flex; gap: 2px; height: 18px; }
+.fn-bar { display: block; height: 100%; background: var(--t0); border-radius: 2px; }
+.fn-row:first-child .fn-bar { background: var(--rule-strong); }
+.fn-row:last-child .fn-bar { background: var(--t1); }
+.fn-bar.next { background: var(--t2); }
+.fn-val { font: 500 0.86rem var(--f-mono); text-align: right; }
+.value-controls { align-items: end; gap: var(--s-3) var(--s-6); }
+.value-controls .slider { min-width: 12rem; }
+.value-controls .slider b { font-family: var(--f-mono); color: var(--ink); text-transform: none; letter-spacing: 0; }
+input[type="range"] { accent-color: var(--accent); width: 100%; }
+.value-table td:first-child { white-space: nowrap; }
+.vgroups { display: flex; flex-direction: column; gap: var(--s-2); }
+.vg-row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 4.5rem; gap: var(--s-3); align-items: center; font-size: 0.88rem; }
+.vg-bar { height: 14px; }
+.fill-rest { background: var(--rule); }
+.vg-val { font: 500 0.82rem var(--f-mono); text-align: right; }
+@media (max-width: 680px) {
+  .fn-row, .vg-row { grid-template-columns: minmax(0, 1fr) 4.5rem; }
+  .fn-track, .vg-bar { grid-column: 1 / -1; order: 3; }
+}
+
 /* Evidence-quality strip */
 .evidence { display: flex; flex-direction: column; gap: var(--s-2); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-3) var(--s-4); }
 .panel .evidence { border: 0; padding: 0; }
