@@ -57,7 +57,10 @@ const weightPhrase = (w = state.weight) => (w === "wage" ? "weighted by wages" :
 const weightNoun = (w = state.weight) => (w === "wage" ? "wages" : "people");
 
 // Date of generation n for an assessment: its own date, the stated forecast dates for
-// Frontier+1 and +2, then one cadence per generation beyond.
+// Plain names for the forecast generations: the next frontier model and the one after.
+const GEN = { 1: "Next model", 2: "Model after next" };
+const genName = (n) => GEN[n] || `${n} models ahead`;
+// The next model and the one after, then one cadence per generation beyond.
 function tierDate(n, a = live()) {
   const base = parseDate(a.date);
   const fd = a.forecast_dates;
@@ -280,10 +283,10 @@ function renderOverview() {
   const pace = recentPace();
   const line = (n) => {
     const d = tierDate(n), r = range[`f${n}`], gain = proj[n] - proj[0];
-    const tip = { title: `Frontier+${n}, around ${monthYear(d)}`, sub: n === 1 ? "The next capability step" : "The step after that",
+    const tip = { title: `${genName(n)}, around ${monthYear(d)}`, sub: n === 1 ? "The next frontier model" : "The frontier model after that",
       rows: [{ k: "v", label: "Forecast", value: pct(proj[n]), swatch: `f${n}` }, { label: "Range", value: `${span(r)}%` }, { label: "From today", value: `+${r0(gain)} pts` }],
       note: "Each task type closes a fixed share of its remaining gap to the ceiling per generation. The range adds up the task types' ranges, which assumes their errors move together." };
-    return `<div class="forecast-line" tabindex="0" ${tipAttr(tip)}><div><strong>${monthYear(d)}</strong><small>+${r0(gain)} pts from today · range ${span(r)}</small></div><span class="metric">${r0(proj[n])}<small>%</small></span></div>`;
+    return `<div class="forecast-line" tabindex="0" ${tipAttr(tip)}><div><strong>${genName(n)} · ${monthYear(d)}</strong><small>+${r0(gain)} pts from today · range ${span(r)}</small></div><span class="metric">${r0(proj[n])}<small>%</small></span></div>`;
   };
   const ceilTip = { title: "Ceiling", rows: [{ label: "Most AI could ever take", value: pct(limit), swatch: "line" }, { k: "human", label: "Needs a person", value: pct(100 - limit), swatch: "human" },
     ...(flattens ? [{ label: `Index by ${monthYear(tierDate(flatAt))}`, value: pct(proj[flatAt]), swatch: "trend" }] : [])],
@@ -292,7 +295,7 @@ function renderOverview() {
     <h2 id="readout-h">The next two generations</h2>
     ${line(1)}${line(2)}
     <div class="forecast-line ceil" tabindex="0" ${tipAttr(ceilTip)}><div><strong>Ceiling</strong><small>${flattens ? `Flattens by ~${tierDate(flatAt).getUTCFullYear()} near ${pct(proj[flatAt])}` : "Still rising at the end of the projection"} · ${pct(100 - limit)} needs a person</small></div><span class="metric">${r0(limit)}<small>%</small></span></div>
-    <p class="panel-note">Forecasts carry today's pace forward: each task type closes a fixed share of its gap to the ceiling.${pace ? ` Frontier+1 closes ${pct(pace.ahead * 100)} of the remaining gap in ${pace.months} months; the ${pace.months} months before ${shortModel(a.anchor)} closed ${pct(pace.behind * 100)}.` : ""}</p>
+    <p class="panel-note">Forecasts carry today's pace forward: each task type closes a fixed share of its gap to the ceiling.${pace ? ` The next model closes ${pct(pace.ahead * 100)} of the remaining gap in ${pace.months} months; the ${pace.months} months before ${shortModel(a.anchor)} closed ${pct(pace.behind * 100)}.` : ""}</p>
     <p class="panel-link"><a href="#tasks">Inspect the assumptions →</a></p>`;
   const sw = (c) => `<span class="swatch" style="background:${c}"></span>`;
 
@@ -310,8 +313,8 @@ function renderOverview() {
 
   const g = [
     [sw("var(--t0)"), "Frontier", `The best publicly available model on the snapshot date. Today that's ${a.anchor}. Earlier snapshots track each Opus release back to ${first.a.anchor}; where another public model led, the score follows the leader.`],
-    [sw("var(--t1)"), "Next generation and the one after", `Frontier+1 and Frontier+2: the next two capability steps, roughly two or three point releases each. They are not separate judgments: each closes a fixed share of the remaining gap to the ceiling, set by the pace of the last ten months.`],
-    ["", "Range", `The forecast range: 5 points either side at Frontier+1 and 8 at Frontier+2 for a task type with medium-confidence evidence, narrower with a direct benchmark, wider without one, and never below today's score or above the ceiling.`],
+    [sw("var(--t1)"), "Next model and the one after", `Forecasts for the next two frontier models, each roughly two or three point releases away. They are not separate judgments: each closes a fixed share of the remaining gap to the ceiling, set by the pace of the last ten months.`],
+    ["", "Range", `The forecast range: 5 points either side for the next model and 8 for the one after, for a task type with medium-confidence evidence, narrower with a direct benchmark, wider without one, and never below today's score or above the ceiling.`],
     ["", "Can do", "AI can do the task at the quality of a competent professional, with no more than light review. This measures capability, not whether employers have adopted it."],
     ['<span class="swatch line"></span>', "Ceiling", "The most of a task AI could ever take, even with unlimited intelligence. Above it sits work that needs physical presence, legal accountability, or a human relationship."],
     ["", "Wages or people", "Wages weights each job by its total pay, so the index reads as a share of what employers spend. People weights by headcount, so it reads as a share of working time."],
@@ -378,11 +381,11 @@ function renderTimeline() {
   future.forEach((p) => {
     const scored = p.n <= 2;
     s += `<circle id="tl-f${p.n}" class="pt" cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
-    // Both labels sit under the band, F+1 centred on its point and F+2 starting at its
+    // Both labels sit under the band, the first centred on its point and the second starting at its
     // point, so they clear each other, the ceiling line and the trend.
     if (scored) {
       const first = p.n === 1;
-      s += `<text x="${x(p.d) - (first ? 0 : 4)}" y="${y(p.r[0]) + 18}" text-anchor="${first ? "middle" : "start"}" class="lbl-strong">${narrow ? `F+${p.n}` : `F+${p.n} · ${pct(p.v)} (${span(p.r)})`}</text>`;
+      s += `<text x="${x(p.d) - (first ? 0 : 4)}" y="${y(p.r[0]) + 18}" text-anchor="${first ? "middle" : "start"}" class="lbl-strong">${narrow ? (first ? "Next" : "After next") : `${genName(p.n)} · ${pct(p.v)}`}</text>`;
     }
   });
   const lastF = future[future.length - 1];
@@ -396,7 +399,7 @@ function renderTimeline() {
       rows: [{ label: "AI can do", value: pct(p.v), swatch: "now" }, ...(i ? [{ label: "Since the previous snapshot", value: `+${r0(p.v - past[i - 1].v)} pts` }] : [])],
       note: `${p.a.frontier ? `Frontier then: ${p.a.frontier}. ` : ""}Select for this snapshot's evidence.` } })),
     ...future.map((p) => ({ ...p, id: `tl-f${p.n}`, href: p.n <= 2 ? "method/forecasts" : null, tip: {
-      title: `Frontier+${p.n}`, sub: `Around ${monthYear(p.d)}`,
+      title: genName(p.n), sub: `Around ${monthYear(p.d)}`,
       rows: [{ label: p.n <= 2 ? "Forecast" : "Trend", value: pct(p.v), swatch: p.n <= 2 ? `f${p.n}` : "trend" }, ...(p.r ? [{ label: "Range", value: `${span(p.r)}%` }] : []), { label: "From today", value: `+${r0(p.v - now.v)} pts` }],
       note: p.n <= 2 ? "Select to see how forecasts are checked against later snapshots." : "A trend, not a forecast: each task type keeps closing its gap at the rate of its last step." } })),
   ];
@@ -407,7 +410,7 @@ function renderTimeline() {
   box.innerHTML = s + "</svg>";
 
   $("timeline-h").textContent = `From ${shortModel(past[0].a.anchor)} to saturation`;
-  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are the next two generations with their forecast range; the dashed line carries each task type's gap-closure rate past Frontier+2 and is a trend, not a forecast. Hover, tap or tab to a point for details, and select it for the evidence.`;
+  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are forecasts for the next frontier model and the one after, with their ranges; the dashed line carries each task type's gap-closure rate further and is a trend, not a forecast. Hover, tap or tab to a point for details, and select it for the evidence.`;
   const lg = (inner, title, note) => `<span class="lg" ${tipAttr({ title, note })}>${inner}${title}</span>`;
   $("timeline-legend").innerHTML = [
     lg('<span class="dot hollow"></span>', "Backfilled snapshots", "Scored after the fact from benchmark results, for the frontier of that date only."),
@@ -559,8 +562,8 @@ function renderTasks() {
   $("dots-legend").innerHTML = [
     lg('<span class="dot" style="background:var(--past)"></span>', "Earlier Opus snapshots", `Scores at each Opus release since ${shortModel(snaps[0].a.anchor)}, scored for the public frontier of the day.`),
     lg('<span class="dot" style="background:var(--t0)"></span>', "Now", bandHelp("now")),
-    lg('<span class="dot" style="background:var(--t1)"></span>', "Next generation", `The Frontier+1 forecast, around ${monthYear(tierDate(1))}.`),
-    lg('<span class="dot" style="background:var(--t2)"></span>', "Generation after", `The Frontier+2 forecast, around ${monthYear(tierDate(2))}.`),
+    lg('<span class="dot" style="background:var(--t1)"></span>', "Next model", `Forecast for the next frontier model, around ${monthYear(tierDate(1))}.`),
+    lg('<span class="dot" style="background:var(--t2)"></span>', "Model after next", `Forecast for the frontier model after that, around ${monthYear(tierDate(2))}.`),
     lg('<span class="tick"></span>', "Ceiling", "The most of this task type AI could take with unlimited intelligence."),
   ].join("") + '<span class="note">Hover a track to step through its points.</span>';
 
@@ -590,10 +593,10 @@ function renderTasks() {
         <span class="nums"><b>${r.f0}</b></span>
       </button>
       ${open ? `<div class="dot-detail">
-        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1} (${span(r.range.f1)})</span><span>F+2 ${r.f2} (${span(r.range.f2)})</span><span>Ceiling ${r.ceiling}</span><span>${esc(r.confidence)} confidence${edited}</span></div>
+        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>Next model ${r.f1} (${span(r.range.f1)})</span><span>After next ${r.f2} (${span(r.range.f2)})</span><span>Ceiling ${r.ceiling}</span><span>${esc(r.confidence)} confidence${edited}</span></div>
         ${a.evidence?.[r.id] ? `<p>${esc(a.evidence[r.id])}</p>` : `<p class="note">No evidence note for this task type yet.</p>`}
         ${srcs.length ? `<p class="srcs">Sources: ${srcs.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a><span class="chip ${esc(s.tier || "secondary")}">${esc(s.tier || "secondary")}</span>`).join(" ")}</p>` : ""}
-        ${edited ? `<p class="note">Published: now ${published.f0}, F+1 ${published.f1}, F+2 ${published.f2}, ceiling ${published.ceiling}.</p>` : ""}
+        ${edited ? `<p class="note">Published: now ${published.f0}, next model ${published.f1}, after next ${published.f2}, ceiling ${published.ceiling}.</p>` : ""}
       </div>` : ""}
     </div>`;
   };
@@ -626,7 +629,7 @@ function renderTasks() {
 function renderEditor() {
   const published = live().scores;
   const rows = [...model.archetypes].sort((p, q) => q.share - p.share);
-  const label = { f0: "Now", f1: "F+1", f2: "F+2", ceiling: "Ceiling" };
+  const label = { f0: "Now", f1: "Next model", f2: "After next", ceiling: "Ceiling" };
   const hasEdits = Object.keys(state.edits).length > 0;
   if (hasEdits) {
     const base = computeModel({ ...data, assessment: live(), weight: state.weight, horizon: HORIZON }).index;
@@ -649,7 +652,7 @@ function renderEditor() {
     const next = { ...state.edits[arch], [k]: v };
     if (v === published[arch][k]) delete next[k];
     const s = { ...published[arch], ...next };
-    if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) { el.setCustomValidity("Keep Now ≤ F+1 ≤ F+2 ≤ Ceiling"); el.reportValidity(); return; }
+    if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) { el.setCustomValidity("Keep Now ≤ Next model ≤ After next ≤ Ceiling"); el.reportValidity(); return; }
     el.setCustomValidity("");
     if (Object.keys(next).length) state.edits[arch] = next; else delete state.edits[arch];
     store.set(`headroom.edits.${data.index.latest}`, state.edits);
@@ -709,18 +712,20 @@ function renderValue() {
   // Capability path: today, then each generation at its date.
   const capPts = [{ t: today, v: proj[0] }, ...Array.from({ length: HORIZON }, (_, i) => ({ t: tierDate(i + 1).getTime(), v: proj[i + 1] }))];
   const end = capPts[capPts.length - 1].t;
-  const path = ({ growth, peak, price, cut }) => {
+  const pointAt = ({ growth, peak, price, cut }, t) => {
+    const idx = interpolate(capPts, t) / 100, a = adoptionAt((t - today) / YEAR, { a0, growth, peak });
+    const pr = driftAt(a, { a0, peak, from: price0, to: price }), c = driftAt(a, { a0, peak, from: cut0, to: cut });
+    const rev = W * idx * a * pr * c;
+    return { t, idx, does: idx * a, price: pr, cut: c, rev, all: rev / mix, share: (rev / W) * 100 };
+  };
+  const path = (params) => {
     const out = [];
-    for (let t = today; t <= end + 1; t += YEAR / 12) {
-      const idx = interpolate(capPts, t) / 100, a = adoptionAt((t - today) / YEAR, { a0, growth, peak });
-      const pr = driftAt(a, { a0, peak, from: price0, to: price }), c = driftAt(a, { a0, peak, from: cut0, to: cut });
-      const rev = W * idx * a * pr * c;
-      out.push({ t, idx, does: idx * a, price: pr, cut: c, rev, all: rev / mix, share: (rev / W) * 100 });
-    }
+    for (let t = today; t <= end + 1; t += YEAR / 12) out.push(pointAt(params, t));
     return out;
   };
   const main = path(p);
-  const flat = path({ growth: 1, peak: 1, price: price0, cut: cut0 });
+  const still = { growth: 1, peak: 1, price: price0, cut: cut0 };
+  const flat = path(still);
   const sc = econ.scenarios || {};
   const slow = sc.slow ? path(sc.slow) : null, fast = sc.fast ? path(sc.fast) : null;
 
@@ -804,7 +809,7 @@ function renderValue() {
     <line x1="${x(today)}" x2="${x(today)}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)"/><text x="${x(today) + 5}" y="${m.t + 10}">Today</text>`;
   for (let d = new Date(Date.UTC(new Date(t0).getUTCFullYear() + 1, 0, 1)); d.getTime() <= end; d = addMonths(d, 12))
     svg += `<line x1="${x(d.getTime())}" x2="${x(d.getTime())}" y1="${y(0)}" y2="${y(0) + 5}" stroke="var(--rule-strong)"/><text x="${x(d.getTime())}" y="${H - m.b + 18}" text-anchor="middle" class="lbl-strong">${narrow ? `'${String(d.getUTCFullYear()).slice(2)}` : d.getUTCFullYear()}</text>`;
-  [1, 2].forEach((n) => { const t = tierDate(n).getTime(); svg += `<line x1="${x(t)}" x2="${x(t)}" y1="${y(0)}" y2="${y(0) - 6}" stroke="var(--t${n})" stroke-width="2"/><text x="${x(t)}" y="${y(0) - 10}" text-anchor="middle" class="lbl-strong">F+${n}</text>`; });
+  [1, 2].forEach((n) => { const t = tierDate(n).getTime(); svg += `<line x1="${x(t)}" x2="${x(t)}" y1="${y(0)}" y2="${y(0) - 6}" stroke="var(--t${n})" stroke-width="2"/>`; });
   if (slow && fast) svg += `<path d="${line(fast)} L${[...slow].reverse().map((q) => `${x(q.t).toFixed(1)},${y(q.share).toFixed(1)}`).join(" L")} Z" fill="var(--t1)" opacity="0.12"/>`;
   svg += `<path d="${line(flat)}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
     <path d="${line(main)}" fill="none" stroke="var(--t1)" stroke-width="2.5"/>
@@ -824,15 +829,15 @@ function renderValue() {
     lg('<span class="swatch" style="background:var(--t1)"></span>', `${sc[state.scenario]?.label || "Custom"} scenario`, "Capability follows the model's forecast and trend; adoption follows an S-curve to its peak; price and the labs' cut move to their long-run values as adoption matures."),
     lg('<span class="band"></span>', "Slow to fast range", "Between the slow and fast scenarios."),
     lg('<span class="dot trend"></span>', "Capability only", "Adoption, price and cut held at today's levels: revenue grows only as models can do more of the work."),
+    lg('<span class="swatch" style="background:linear-gradient(90deg, var(--t1) 50%, var(--t2) 50%)"></span>', "Next model and the one after", `Ticks on the axis: the next frontier model, around ${monthYear(tierDate(1))}, and the one after, around ${monthYear(tierDate(2))}.`),
   ].join("");
   $("vpath-note").textContent = `Revenue = work AI can do × share of it AI does × price per $1 of wages × labs' cut. Capability follows this site's forecasts (${monthYear(tierDate(1))}, ${monthYear(tierDate(2))}) and trend. Adoption starts at ${pct(a0 * 100)} of the work AI can do, grows ${p.growth.toFixed(1)}x in the first year and slows as it nears ${pct(p.peak * 100)}. Price moves from ${cents(price0)} to ${cents(p.price)} and the labs' cut from ${pct(cut0 * 100)} to ${pct(p.cut * 100)} as adoption approaches its peak. Dollars are in today's terms with the wage bill held at May 2025 levels.`;
 
   // Table at the forecast dates and two later years
-  const at = (pts, t) => pts.reduce((b, q) => (Math.abs(q.t - t) < Math.abs(b.t - t) ? q : b));
-  const trows = [["Today", today], [`Frontier+1 · ${monthYear(tierDate(1))}`, tierDate(1).getTime()], [`Frontier+2 · ${monthYear(tierDate(2))}`, tierDate(2).getTime()],
+  const trows = [["Today", today], [`Next model · ${monthYear(tierDate(1))}`, tierDate(1).getTime()], [`Model after next · ${monthYear(tierDate(2))}`, tierDate(2).getTime()],
     [monthYear(tierDate(4)), tierDate(4).getTime()], [monthYear(new Date(end)), end]];
   $("value-table").innerHTML = `<thead><tr><th></th><th class="num">AI can do</th><th class="num">AI does</th><th class="num">Price per $1</th><th class="num">Labs' cut</th><th class="num">U.S. work revenue</th><th class="num">All revenue*</th><th class="num">Capability only</th></tr></thead>
-    <tbody>${trows.map(([label, t]) => { const q = at(main, t), f = at(flat, t); return `<tr><td>${label}</td><td class="num">${pct(q.idx * 100)}</td><td class="num">${pct1(q.does * 100)}</td><td class="num">${cents(q.price)}</td><td class="num">${pct(q.cut * 100)}</td><td class="num">${usd(q.rev)}</td><td class="num">${usd(q.all)}</td><td class="num">${usd(f.rev)}</td></tr>`; }).join("")}</tbody>
+    <tbody>${trows.map(([label, t]) => { const q = pointAt(p, t), f = pointAt(still, t); return `<tr><td>${label}</td><td class="num">${pct(q.idx * 100)}</td><td class="num">${pct1(q.does * 100)}</td><td class="num">${cents(q.price)}</td><td class="num">${pct(q.cut * 100)}</td><td class="num">${usd(q.rev)}</td><td class="num">${usd(q.all)}</td><td class="num">${usd(f.rev)}</td></tr>`; }).join("")}</tbody>
     <tfoot><tr><td colspan="8" class="note">AI can do and AI does are shares of the wage bill. *All lab revenue, worldwide and for every use, at today's mix (U.S. work is ${pct(mix * 100)} of it).</td></tr></tfoot>`;
 
   // Where the value sits: pay for AI-doable work by group, now and by Frontier+2
@@ -854,9 +859,8 @@ function renderValue() {
   const evidence = (k, el) => { $(`${k}-note`).textContent = econ[k].note || ""; $(el).innerHTML = `<thead><tr><th>Evidence</th><th class="num">${k === "price" ? "Per $1 of human cost" : "Share"}</th><th>Source</th></tr></thead><tbody>${(econ[k].evidence || []).map((e) => `<tr><td>${esc(e.what)}</td><td class="num">${e.ratio != null ? (k === "price" ? cents(e.ratio) : pct(e.ratio * 100)) : ""}</td><td>${links(e.sources)}</td></tr>`).join("")}</tbody>`; };
   evidence("price", "price-table"); evidence("cut", "cut-table");
   // Calibration: the base scenario against the labs' own projections (all revenue at today's mix)
-  const base = sc.base ? path(sc.base) : main;
-  const baseAt = (iso) => at(base, parseDate(iso).getTime());
-  $("vproj-note").textContent = `For comparison, the base scenario puts the two labs' total revenue, at today's mix, at ${usd(baseAt("2026-12-31").all)} at the end of 2026, ${usd(baseAt("2028-12-31").all)} at the end of 2028 and ${usd(at(base, end).all)} by ${monthYear(new Date(end))}.`;
+  const baseAt = (t) => pointAt(sc.base || p, t);
+  $("vproj-note").textContent = `For comparison, the base scenario puts the two labs' total revenue, at today's mix, at ${usd(baseAt(parseDate("2026-12-31").getTime()).all)} at the end of 2026, ${usd(baseAt(parseDate("2028-12-31").getTime()).all)} at the end of 2028 and ${usd(baseAt(end).all)} by ${monthYear(new Date(end))}.`;
   $("projection-table").innerHTML = `<thead><tr><th>Lab</th><th>Projection</th><th>Source</th></tr></thead><tbody>${(econ.projections || []).map((x) => `<tr><td>${esc(x.lab)}</td><td>${esc(x.what)}</td><td>${links(x.sources)}</td></tr>`).join("")}</tbody>`;
   $("value-method").innerHTML = (econ.method || []).map(([h, ps]) => `<div><h3>${esc(h)}</h3>${ps.map((x) => `<p>${esc(x)}</p>`).join("")}</div>`).join("");
 }
@@ -897,9 +901,9 @@ function renderMethod() {
   const blocks = [
     ["What's measured", [a.definition, a.method_note].filter(Boolean)],
     ["Structure", [`${model.occupations.length} occupations from BLS OEWS (${data.occupations.reference || "May 2025"}) are split into tasks with a share of working time. Each task maps to one of ${model.archetypes.length} task types, and each task type is scored 0 to 100 at every snapshot.`, data.occupations.task_basis].filter(Boolean)],
-    ["Snapshots and forecasts", [`Each Opus release since ${snaps[0].a.anchor} is a snapshot that scores what the public frontier could do on that date. The live snapshot also carries forecasts for Frontier+1 (${monthYear(tierDate(1))}) and Frontier+2 (${monthYear(tierDate(2))}); later generations are spaced ${a.cadence_months} months apart.`, "When a forecast date arrives, the next snapshot is scored against the forecast on this page, so the method is tested, not just restated."]],
-    ["Ceiling and saturation", ["Each task type has a ceiling: the most AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference.", "Past Frontier+2, each task type's remaining gap to its ceiling keeps closing at the rate implied by its last step. The saturation point is the first generation that adds under one point to the index; that one-point threshold is a convention."]],
-    ["Uncertainty", [`Forecast ranges are ${(a.uncertainty?.f1 ?? 5)} points either side at Frontier+1 and ${(a.uncertainty?.f2 ?? 8)} at Frontier+2 for a task type with medium-confidence evidence, narrower for high and wider for low, and cut off at today's score and at the ceiling. The index range adds the task-type ranges together, which assumes their errors move in the same direction; independent errors would give a narrower band.`]],
+    ["Snapshots and forecasts", [`Each Opus release since ${snaps[0].a.anchor} is a snapshot that scores what the public frontier could do on that date. The live snapshot also carries forecasts for the next frontier model (${monthYear(tierDate(1))}) and the one after (${monthYear(tierDate(2))}); later generations are spaced ${a.cadence_months} months apart.`, "When a forecast date arrives, the next snapshot is scored against the forecast on this page, so the method is tested, not just restated."]],
+    ["Ceiling and saturation", ["Each task type has a ceiling: the most AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference.", "Past the model after next, each task type's remaining gap to its ceiling keeps closing at the rate implied by its last step. The saturation point is the first generation that adds under one point to the index; that one-point threshold is a convention."]],
+    ["Uncertainty", [`Forecast ranges are ${(a.uncertainty?.f1 ?? 5)} points either side for the next model and ${(a.uncertainty?.f2 ?? 8)} for the one after, for a task type with medium-confidence evidence, narrower for high and wider for low, and cut off at today's score and at the ceiling. The index range adds the task-type ranges together, which assumes their errors move in the same direction; independent errors would give a narrower band.`]],
     ["Weights", ["Wages weights each occupation by employment times mean wage. People weights by headcount. The headline uses wages."]],
     ["Limits", a.caveats || []],
   ];
@@ -955,7 +959,7 @@ function renderForecastCheck() {
     const verdict = it.actual
       ? `${pct(got)} measured (${esc(it.actual.a.anchor)}, ${monthYear(parseDate(it.actual.a.date))}): ${got >= it.range[0] && got <= it.range[1] ? "within" : "outside"} the range (${diff >= 0 ? "+" : ""}${r0(diff)})`
       : `due ${monthYear(it.due)}`;
-    return `<div class="check"><span>Frontier+${it.n} forecast made ${monthYear(parseDate(it.a.updated || it.a.date))} with ${esc(it.a.anchor)} as the frontier: <b>${pct(it.predicted)} (${span(it.range)})</b> by ${monthYear(it.due)}</span><span class="verdict">${verdict}</span></div>`;
+    return `<div class="check"><span>Forecast for the ${it.n === 1 ? "next model" : "model after next"}, made ${monthYear(parseDate(it.a.updated || it.a.date))} with ${esc(it.a.anchor)} as the frontier: <b>${pct(it.predicted)} (${span(it.range)})</b> by ${monthYear(it.due)}</span><span class="verdict">${verdict}</span></div>`;
   }).join("") : `<p class="note">No forecast has come due yet.</p>`;
 }
 
