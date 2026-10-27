@@ -1,0 +1,330 @@
+{
+  "wiki-claude": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "anthropic-opus-4-5": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-opus-4-6": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-opus-5": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-opus-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "techcrunch-opus-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "techcrunch-opus-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "llmstats-opus-4-8": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "vellum-opus-4-6": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "kellogg-opus-4-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "cfg-opus-4-7": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "datacamp-opus-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "datacamp-mythos-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "rdworld-mythos": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "marktechpost-fable-5-1": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "kingy-opus-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "openai-gpt-5-2": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "openai-gpt-5-4": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "openai-gpt-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "ie-gpt-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "ubergizmo-codex": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "aa-gpt-5-6": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "wiki-gpt-6": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "venturebeat-argon": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "deeplearning-gemini-3-1": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "gdpval-paper": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "idwn-gdpval": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "testmu-gdpval": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "benchlm-gdpval-aa": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "llmstats-gdpval-aa": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "scale-rli": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "scale-rli-blog": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "cais-rli": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "mercor-apex": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "mercor-apex-mar": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "mercor-apex-apr": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "mercor-ib": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "llmlearner-tau2-telecom": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "benchlm-tau2": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "benchlm-tau2-airline": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "benchlm-swe-pro": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "decodethefuture": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "andonlabs-vb2": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "vals-hub": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "vals-finance": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "snorkel-biglaw": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "healthbench-pro": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "frontierfinance": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "benchmarklist-ssb2": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "benchmarklist-osworld2": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "bettersheets": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "wmt25-findings": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "pkg-hallucination": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "metr-horizons": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "metr-results-file": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "metr-th11": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "metr-opus-5-5": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "metr-gpt-5-6": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "epoch-brief": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "epoch-eci-trend": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "epoch-compute": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "epoch-training-run": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "mit-tr-suleyman": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "aa-leaderboard": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "aifutures-q25": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "leap-wave8": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "aei-sep-2025": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "aei-jan-2026": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "aei-mar-2026": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "aei-jun-2026": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-labor": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-robots": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "anthropic-employment": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "microsoft-wwai": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "esade": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "fortune-mckinsey": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "mckinsey-press": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "stanford-canaries": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "yale-may-2026": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "fortune-amodei": {
+    "accessed": "2026-10-27",
+    "retrieved": false
+  },
+  "bls-oews": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  },
+  "bls-oews-notes": {
+    "accessed": "2026-10-27",
+    "retrieved": true
+  }
+}

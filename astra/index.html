@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="/astra/" />
+    <title>Headroom / Astra — AI and the work ahead</title>
+    <meta
+      name="description"
+      content="Explore what frontier AI can do across 98 U.S. occupations, the path ahead, and the assumptions behind it."
+    />
+    <meta
+      property="og:title"
+      content="Headroom / Astra — AI and the work ahead"
+    />
+    <meta
+      property="og:description"
+      content="A task-by-task estimate, a dated forecast, and the constraints that could change the path."
+    />
+    <meta property="og:url" content="https://workanalyst.com/astra" />
+    <meta property="og:image" content="https://workanalyst.com/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231e4b71'/%3E%3Cpath d='M7 24V14h5v10m3 0V9h5v15m3 0V4h3v20' stroke='white' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="mast">
+      <div class="wrap mast-top">
+        <a href="#overview" class="brand" aria-label="Headroom Astra overview"
+          ><span class="brand-mark" aria-hidden="true">H</span>Headroom
+          <span class="edition">Astra</span></a
+        >
+        <a href="/" class="original"
+          >Compare original <span aria-hidden="true">→</span></a
+        >
+      </div>
+      <div class="wrap mast-nav">
+        <nav aria-label="Explore Headroom">
+          <a href="#overview" data-view="overview">Overview</a>
+          <a href="#jobs" data-view="jobs">Occupations</a>
+          <a href="#tasks" data-view="tasks">Tasks</a>
+          <a href="#constraints" data-view="constraints">Constraints</a>
+          <a href="#method" data-view="method">Method</a>
+        </nav>
+        <fieldset class="weight">
+          <legend class="sr">Weight the index by</legend>
+          <label
+            ><input type="radio" name="weight" value="wage" checked />Pay</label
+          ><label
+            ><input
+              type="radio"
+              name="weight"
+              value="employment"
+            />Workers</label
+          >
+        </fieldset>
+      </div>
+    </header>
+    <main id="main" class="wrap" tabindex="-1">
+      <div id="scenario" class="scenario" hidden>
+        <div>
+          <strong>Your scenario</strong><span id="scenario-summary"></span>
+        </div>
+        <div class="actions">
+          <button id="share" class="button small">Copy scenario link</button
+          ><button id="reset" class="button small quiet">Reset all</button>
+        </div>
+      </div>
+      <div id="status" class="sr" role="status" aria-live="polite"></div>
+      <div id="error" class="error" role="alert" hidden></div>
+      <div id="content"><p class="loading">Loading the work model…</p></div>
+    </main>
+    <footer class="wrap footer">
+      <span>Headroom <b>/ Astra</b> · A model of today’s work</span
+      ><a href="#method">Data, assumptions & sources</a
+      ><a href="/">Original version →</a>
+    </footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

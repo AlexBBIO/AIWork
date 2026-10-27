@@ -3,5 +3,6 @@
   "framework": null,
   "installCommand": "",
   "buildCommand": "node scripts/build.mjs",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [{ "source": "/astra", "destination": "/astra/index.html" }]
 }

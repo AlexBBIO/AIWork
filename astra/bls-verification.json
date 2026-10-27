@@ -1,0 +1,818 @@
+{
+  "source": "https://www.bls.gov/oes/special-requests/oesm25nat.zip",
+  "accessed": "2026-10-27",
+  "reference": "May 2025",
+  "rows": [
+    {
+      "occupation": "gen_ops_mgr",
+      "codes": [
+        "11-1021"
+      ],
+      "employment": 3503020,
+      "annualMeanWage": 134940.0
+    },
+    {
+      "occupation": "ceo",
+      "codes": [
+        "11-1011"
+      ],
+      "employment": 204350,
+      "annualMeanWage": 269630.0
+    },
+    {
+      "occupation": "fin_mgr",
+      "codes": [
+        "11-3031"
+      ],
+      "employment": 841710,
+      "annualMeanWage": 186910.0
+    },
+    {
+      "occupation": "it_mgr",
+      "codes": [
+        "11-3021"
+      ],
+      "employment": 670570,
+      "annualMeanWage": 192160.0
+    },
+    {
+      "occupation": "mkt_mgr",
+      "codes": [
+        "11-2021"
+      ],
+      "employment": 395240,
+      "annualMeanWage": 177770.0
+    },
+    {
+      "occupation": "sales_mgr",
+      "codes": [
+        "11-2022"
+      ],
+      "employment": 637080,
+      "annualMeanWage": 164350.0
+    },
+    {
+      "occupation": "health_mgr",
+      "codes": [
+        "11-9111"
+      ],
+      "employment": 597080,
+      "annualMeanWage": 140970.0
+    },
+    {
+      "occupation": "hr_mgr",
+      "codes": [
+        "11-3121"
+      ],
+      "employment": 220660,
+      "annualMeanWage": 164230.0
+    },
+    {
+      "occupation": "edu_admin",
+      "codes": [
+        "11-9030"
+      ],
+      "employment": 637590,
+      "annualMeanWage": 111900.0
+    },
+    {
+      "occupation": "constr_mgr",
+      "codes": [
+        "11-9021"
+      ],
+      "employment": 380360,
+      "annualMeanWage": 124360.0
+    },
+    {
+      "occupation": "admin_mgr",
+      "codes": [
+        "11-3012"
+      ],
+      "employment": 263960,
+      "annualMeanWage": 129870.0
+    },
+    {
+      "occupation": "arch_eng_mgr",
+      "codes": [
+        "11-9041"
+      ],
+      "employment": 220260,
+      "annualMeanWage": 181540.0
+    },
+    {
+      "occupation": "prod_mgr",
+      "codes": [
+        "11-3051",
+        "11-3071"
+      ],
+      "employment": 467430,
+      "annualMeanWage": 128222.09
+    },
+    {
+      "occupation": "property_mgr",
+      "codes": [
+        "11-9141"
+      ],
+      "employment": 311180,
+      "annualMeanWage": 83710.0
+    },
+    {
+      "occupation": "mgr_other",
+      "codes": [
+        "11-9199"
+      ],
+      "employment": 622190,
+      "annualMeanWage": 153890.0
+    },
+    {
+      "occupation": "accountant",
+      "codes": [
+        "13-2011"
+      ],
+      "employment": 1449500,
+      "annualMeanWage": 94750.0
+    },
+    {
+      "occupation": "mgmt_analyst",
+      "codes": [
+        "13-1111"
+      ],
+      "employment": 898280,
+      "annualMeanWage": 113790.0
+    },
+    {
+      "occupation": "proj_mgmt",
+      "codes": [
+        "13-1082"
+      ],
+      "employment": 1066670,
+      "annualMeanWage": 110740.0
+    },
+    {
+      "occupation": "mkt_research",
+      "codes": [
+        "13-1161"
+      ],
+      "employment": 899580,
+      "annualMeanWage": 89490.0
+    },
+    {
+      "occupation": "hr_spec",
+      "codes": [
+        "13-1071"
+      ],
+      "employment": 912430,
+      "annualMeanWage": 81990.0
+    },
+    {
+      "occupation": "fin_analyst",
+      "codes": [
+        "13-2051"
+      ],
+      "employment": 361980,
+      "annualMeanWage": 116800.0
+    },
+    {
+      "occupation": "fin_advisor",
+      "codes": [
+        "13-2052"
+      ],
+      "employment": 266800,
+      "annualMeanWage": 156670.0
+    },
+    {
+      "occupation": "claims_adj",
+      "codes": [
+        "13-1031"
+      ],
+      "employment": 324230,
+      "annualMeanWage": 80470.0
+    },
+    {
+      "occupation": "loan_officer",
+      "codes": [
+        "13-2072"
+      ],
+      "employment": 274330,
+      "annualMeanWage": 87790.0
+    },
+    {
+      "occupation": "compliance_off",
+      "codes": [
+        "13-1041"
+      ],
+      "employment": 417070,
+      "annualMeanWage": 88400.0
+    },
+    {
+      "occupation": "buyer",
+      "codes": [
+        "13-1020"
+      ],
+      "employment": 491430,
+      "annualMeanWage": 83770.0
+    },
+    {
+      "occupation": "training",
+      "codes": [
+        "13-1151"
+      ],
+      "employment": 458300,
+      "annualMeanWage": 75550.0
+    },
+    {
+      "occupation": "logistician",
+      "codes": [
+        "13-1081"
+      ],
+      "employment": 251040,
+      "annualMeanWage": 89730.0
+    },
+    {
+      "occupation": "underwriter",
+      "codes": [
+        "13-2053"
+      ],
+      "employment": 105420,
+      "annualMeanWage": 93700.0
+    },
+    {
+      "occupation": "cost_estimator",
+      "codes": [
+        "13-1051"
+      ],
+      "employment": 224220,
+      "annualMeanWage": 85390.0
+    },
+    {
+      "occupation": "bizops_other",
+      "codes": [
+        "13-1199"
+      ],
+      "employment": 1087090,
+      "annualMeanWage": 93970.0
+    },
+    {
+      "occupation": "swe",
+      "codes": [
+        "15-1252"
+      ],
+      "employment": 1687890,
+      "annualMeanWage": 148100.0
+    },
+    {
+      "occupation": "qa",
+      "codes": [
+        "15-1253"
+      ],
+      "employment": 186740,
+      "annualMeanWage": 111490.0
+    },
+    {
+      "occupation": "user_support",
+      "codes": [
+        "15-1232"
+      ],
+      "employment": 717190,
+      "annualMeanWage": 67330.0
+    },
+    {
+      "occupation": "sys_analyst",
+      "codes": [
+        "15-1211"
+      ],
+      "employment": 519530,
+      "annualMeanWage": 114610.0
+    },
+    {
+      "occupation": "sysadmin",
+      "codes": [
+        "15-1244"
+      ],
+      "employment": 314340,
+      "annualMeanWage": 103680.0
+    },
+    {
+      "occupation": "infosec",
+      "codes": [
+        "15-1212"
+      ],
+      "employment": 190650,
+      "annualMeanWage": 132510.0
+    },
+    {
+      "occupation": "data_sci",
+      "codes": [
+        "15-2051"
+      ],
+      "employment": 262440,
+      "annualMeanWage": 126800.0
+    },
+    {
+      "occupation": "web_dev",
+      "codes": [
+        "15-1254",
+        "15-1255"
+      ],
+      "employment": 183520,
+      "annualMeanWage": 110330.25
+    },
+    {
+      "occupation": "dba",
+      "codes": [
+        "15-1242",
+        "15-1243"
+      ],
+      "employment": 137130,
+      "annualMeanWage": 126908.05
+    },
+    {
+      "occupation": "programmer",
+      "codes": [
+        "15-1251"
+      ],
+      "employment": 92230,
+      "annualMeanWage": 105170.0
+    },
+    {
+      "occupation": "ops_research",
+      "codes": [
+        "15-2031"
+      ],
+      "employment": 108510,
+      "annualMeanWage": 99730.0
+    },
+    {
+      "occupation": "actuary",
+      "codes": [
+        "15-2011",
+        "15-2041"
+      ],
+      "employment": 55700,
+      "annualMeanWage": 128043.85
+    },
+    {
+      "occupation": "comp_other",
+      "codes": [
+        "15-1299"
+      ],
+      "employment": 435370,
+      "annualMeanWage": 122230.0
+    },
+    {
+      "occupation": "net_architect",
+      "codes": [
+        "15-1241",
+        "15-1231"
+      ],
+      "employment": 325930,
+      "annualMeanWage": 113695.22
+    },
+    {
+      "occupation": "civil_eng",
+      "codes": [
+        "17-2051"
+      ],
+      "employment": 367840,
+      "annualMeanWage": 108670.0
+    },
+    {
+      "occupation": "mech_eng",
+      "codes": [
+        "17-2141"
+      ],
+      "employment": 296810,
+      "annualMeanWage": 113610.0
+    },
+    {
+      "occupation": "ind_eng",
+      "codes": [
+        "17-2112"
+      ],
+      "employment": 365740,
+      "annualMeanWage": 109900.0
+    },
+    {
+      "occupation": "elec_eng",
+      "codes": [
+        "17-2070"
+      ],
+      "employment": 295650,
+      "annualMeanWage": 129100.0
+    },
+    {
+      "occupation": "other_eng",
+      "codes": [
+        "17-2011",
+        "17-2021",
+        "17-2031",
+        "17-2041",
+        "17-2061",
+        "17-2081",
+        "17-2111",
+        "17-2121",
+        "17-2131",
+        "17-2151",
+        "17-2161",
+        "17-2171",
+        "17-2199"
+      ],
+      "employment": 474700,
+      "annualMeanWage": 133533.28
+    },
+    {
+      "occupation": "architect",
+      "codes": [
+        "17-1011"
+      ],
+      "employment": 106770,
+      "annualMeanWage": 106260.0
+    },
+    {
+      "occupation": "drafters_techs",
+      "codes": [
+        "17-3000"
+      ],
+      "employment": 624930,
+      "annualMeanWage": 73190.0
+    },
+    {
+      "occupation": "scientists",
+      "codes": [
+        "19-1000",
+        "19-2000"
+      ],
+      "employment": 651550,
+      "annualMeanWage": 107670.89
+    },
+    {
+      "occupation": "social_sci",
+      "codes": [
+        "19-3000"
+      ],
+      "employment": 288600,
+      "annualMeanWage": 106250.0
+    },
+    {
+      "occupation": "sci_tech",
+      "codes": [
+        "19-4000"
+      ],
+      "employment": 361920,
+      "annualMeanWage": 64290.0
+    },
+    {
+      "occupation": "social_worker",
+      "codes": [
+        "21-1020"
+      ],
+      "employment": 775930,
+      "annualMeanWage": 67540.0
+    },
+    {
+      "occupation": "counselor",
+      "codes": [
+        "21-1010"
+      ],
+      "employment": 1035300,
+      "annualMeanWage": 66300.0
+    },
+    {
+      "occupation": "social_assist",
+      "codes": [
+        "21-1093"
+      ],
+      "employment": 437860,
+      "annualMeanWage": 47690.0
+    },
+    {
+      "occupation": "lawyer",
+      "codes": [
+        "23-1011"
+      ],
+      "employment": 754500,
+      "annualMeanWage": 185840.0
+    },
+    {
+      "occupation": "paralegal",
+      "codes": [
+        "23-2011"
+      ],
+      "employment": 392880,
+      "annualMeanWage": 69700.0
+    },
+    {
+      "occupation": "legal_other",
+      "codes": [
+        "23-1020",
+        "23-2090"
+      ],
+      "employment": 144950,
+      "annualMeanWage": 93674.21
+    },
+    {
+      "occupation": "k12_teacher",
+      "codes": [
+        "25-2000"
+      ],
+      "employment": 4373040,
+      "annualMeanWage": 70410.0
+    },
+    {
+      "occupation": "postsec",
+      "codes": [
+        "25-1000"
+      ],
+      "employment": 1370560,
+      "annualMeanWage": 103470.0
+    },
+    {
+      "occupation": "teach_assist",
+      "codes": [
+        "25-9045"
+      ],
+      "employment": 1420350,
+      "annualMeanWage": 38290.0
+    },
+    {
+      "occupation": "librarian",
+      "codes": [
+        "25-4000"
+      ],
+      "employment": 234910,
+      "annualMeanWage": 63900.0
+    },
+    {
+      "occupation": "instr_coord",
+      "codes": [
+        "25-9031"
+      ],
+      "employment": 227760,
+      "annualMeanWage": 80920.0
+    },
+    {
+      "occupation": "writers",
+      "codes": [
+        "27-3040"
+      ],
+      "employment": 185130,
+      "annualMeanWage": 90730.0
+    },
+    {
+      "occupation": "pr",
+      "codes": [
+        "27-3031"
+      ],
+      "employment": 283380,
+      "annualMeanWage": 84120.0
+    },
+    {
+      "occupation": "designers",
+      "codes": [
+        "27-1024",
+        "27-1014"
+      ],
+      "employment": 217800,
+      "annualMeanWage": 74439.39
+    },
+    {
+      "occupation": "translators",
+      "codes": [
+        "27-3091"
+      ],
+      "employment": 52060,
+      "annualMeanWage": 66360.0
+    },
+    {
+      "occupation": "producers",
+      "codes": [
+        "27-2012"
+      ],
+      "employment": 143120,
+      "annualMeanWage": 113300.0
+    },
+    {
+      "occupation": "reporters",
+      "codes": [
+        "27-3023"
+      ],
+      "employment": 39250,
+      "annualMeanWage": 102460.0
+    },
+    {
+      "occupation": "physician",
+      "codes": [
+        "29-1210",
+        "29-1240"
+      ],
+      "employment": 804140,
+      "annualMeanWage": 282608.57
+    },
+    {
+      "occupation": "pharmacist",
+      "codes": [
+        "29-1051"
+      ],
+      "employment": 321970,
+      "annualMeanWage": 140920.0
+    },
+    {
+      "occupation": "med_records",
+      "codes": [
+        "29-9021",
+        "29-2072"
+      ],
+      "employment": 232820,
+      "annualMeanWage": 59765.08
+    },
+    {
+      "occupation": "sales_rep",
+      "codes": [
+        "41-4011",
+        "41-4012"
+      ],
+      "employment": 1522990,
+      "annualMeanWage": 89486.42
+    },
+    {
+      "occupation": "fin_sales",
+      "codes": [
+        "41-3021",
+        "41-3031"
+      ],
+      "employment": 968670,
+      "annualMeanWage": 95464.54
+    },
+    {
+      "occupation": "real_estate",
+      "codes": [
+        "41-9021",
+        "41-9022"
+      ],
+      "employment": 239470,
+      "annualMeanWage": 72289.82
+    },
+    {
+      "occupation": "ad_sales",
+      "codes": [
+        "41-3011"
+      ],
+      "employment": 91700,
+      "annualMeanWage": 80670.0
+    },
+    {
+      "occupation": "sales_services",
+      "codes": [
+        "41-3091"
+      ],
+      "employment": 1256010,
+      "annualMeanWage": 82430.0
+    },
+    {
+      "occupation": "sales_super",
+      "codes": [
+        "41-1012"
+      ],
+      "employment": 214390,
+      "annualMeanWage": 99370.0
+    },
+    {
+      "occupation": "csr",
+      "codes": [
+        "43-4051"
+      ],
+      "employment": 2595750,
+      "annualMeanWage": 46590.0
+    },
+    {
+      "occupation": "office_clerk",
+      "codes": [
+        "43-9061"
+      ],
+      "employment": 2464940,
+      "annualMeanWage": 46420.0
+    },
+    {
+      "occupation": "secretary",
+      "codes": [
+        "43-6014"
+      ],
+      "employment": 1706790,
+      "annualMeanWage": 49350.0
+    },
+    {
+      "occupation": "exec_asst",
+      "codes": [
+        "43-6011"
+      ],
+      "employment": 459910,
+      "annualMeanWage": 79140.0
+    },
+    {
+      "occupation": "med_secretary",
+      "codes": [
+        "43-6013"
+      ],
+      "employment": 961610,
+      "annualMeanWage": 46800.0
+    },
+    {
+      "occupation": "bookkeeper",
+      "codes": [
+        "43-3031"
+      ],
+      "employment": 1373680,
+      "annualMeanWage": 53560.0
+    },
+    {
+      "occupation": "receptionist",
+      "codes": [
+        "43-4171"
+      ],
+      "employment": 910180,
+      "annualMeanWage": 39460.0
+    },
+    {
+      "occupation": "office_super",
+      "codes": [
+        "43-1011"
+      ],
+      "employment": 1436680,
+      "annualMeanWage": 73490.0
+    },
+    {
+      "occupation": "billing",
+      "codes": [
+        "43-3021",
+        "43-3051"
+      ],
+      "employment": 557200,
+      "annualMeanWage": 53422.62
+    },
+    {
+      "occupation": "data_entry",
+      "codes": [
+        "43-9021"
+      ],
+      "employment": 127080,
+      "annualMeanWage": 43310.0
+    },
+    {
+      "occupation": "ins_clerk",
+      "codes": [
+        "43-9041"
+      ],
+      "employment": 214260,
+      "annualMeanWage": 52920.0
+    },
+    {
+      "occupation": "collectors",
+      "codes": [
+        "43-3011"
+      ],
+      "employment": 158830,
+      "annualMeanWage": 49060.0
+    },
+    {
+      "occupation": "expediting",
+      "codes": [
+        "43-5061"
+      ],
+      "employment": 390160,
+      "annualMeanWage": 62150.0
+    },
+    {
+      "occupation": "tellers",
+      "codes": [
+        "43-3071"
+      ],
+      "employment": 329480,
+      "annualMeanWage": 42350.0
+    },
+    {
+      "occupation": "dispatchers",
+      "codes": [
+        "43-5032"
+      ],
+      "employment": 202810,
+      "annualMeanWage": 54740.0
+    },
+    {
+      "occupation": "loan_clerks",
+      "codes": [
+        "43-4131",
+        "43-4141"
+      ],
+      "employment": 201650,
+      "annualMeanWage": 51944.21
+    },
+    {
+      "occupation": "legal_secretary",
+      "codes": [
+        "43-6012"
+      ],
+      "employment": 156280,
+      "annualMeanWage": 60620.0
+    }
+  ]
+}

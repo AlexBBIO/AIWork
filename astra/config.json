@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "assessment": "opus-5-5",
+  "as_of": "2026-10-27",
+  "forecast_dates": [
+    "2027-04-27",
+    "2027-10-27"
+  ],
+  "rates": {
+    "draft": 0.4,
+    "edit": 0.4,
+    "translate": 0.4,
+    "research": 0.4,
+    "analysis": 0.4,
+    "expert": 0.25,
+    "diagnosis": 0.25,
+    "code": 0.45,
+    "debug": 0.45,
+    "design_tech": 0.25,
+    "entry": 0.4,
+    "docproc": 0.4,
+    "accounting": 0.4,
+    "compliance": 0.4,
+    "scheduling": 0.4,
+    "project": 0.25,
+    "service": 0.4,
+    "support": 0.4,
+    "creative": 0.25,
+    "media": 0.25,
+    "grading": 0.4,
+    "teaching": 0.12,
+    "sales": 0.15,
+    "relationship": 0.15,
+    "meetings": 0.15,
+    "people": 0.12,
+    "strategy": 0.2,
+    "care": 0.12,
+    "physical": 0.12
+  },
+  "constraint_tags": {
+    "physical": [
+      "physical",
+      "care",
+      "teaching",
+      "media",
+      "support",
+      "translate"
+    ],
+    "regulation": [
+      "expert",
+      "diagnosis",
+      "compliance",
+      "accounting",
+      "people",
+      "strategy",
+      "care",
+      "teaching",
+      "grading",
+      "sales",
+      "docproc"
+    ],
+    "preference": [
+      "relationship",
+      "sales",
+      "meetings",
+      "people",
+      "care",
+      "teaching",
+      "creative",
+      "media",
+      "service",
+      "strategy",
+      "translate"
+    ]
+  },
+  "constraint_notes": {
+    "physical": "A software agent cannot directly manipulate the environment. Robotics, equipment and deployment context can change this constraint.",
+    "regulation": "Professional rules, legal permission and organizational accountability may require human involvement. Requirements vary by jurisdiction and task.",
+    "preference": "People may value human delivery, authorship or a continuing relationship. Acceptance can change with the setting, quality and price."
+  },
+  "source_reviews": {
+    "gdpval-paper": "Confirmed 47.6% wins-or-ties for Opus 4.1 on the gold subset. This is a deliverable comparison, not a national share of working hours.",
+    "anthropic-opus-5-5": "Confirmed vendor-reported GDPval-AA v2.1 Elo of 1846, against 1708 for Opus 5. Elo is not a percentage of tasks automated.",
+    "scale-rli": "Confirmed Opus 5.5 automation rate of 21.25% on the live leaderboard. Whole-project acceptance differs from task coverage with review.",
+    "metr-opus-5-5": "Confirmed a modest improvement over Fable 5.1, limited evidence of gains in research judgement, and insufficient evidence to distinguish acceleration from deceleration.",
+    "metr-gpt-5-6": "METR reports an approximately 11.3-hour estimate when cheating attempts count as failures, but explicitly says it is not a robust capability measurement.",
+    "bls-oews": "All 98 occupation employment and wage rows reconciled to the May 2025 national workbook, including combined SOC groups and rounding.",
+    "metr-results-file": "The version 1.1 results file separates 50% and 80% success horizons and records the model, scaffold and release date."
+  },
+  "aliases": {
+    "swe": [
+      "software engineer",
+      "developer",
+      "programmer"
+    ],
+    "accountant": [
+      "cpa",
+      "auditor"
+    ],
+    "k12_teacher": [
+      "teacher",
+      "educator"
+    ],
+    "gen_ops_mgr": [
+      "manager",
+      "operations"
+    ],
+    "physician": [
+      "doctor",
+      "surgeon"
+    ],
+    "med_records": [
+      "medical coder"
+    ],
+    "dba": [
+      "database architect",
+      "database administrator"
+    ],
+    "actuary": [
+      "statistician"
+    ],
+    "qa": [
+      "tester",
+      "quality assurance"
+    ],
+    "sales_services": [
+      "account executive",
+      "b2b"
+    ],
+    "user_support": [
+      "help desk",
+      "it support"
+    ]
+  }
+}

@@ -1,0 +1,1546 @@
+{
+  "issued": "2026-10-27",
+  "model": "Astra v1: explicit gap closure per six months",
+  "inputCommit": "1fc936f1c7166da1cf988a58daa7530932c975ce",
+  "assessment": "opus-5-5",
+  "asOf": "2026-10-27",
+  "forecastDates": [
+    "2027-04-27",
+    "2027-10-27"
+  ],
+  "parameters": {
+    "draft": {
+      "now": 84,
+      "cap": 98,
+      "rate": 0.4
+    },
+    "edit": {
+      "now": 88,
+      "cap": 99,
+      "rate": 0.4
+    },
+    "translate": {
+      "now": 78,
+      "cap": 94,
+      "rate": 0.4
+    },
+    "research": {
+      "now": 78,
+      "cap": 97,
+      "rate": 0.4
+    },
+    "analysis": {
+      "now": 66,
+      "cap": 97,
+      "rate": 0.4
+    },
+    "expert": {
+      "now": 56,
+      "cap": 88,
+      "rate": 0.25
+    },
+    "diagnosis": {
+      "now": 55,
+      "cap": 85,
+      "rate": 0.25
+    },
+    "code": {
+      "now": 82,
+      "cap": 98,
+      "rate": 0.45
+    },
+    "debug": {
+      "now": 72,
+      "cap": 96,
+      "rate": 0.45
+    },
+    "design_tech": {
+      "now": 50,
+      "cap": 93,
+      "rate": 0.25
+    },
+    "entry": {
+      "now": 85,
+      "cap": 99,
+      "rate": 0.4
+    },
+    "docproc": {
+      "now": 78,
+      "cap": 97,
+      "rate": 0.4
+    },
+    "accounting": {
+      "now": 68,
+      "cap": 97,
+      "rate": 0.4
+    },
+    "compliance": {
+      "now": 66,
+      "cap": 90,
+      "rate": 0.4
+    },
+    "scheduling": {
+      "now": 66,
+      "cap": 96,
+      "rate": 0.4
+    },
+    "project": {
+      "now": 58,
+      "cap": 90,
+      "rate": 0.25
+    },
+    "service": {
+      "now": 82,
+      "cap": 94,
+      "rate": 0.4
+    },
+    "support": {
+      "now": 72,
+      "cap": 91,
+      "rate": 0.4
+    },
+    "creative": {
+      "now": 58,
+      "cap": 90,
+      "rate": 0.25
+    },
+    "media": {
+      "now": 38,
+      "cap": 94,
+      "rate": 0.25
+    },
+    "grading": {
+      "now": 72,
+      "cap": 93,
+      "rate": 0.4
+    },
+    "teaching": {
+      "now": 10,
+      "cap": 35,
+      "rate": 0.12
+    },
+    "sales": {
+      "now": 28,
+      "cap": 70,
+      "rate": 0.15
+    },
+    "relationship": {
+      "now": 12,
+      "cap": 50,
+      "rate": 0.15
+    },
+    "meetings": {
+      "now": 18,
+      "cap": 55,
+      "rate": 0.15
+    },
+    "people": {
+      "now": 13,
+      "cap": 40,
+      "rate": 0.12
+    },
+    "strategy": {
+      "now": 31,
+      "cap": 65,
+      "rate": 0.2
+    },
+    "care": {
+      "now": 9,
+      "cap": 30,
+      "rate": 0.12
+    },
+    "physical": {
+      "now": 3,
+      "cap": 15,
+      "rate": 0.12
+    }
+  },
+  "weightings": {
+    "wage": {
+      "now": 47.920010795837186,
+      "sixMonths": 54.68175790916567,
+      "twelveMonths": 59.32949716207554,
+      "occupations": [
+        {
+          "id": "gen_ops_mgr",
+          "weight": 0.08208047237862494,
+          "now": 36.75,
+          "sixMonths": 43.03,
+          "twelveMonths": 47.7543
+        },
+        {
+          "id": "ceo",
+          "weight": 0.009560043599908356,
+          "now": 26.3,
+          "sixMonths": 32.316,
+          "twelveMonths": 37.100179999999995
+        },
+        {
+          "id": "fin_mgr",
+          "weight": 0.027328741920478766,
+          "now": 44.75,
+          "sixMonths": 52.3505,
+          "twelveMonths": 57.50436499999999
+        },
+        {
+          "id": "it_mgr",
+          "weight": 0.022360921152203946,
+          "now": 34.800000000000004,
+          "sixMonths": 41.232499999999995,
+          "twelveMonths": 46.282174999999995
+        },
+        {
+          "id": "mkt_mgr",
+          "weight": 0.012203461610558398,
+          "now": 42.699999999999996,
+          "sixMonths": 49.44049999999999,
+          "twelveMonths": 54.326364999999996
+        },
+        {
+          "id": "sales_mgr",
+          "weight": 0.01813214660122052,
+          "now": 28.1,
+          "sixMonths": 34.159499999999994,
+          "twelveMonths": 38.804235000000006
+        },
+        {
+          "id": "health_mgr",
+          "weight": 0.014610308462408964,
+          "now": 43.150000000000006,
+          "sixMonths": 50.190000000000005,
+          "twelveMonths": 55.0983
+        },
+        {
+          "id": "hr_mgr",
+          "weight": 0.0062907447391989555,
+          "now": 37.95,
+          "sixMonths": 43.812,
+          "twelveMonths": 48.08286
+        },
+        {
+          "id": "edu_admin",
+          "weight": 0.01240236883578525,
+          "now": 34.2,
+          "sixMonths": 40.0115,
+          "twelveMonths": 44.18799500000001
+        },
+        {
+          "id": "constr_mgr",
+          "weight": 0.00817845414719829,
+          "now": 33.45,
+          "sixMonths": 39.028,
+          "twelveMonths": 43.09954
+        },
+        {
+          "id": "admin_mgr",
+          "weight": 0.005956802765955969,
+          "now": 41.6,
+          "sixMonths": 47.562,
+          "twelveMonths": 51.92886
+        },
+        {
+          "id": "arch_eng_mgr",
+          "weight": 0.006949603226948631,
+          "now": 33.1,
+          "sixMonths": 39.790000000000006,
+          "twelveMonths": 45.074799999999996
+        },
+        {
+          "id": "prod_mgr",
+          "weight": 0.010375111950401633,
+          "now": 30.7,
+          "sixMonths": 36.64249999999999,
+          "twelveMonths": 40.743725
+        },
+        {
+          "id": "property_mgr",
+          "weight": 0.0045342516159042464,
+          "now": 33.15,
+          "sixMonths": 38.644000000000005,
+          "twelveMonths": 42.574419999999996
+        },
+        {
+          "id": "mgr_other",
+          "weight": 0.01662558925831557,
+          "now": 36.75,
+          "sixMonths": 43.03,
+          "twelveMonths": 47.7543
+        },
+        {
+          "id": "accountant",
+          "weight": 0.02390878732547887,
+          "now": 64.2,
+          "sixMonths": 73.83,
+          "twelveMonths": 79.75049999999999
+        },
+        {
+          "id": "mgmt_analyst",
+          "weight": 0.01776835118754209,
+          "now": 55.90000000000001,
+          "sixMonths": 63.722500000000004,
+          "twelveMonths": 68.902625
+        },
+        {
+          "id": "proj_mgmt",
+          "weight": 0.02055669723751536,
+          "now": 48.599999999999994,
+          "sixMonths": 55.7515,
+          "twelveMonths": 60.899995000000004
+        },
+        {
+          "id": "mkt_research",
+          "weight": 0.013902677784180454,
+          "now": 64.2,
+          "sixMonths": 72.3525,
+          "twelveMonths": 77.632125
+        },
+        {
+          "id": "hr_spec",
+          "weight": 0.012979998194908252,
+          "now": 61.7,
+          "sixMonths": 69.3,
+          "twelveMonths": 74.235
+        },
+        {
+          "id": "fin_analyst",
+          "weight": 0.007351236140713844,
+          "now": 61.50000000000001,
+          "sixMonths": 70.325,
+          "twelveMonths": 75.90125
+        },
+        {
+          "id": "fin_advisor",
+          "weight": 0.007275734707054437,
+          "now": 42.2,
+          "sixMonths": 49.735,
+          "twelveMonths": 55.06975
+        },
+        {
+          "id": "claims_adj",
+          "weight": 0.004498844047015697,
+          "now": 65.85,
+          "sixMonths": 72.20599999999999,
+          "twelveMonths": 76.08008
+        },
+        {
+          "id": "loan_officer",
+          "weight": 0.00418503578941522,
+          "now": 48.7,
+          "sixMonths": 56.475,
+          "twelveMonths": 61.81875000000001
+        },
+        {
+          "id": "compliance_off",
+          "weight": 0.006369196803599075,
+          "now": 61.65,
+          "sixMonths": 69.0345,
+          "twelveMonths": 73.69348500000001
+        },
+        {
+          "id": "buyer",
+          "weight": 0.007158577309996737,
+          "now": 48.1,
+          "sixMonths": 56.614999999999995,
+          "twelveMonths": 62.402750000000005
+        },
+        {
+          "id": "training",
+          "weight": 0.006041503224865833,
+          "now": 42.50000000000001,
+          "sixMonths": 48.2225,
+          "twelveMonths": 52.338125
+        },
+        {
+          "id": "logistician",
+          "weight": 0.0039208675548643756,
+          "now": 54.89999999999999,
+          "sixMonths": 64.75,
+          "twelveMonths": 71.0125
+        },
+        {
+          "id": "underwriter",
+          "weight": 0.0017131014947548199,
+          "now": 63.6,
+          "sixMonths": 73.14999999999999,
+          "twelveMonths": 79.02250000000001
+        },
+        {
+          "id": "cost_estimator",
+          "weight": 0.0033047064295979507,
+          "now": 52.65,
+          "sixMonths": 60.761,
+          "twelveMonths": 65.90183000000002
+        },
+        {
+          "id": "bizops_other",
+          "weight": 0.017734679283795136,
+          "now": 63.90000000000001,
+          "sixMonths": 71.6525,
+          "twelveMonths": 76.752125
+        },
+        {
+          "id": "swe",
+          "weight": 0.04336108083339697,
+          "now": 65.80000000000001,
+          "sixMonths": 73.84499999999998,
+          "twelveMonths": 78.87
+        },
+        {
+          "id": "qa",
+          "weight": 0.0036027201344099088,
+          "now": 65,
+          "sixMonths": 73.24999999999999,
+          "twelveMonths": 78.1625
+        },
+        {
+          "id": "user_support",
+          "weight": 0.008337961773710921,
+          "now": 65.5,
+          "sixMonths": 71.31599999999999,
+          "twelveMonths": 74.86608
+        },
+        {
+          "id": "sys_analyst",
+          "weight": 0.010379277546741462,
+          "now": 50.30000000000001,
+          "sixMonths": 59.0675,
+          "twelveMonths": 65.097125
+        },
+        {
+          "id": "sysadmin",
+          "weight": 0.0056679880863944685,
+          "now": 59.550000000000004,
+          "sixMonths": 67.7785,
+          "twelveMonths": 72.80195499999999
+        },
+        {
+          "id": "infosec",
+          "weight": 0.0044091101591952064,
+          "now": 67,
+          "sixMonths": 76.94999999999999,
+          "twelveMonths": 83.1075
+        },
+        {
+          "id": "data_sci",
+          "weight": 0.005775252192145074,
+          "now": 69.1,
+          "sixMonths": 78.01500000000001,
+          "twelveMonths": 83.41275000000002
+        },
+        {
+          "id": "web_dev",
+          "weight": 0.0035129862465894178,
+          "now": 58.5,
+          "sixMonths": 67.4725,
+          "twelveMonths": 73.45712499999999
+        },
+        {
+          "id": "dba",
+          "weight": 0.0030198837798621186,
+          "now": 60.900000000000006,
+          "sixMonths": 70,
+          "twelveMonths": 75.79225
+        },
+        {
+          "id": "programmer",
+          "weight": 0.001676652526781313,
+          "now": 76.00000000000001,
+          "sixMonths": 84.0375,
+          "twelveMonths": 88.56937500000001
+        },
+        {
+          "id": "ops_research",
+          "weight": 0.0018918750043391628,
+          "now": 67.2,
+          "sixMonths": 76.735,
+          "twelveMonths": 82.54075
+        },
+        {
+          "id": "actuary",
+          "weight": 0.001244124773495699,
+          "now": 68.7,
+          "sixMonths": 78.6775,
+          "twelveMonths": 84.67937500000001
+        },
+        {
+          "id": "comp_other",
+          "weight": 0.009211174906447649,
+          "now": 58.300000000000004,
+          "sixMonths": 66.7225,
+          "twelveMonths": 72.25037499999999
+        },
+        {
+          "id": "net_architect",
+          "weight": 0.006450425932225747,
+          "now": 57.35,
+          "sixMonths": 65.73349999999999,
+          "twelveMonths": 71.038205
+        },
+        {
+          "id": "civil_eng",
+          "weight": 0.006962100015968119,
+          "now": 46.15,
+          "sixMonths": 53.230999999999995,
+          "twelveMonths": 58.54133
+        },
+        {
+          "id": "mech_eng",
+          "weight": 0.005876615036414254,
+          "now": 49.099999999999994,
+          "sixMonths": 57.5815,
+          "twelveMonths": 63.653845
+        },
+        {
+          "id": "ind_eng",
+          "weight": 0.006987787860063733,
+          "now": 41.800000000000004,
+          "sixMonths": 49.9905,
+          "twelveMonths": 55.696065
+        },
+        {
+          "id": "elec_eng",
+          "weight": 0.006627463776668495,
+          "now": 49.99999999999999,
+          "sixMonths": 58.2415,
+          "twelveMonths": 64.08884499999999
+        },
+        {
+          "id": "other_eng",
+          "weight": 0.011047508626255753,
+          "now": 49.39999999999999,
+          "sixMonths": 57.74399999999999,
+          "twelveMonths": 63.71322
+        },
+        {
+          "id": "architect",
+          "weight": 0.0019685914035976865,
+          "now": 40.8,
+          "sixMonths": 48.4815,
+          "twelveMonths": 54.186345
+        },
+        {
+          "id": "drafters_techs",
+          "weight": 0.007918972208529752,
+          "now": 42.15,
+          "sixMonths": 49.059,
+          "twelveMonths": 53.82927
+        },
+        {
+          "id": "scientists",
+          "weight": 0.012221859661059311,
+          "now": 47.4,
+          "sixMonths": 53.847,
+          "twelveMonths": 57.97491000000001
+        },
+        {
+          "id": "social_sci",
+          "weight": 0.005317036594763846,
+          "now": 56.39999999999999,
+          "sixMonths": 63.579,
+          "twelveMonths": 68.16627
+        },
+        {
+          "id": "sci_tech",
+          "weight": 0.004021189000048599,
+          "now": 36,
+          "sixMonths": 40.672,
+          "twelveMonths": 43.696960000000004
+        },
+        {
+          "id": "social_worker",
+          "weight": 0.009158757819171463,
+          "now": 40.35,
+          "sixMonths": 45.699,
+          "twelveMonths": 49.364670000000004
+        },
+        {
+          "id": "counselor",
+          "weight": 0.011856328582239286,
+          "now": 31.2,
+          "sixMonths": 35.346999999999994,
+          "twelveMonths": 38.397310000000004
+        },
+        {
+          "id": "social_assist",
+          "weight": 0.00364906239369051,
+          "now": 46.2,
+          "sixMonths": 51.873999999999995,
+          "twelveMonths": 55.59592
+        },
+        {
+          "id": "lawyer",
+          "weight": 0.024373945583426482,
+          "now": 52.6,
+          "sixMonths": 59.1425,
+          "twelveMonths": 63.868624999999994
+        },
+        {
+          "id": "paralegal",
+          "weight": 0.0047748148045293915,
+          "now": 79,
+          "sixMonths": 86.16,
+          "twelveMonths": 90.45599999999999
+        },
+        {
+          "id": "legal_other",
+          "weight": 0.0023657115879947514,
+          "now": 61.4,
+          "sixMonths": 69.155,
+          "twelveMonths": 74.42675
+        },
+        {
+          "id": "k12_teacher",
+          "weight": 0.053130445649381755,
+          "now": 26.2,
+          "sixMonths": 30.757,
+          "twelveMonths": 34.16251
+        },
+        {
+          "id": "postsec",
+          "weight": 0.024509848164013415,
+          "now": 48.300000000000004,
+          "sixMonths": 54.0725,
+          "twelveMonths": 57.996125
+        },
+        {
+          "id": "teach_assist",
+          "weight": 0.009365649104049655,
+          "now": 17.95,
+          "sixMonths": 21.382,
+          "twelveMonths": 24.049359999999997
+        },
+        {
+          "id": "librarian",
+          "weight": 0.0026104403729597255,
+          "now": 58.25,
+          "sixMonths": 63.15799999999999,
+          "twelveMonths": 66.26744
+        },
+        {
+          "id": "instr_coord",
+          "weight": 0.0032054263834986846,
+          "now": 46,
+          "sixMonths": 52.800000000000004,
+          "twelveMonths": 57.3675
+        },
+        {
+          "id": "writers",
+          "weight": 0.0029219922658761293,
+          "now": 77.5,
+          "sixMonths": 83.09500000000001,
+          "twelveMonths": 86.59075
+        },
+        {
+          "id": "pr",
+          "weight": 0.00412602317460097,
+          "now": 51.599999999999994,
+          "sixMonths": 57.777499999999996,
+          "twelveMonths": 62.228374999999986
+        },
+        {
+          "id": "designers",
+          "weight": 0.002799975006421961,
+          "now": 40.4,
+          "sixMonths": 50.625,
+          "twelveMonths": 58.40625
+        },
+        {
+          "id": "translators",
+          "weight": 0.0005956802765955969,
+          "now": 71.4,
+          "sixMonths": 77.85000000000001,
+          "twelveMonths": 81.86250000000001
+        },
+        {
+          "id": "producers",
+          "weight": 0.0028046613023042693,
+          "now": 28.750000000000004,
+          "sixMonths": 35.524,
+          "twelveMonths": 40.82782
+        },
+        {
+          "id": "reporters",
+          "weight": 0.0006904475933267146,
+          "now": 60.39999999999999,
+          "sixMonths": 65.984,
+          "twelveMonths": 69.65972
+        },
+        {
+          "id": "physician",
+          "weight": 0.03949193609975215,
+          "now": 30.849999999999998,
+          "sixMonths": 35.517999999999994,
+          "twelveMonths": 39.04624
+        },
+        {
+          "id": "pharmacist",
+          "weight": 0.007880266875872172,
+          "now": 42.1,
+          "sixMonths": 48.08599999999999,
+          "twelveMonths": 52.15448
+        },
+        {
+          "id": "med_records",
+          "weight": 0.002426459867950596,
+          "now": 77.55,
+          "sixMonths": 84.91,
+          "twelveMonths": 89.326
+        },
+        {
+          "id": "sales_rep",
+          "weight": 0.02352642029478537,
+          "now": 40.9,
+          "sixMonths": 47.525000000000006,
+          "twelveMonths": 52.486250000000005
+        },
+        {
+          "id": "fin_sales",
+          "weight": 0.015977665460957947,
+          "now": 39.1,
+          "sixMonths": 46.385000000000005,
+          "twelveMonths": 51.742250000000006
+        },
+        {
+          "id": "real_estate",
+          "weight": 0.0029867325756576437,
+          "now": 29,
+          "sixMonths": 34.438,
+          "twelveMonths": 38.688939999999995
+        },
+        {
+          "id": "ad_sales",
+          "weight": 0.001293417663517013,
+          "now": 36.4,
+          "sixMonths": 43.260000000000005,
+          "twelveMonths": 48.56100000000001
+        },
+        {
+          "id": "sales_services",
+          "weight": 0.017875962426321015,
+          "now": 42.7,
+          "sixMonths": 48.685,
+          "twelveMonths": 53.26225
+        },
+        {
+          "id": "sales_super",
+          "weight": 0.003677180168984358,
+          "now": 25.05,
+          "sixMonths": 31.029,
+          "twelveMonths": 35.680170000000004
+        },
+        {
+          "id": "csr",
+          "weight": 0.021177197525635773,
+          "now": 79.35000000000001,
+          "sixMonths": 84.625,
+          "twelveMonths": 87.86875
+        },
+        {
+          "id": "office_clerk",
+          "weight": 0.01968070704055208,
+          "now": 67.50000000000001,
+          "sixMonths": 73.776,
+          "twelveMonths": 77.60208000000002
+        },
+        {
+          "id": "secretary",
+          "weight": 0.01451762394384776,
+          "now": 69.35,
+          "sixMonths": 76.614,
+          "twelveMonths": 81.01271999999999
+        },
+        {
+          "id": "exec_asst",
+          "weight": 0.0063074071245582735,
+          "now": 58.8,
+          "sixMonths": 67.17,
+          "twelveMonths": 72.54450000000001
+        },
+        {
+          "id": "med_secretary",
+          "weight": 0.007847636371210175,
+          "now": 75.5,
+          "sixMonths": 83.74,
+          "twelveMonths": 88.684
+        },
+        {
+          "id": "bookkeeper",
+          "weight": 0.012877941084582433,
+          "now": 74.15,
+          "sixMonths": 83.37,
+          "twelveMonths": 88.902
+        },
+        {
+          "id": "receptionist",
+          "weight": 0.006159875587522651,
+          "now": 58.4,
+          "sixMonths": 64.2,
+          "twelveMonths": 67.7808
+        },
+        {
+          "id": "office_super",
+          "weight": 0.018207300901851606,
+          "now": 44.45,
+          "sixMonths": 50.67649999999999,
+          "twelveMonths": 54.938045
+        },
+        {
+          "id": "billing",
+          "weight": 0.0051238570645042595,
+          "now": 75.45,
+          "sixMonths": 84.07,
+          "twelveMonths": 89.242
+        },
+        {
+          "id": "data_entry",
+          "weight": 0.0009478467338253366,
+          "now": 83.95,
+          "sixMonths": 89.85,
+          "twelveMonths": 93.39
+        },
+        {
+          "id": "ins_clerk",
+          "weight": 0.0019685914035976865,
+          "now": 80.2,
+          "sixMonths": 86.84,
+          "twelveMonths": 90.824
+        },
+        {
+          "id": "collectors",
+          "weight": 0.0013522567118171025,
+          "now": 65.30000000000001,
+          "sixMonths": 71.19,
+          "twelveMonths": 75.1965
+        },
+        {
+          "id": "expediting",
+          "weight": 0.004196838312378069,
+          "now": 51.800000000000004,
+          "sixMonths": 59.778000000000006,
+          "twelveMonths": 64.78793999999999
+        },
+        {
+          "id": "tellers",
+          "weight": 0.002398342092656748,
+          "now": 50.1,
+          "sixMonths": 55.402,
+          "twelveMonths": 58.86166000000001
+        },
+        {
+          "id": "dispatchers",
+          "weight": 0.0019378701305914452,
+          "now": 72.7,
+          "sixMonths": 81.9,
+          "twelveMonths": 87.42
+        },
+        {
+          "id": "loan_clerks",
+          "weight": 0.0018231426647319785,
+          "now": 77,
+          "sixMonths": 84.02,
+          "twelveMonths": 88.23200000000001
+        },
+        {
+          "id": "legal_secretary",
+          "weight": 0.001651658948742337,
+          "now": 77.39999999999999,
+          "sixMonths": 85.08,
+          "twelveMonths": 89.68799999999999
+        }
+      ]
+    },
+    "employment": {
+      "now": 50.4439209625969,
+      "sixMonths": 57.11403001504054,
+      "twelveMonths": 61.620246019040394,
+      "occupations": [
+        {
+          "id": "gen_ops_mgr",
+          "weight": 0.05789795547328232,
+          "now": 36.75,
+          "sixMonths": 43.03,
+          "twelveMonths": 47.7543
+        },
+        {
+          "id": "ceo",
+          "weight": 0.0033717336330429896,
+          "now": 26.3,
+          "sixMonths": 32.316,
+          "twelveMonths": 37.100179999999995
+        },
+        {
+          "id": "fin_mgr",
+          "weight": 0.013916665289324497,
+          "now": 44.75,
+          "sixMonths": 52.3505,
+          "twelveMonths": 57.50436499999999
+        },
+        {
+          "id": "it_mgr",
+          "weight": 0.011090359155744344,
+          "now": 34.800000000000004,
+          "sixMonths": 41.232499999999995,
+          "twelveMonths": 46.282174999999995
+        },
+        {
+          "id": "mkt_mgr",
+          "weight": 0.00652860188750971,
+          "now": 42.699999999999996,
+          "sixMonths": 49.44049999999999,
+          "twelveMonths": 54.326364999999996
+        },
+        {
+          "id": "sales_mgr",
+          "weight": 0.01052840355023718,
+          "now": 28.1,
+          "sixMonths": 34.159499999999994,
+          "twelveMonths": 38.804235000000006
+        },
+        {
+          "id": "health_mgr",
+          "weight": 0.009867279308464044,
+          "now": 43.150000000000006,
+          "sixMonths": 50.190000000000005,
+          "twelveMonths": 55.0983
+        },
+        {
+          "id": "hr_mgr",
+          "weight": 0.003652711435796572,
+          "now": 37.95,
+          "sixMonths": 43.812,
+          "twelveMonths": 48.08286
+        },
+        {
+          "id": "edu_admin",
+          "weight": 0.010544931656281507,
+          "now": 34.2,
+          "sixMonths": 40.0115,
+          "twelveMonths": 44.18799500000001
+        },
+        {
+          "id": "constr_mgr",
+          "weight": 0.006280680296844784,
+          "now": 33.45,
+          "sixMonths": 39.028,
+          "twelveMonths": 43.09954
+        },
+        {
+          "id": "admin_mgr",
+          "weight": 0.0043634199957026925,
+          "now": 41.6,
+          "sixMonths": 47.562,
+          "twelveMonths": 51.92886
+        },
+        {
+          "id": "arch_eng_mgr",
+          "weight": 0.0036361833297522436,
+          "now": 33.1,
+          "sixMonths": 39.790000000000006,
+          "twelveMonths": 45.074799999999996
+        },
+        {
+          "id": "prod_mgr",
+          "weight": 0.007718625522701353,
+          "now": 30.7,
+          "sixMonths": 36.64249999999999,
+          "twelveMonths": 40.743725
+        },
+        {
+          "id": "property_mgr",
+          "weight": 0.005140240979786126,
+          "now": 33.15,
+          "sixMonths": 38.644000000000005,
+          "twelveMonths": 42.574419999999996
+        },
+        {
+          "id": "mgr_other",
+          "weight": 0.010280481959572253,
+          "now": 36.75,
+          "sixMonths": 43.03,
+          "twelveMonths": 47.7543
+        },
+        {
+          "id": "accountant",
+          "weight": 0.023965753764276152,
+          "now": 64.2,
+          "sixMonths": 73.83,
+          "twelveMonths": 79.75049999999999
+        },
+        {
+          "id": "mgmt_analyst",
+          "weight": 0.014842239227806886,
+          "now": 55.90000000000001,
+          "sixMonths": 63.722500000000004,
+          "twelveMonths": 68.902625
+        },
+        {
+          "id": "proj_mgmt",
+          "weight": 0.017635489149298383,
+          "now": 48.599999999999994,
+          "sixMonths": 55.7515,
+          "twelveMonths": 60.899995000000004
+        },
+        {
+          "id": "mkt_research",
+          "weight": 0.014875295439895542,
+          "now": 64.2,
+          "sixMonths": 72.3525,
+          "twelveMonths": 77.632125
+        },
+        {
+          "id": "hr_spec",
+          "weight": 0.015073632712427483,
+          "now": 61.7,
+          "sixMonths": 69.3,
+          "twelveMonths": 74.235
+        },
+        {
+          "id": "fin_analyst",
+          "weight": 0.005983174388046874,
+          "now": 61.50000000000001,
+          "sixMonths": 70.325,
+          "twelveMonths": 75.90125
+        },
+        {
+          "id": "fin_advisor",
+          "weight": 0.004413004313835678,
+          "now": 42.2,
+          "sixMonths": 49.735,
+          "twelveMonths": 55.06975
+        },
+        {
+          "id": "claims_adj",
+          "weight": 0.005355106358362395,
+          "now": 65.85,
+          "sixMonths": 72.20599999999999,
+          "twelveMonths": 76.08008
+        },
+        {
+          "id": "loan_officer",
+          "weight": 0.004528701056145976,
+          "now": 48.7,
+          "sixMonths": 56.475,
+          "twelveMonths": 61.81875000000001
+        },
+        {
+          "id": "compliance_off",
+          "weight": 0.006892220220484934,
+          "now": 61.65,
+          "sixMonths": 69.0345,
+          "twelveMonths": 73.69348500000001
+        },
+        {
+          "id": "buyer",
+          "weight": 0.008115300067765235,
+          "now": 48.1,
+          "sixMonths": 56.614999999999995,
+          "twelveMonths": 62.402750000000005
+        },
+        {
+          "id": "training",
+          "weight": 0.007569872568302398,
+          "now": 42.50000000000001,
+          "sixMonths": 48.2225,
+          "twelveMonths": 52.338125
+        },
+        {
+          "id": "logistician",
+          "weight": 0.004148554617126423,
+          "now": 54.89999999999999,
+          "sixMonths": 64.75,
+          "twelveMonths": 71.0125
+        },
+        {
+          "id": "underwriter",
+          "weight": 0.00173545113465448,
+          "now": 63.6,
+          "sixMonths": 73.14999999999999,
+          "twelveMonths": 79.02250000000001
+        },
+        {
+          "id": "cost_estimator",
+          "weight": 0.0037022957539295572,
+          "now": 52.65,
+          "sixMonths": 60.761,
+          "twelveMonths": 65.90183000000002
+        },
+        {
+          "id": "bizops_other",
+          "weight": 0.01796605127018495,
+          "now": 63.90000000000001,
+          "sixMonths": 71.6525,
+          "twelveMonths": 76.752125
+        },
+        {
+          "id": "swe",
+          "weight": 0.027899443002826305,
+          "now": 65.80000000000001,
+          "sixMonths": 73.84499999999998,
+          "twelveMonths": 78.87
+        },
+        {
+          "id": "qa",
+          "weight": 0.0030907558302894073,
+          "now": 65,
+          "sixMonths": 73.24999999999999,
+          "twelveMonths": 78.1625
+        },
+        {
+          "id": "user_support",
+          "weight": 0.011850652033783448,
+          "now": 65.5,
+          "sixMonths": 71.31599999999999,
+          "twelveMonths": 74.86608
+        },
+        {
+          "id": "sys_analyst",
+          "weight": 0.008594615143050759,
+          "now": 50.30000000000001,
+          "sixMonths": 59.0675,
+          "twelveMonths": 65.097125
+        },
+        {
+          "id": "sysadmin",
+          "weight": 0.005189825297919112,
+          "now": 59.550000000000004,
+          "sixMonths": 67.7785,
+          "twelveMonths": 72.80195499999999
+        },
+        {
+          "id": "infosec",
+          "weight": 0.003156868254466721,
+          "now": 67,
+          "sixMonths": 76.94999999999999,
+          "twelveMonths": 83.1075
+        },
+        {
+          "id": "data_sci",
+          "weight": 0.004330363783614036,
+          "now": 69.1,
+          "sixMonths": 78.01500000000001,
+          "twelveMonths": 83.41275000000002
+        },
+        {
+          "id": "web_dev",
+          "weight": 0.003041171512156422,
+          "now": 58.5,
+          "sixMonths": 67.4725,
+          "twelveMonths": 73.45712499999999
+        },
+        {
+          "id": "dba",
+          "weight": 0.002264350528072988,
+          "now": 60.900000000000006,
+          "sixMonths": 70,
+          "twelveMonths": 75.79225
+        },
+        {
+          "id": "programmer",
+          "weight": 0.001520585756078211,
+          "now": 76.00000000000001,
+          "sixMonths": 84.0375,
+          "twelveMonths": 88.56937500000001
+        },
+        {
+          "id": "ops_research",
+          "weight": 0.0018015635588317935,
+          "now": 67.2,
+          "sixMonths": 76.735,
+          "twelveMonths": 82.54075
+        },
+        {
+          "id": "actuary",
+          "weight": 0.0009255739384823893,
+          "now": 68.7,
+          "sixMonths": 78.6775,
+          "twelveMonths": 84.67937500000001
+        },
+        {
+          "id": "comp_other",
+          "weight": 0.007189726129282845,
+          "now": 58.300000000000004,
+          "sixMonths": 66.7225,
+          "twelveMonths": 72.25037499999999
+        },
+        {
+          "id": "net_architect",
+          "weight": 0.005388162570451052,
+          "now": 57.35,
+          "sixMonths": 65.73349999999999,
+          "twelveMonths": 71.038205
+        },
+        {
+          "id": "civil_eng",
+          "weight": 0.006082343024312844,
+          "now": 46.15,
+          "sixMonths": 53.230999999999995,
+          "twelveMonths": 58.54133
+        },
+        {
+          "id": "mech_eng",
+          "weight": 0.004908847495165529,
+          "now": 49.099999999999994,
+          "sixMonths": 57.5815,
+          "twelveMonths": 63.653845
+        },
+        {
+          "id": "ind_eng",
+          "weight": 0.006049286812224187,
+          "now": 41.800000000000004,
+          "sixMonths": 49.9905,
+          "twelveMonths": 55.696065
+        },
+        {
+          "id": "elec_eng",
+          "weight": 0.0048923193891212005,
+          "now": 49.99999999999999,
+          "sixMonths": 58.2415,
+          "twelveMonths": 64.08884499999999
+        },
+        {
+          "id": "other_eng",
+          "weight": 0.00785085037105598,
+          "now": 49.39999999999999,
+          "sixMonths": 57.74399999999999,
+          "twelveMonths": 63.71322
+        },
+        {
+          "id": "architect",
+          "weight": 0.0017685073467431367,
+          "now": 40.8,
+          "sixMonths": 48.4815,
+          "twelveMonths": 54.186345
+        },
+        {
+          "id": "drafters_techs",
+          "weight": 0.010330066277705238,
+          "now": 42.15,
+          "sixMonths": 49.059,
+          "twelveMonths": 53.82927
+        },
+        {
+          "id": "scientists",
+          "weight": 0.010776325140902104,
+          "now": 47.4,
+          "sixMonths": 53.847,
+          "twelveMonths": 57.97491000000001
+        },
+        {
+          "id": "social_sci",
+          "weight": 0.004776622646810902,
+          "now": 56.39999999999999,
+          "sixMonths": 63.579,
+          "twelveMonths": 68.16627
+        },
+        {
+          "id": "sci_tech",
+          "weight": 0.005983174388046874,
+          "now": 36,
+          "sixMonths": 40.672,
+          "twelveMonths": 43.696960000000004
+        },
+        {
+          "id": "social_worker",
+          "weight": 0.012825810290398823,
+          "now": 40.35,
+          "sixMonths": 45.699,
+          "twelveMonths": 49.364670000000004
+        },
+        {
+          "id": "counselor",
+          "weight": 0.017106589755879874,
+          "now": 31.2,
+          "sixMonths": 35.346999999999994,
+          "twelveMonths": 38.397310000000004
+        },
+        {
+          "id": "social_assist",
+          "weight": 0.007239310447415831,
+          "now": 46.2,
+          "sixMonths": 51.873999999999995,
+          "twelveMonths": 55.59592
+        },
+        {
+          "id": "lawyer",
+          "weight": 0.012478720063467928,
+          "now": 52.6,
+          "sixMonths": 59.1425,
+          "twelveMonths": 63.868624999999994
+        },
+        {
+          "id": "paralegal",
+          "weight": 0.006495545675421053,
+          "now": 79,
+          "sixMonths": 86.16,
+          "twelveMonths": 90.45599999999999
+        },
+        {
+          "id": "legal_other",
+          "weight": 0.002396575376427615,
+          "now": 61.4,
+          "sixMonths": 69.155,
+          "twelveMonths": 74.42675
+        },
+        {
+          "id": "k12_teacher",
+          "weight": 0.072277407731848,
+          "now": 26.2,
+          "sixMonths": 30.757,
+          "twelveMonths": 34.16251
+        },
+        {
+          "id": "postsec",
+          "weight": 0.02266003338677421,
+          "now": 48.300000000000004,
+          "sixMonths": 54.0725,
+          "twelveMonths": 57.996125
+        },
+        {
+          "id": "teach_assist",
+          "weight": 0.0234699105829463,
+          "now": 17.95,
+          "sixMonths": 21.382,
+          "twelveMonths": 24.049359999999997
+        },
+        {
+          "id": "librarian",
+          "weight": 0.0038841049204171693,
+          "now": 58.25,
+          "sixMonths": 63.15799999999999,
+          "twelveMonths": 66.26744
+        },
+        {
+          "id": "instr_coord",
+          "weight": 0.003768408178106871,
+          "now": 46,
+          "sixMonths": 52.800000000000004,
+          "twelveMonths": 57.3675
+        },
+        {
+          "id": "writers",
+          "weight": 0.0030576996182007502,
+          "now": 77.5,
+          "sixMonths": 83.09500000000001,
+          "twelveMonths": 86.59075
+        },
+        {
+          "id": "pr",
+          "weight": 0.004677454010544931,
+          "now": 51.599999999999994,
+          "sixMonths": 57.777499999999996,
+          "twelveMonths": 62.228374999999986
+        },
+        {
+          "id": "designers",
+          "weight": 0.003603127117663587,
+          "now": 40.4,
+          "sixMonths": 50.625,
+          "twelveMonths": 58.40625
+        },
+        {
+          "id": "translators",
+          "weight": 0.0008594615143050758,
+          "now": 71.4,
+          "sixMonths": 77.85000000000001,
+          "twelveMonths": 81.86250000000001
+        },
+        {
+          "id": "producers",
+          "weight": 0.0023635191643389584,
+          "now": 28.750000000000004,
+          "sixMonths": 35.524,
+          "twelveMonths": 40.82782
+        },
+        {
+          "id": "reporters",
+          "weight": 0.0006445961357288069,
+          "now": 60.39999999999999,
+          "sixMonths": 65.984,
+          "twelveMonths": 69.65972
+        },
+        {
+          "id": "physician",
+          "weight": 0.013288597259640017,
+          "now": 30.849999999999998,
+          "sixMonths": 35.517999999999994,
+          "twelveMonths": 39.04624
+        },
+        {
+          "id": "pharmacist",
+          "weight": 0.005322050146273739,
+          "now": 42.1,
+          "sixMonths": 48.08599999999999,
+          "twelveMonths": 52.15448
+        },
+        {
+          "id": "med_records",
+          "weight": 0.0038510487083285127,
+          "now": 77.55,
+          "sixMonths": 84.91,
+          "twelveMonths": 89.326
+        },
+        {
+          "id": "sales_rep",
+          "weight": 0.025172305505512124,
+          "now": 40.9,
+          "sixMonths": 47.525000000000006,
+          "twelveMonths": 52.486250000000005
+        },
+        {
+          "id": "fin_sales",
+          "weight": 0.0160157347569542,
+          "now": 39.1,
+          "sixMonths": 46.385000000000005,
+          "twelveMonths": 51.742250000000006
+        },
+        {
+          "id": "real_estate",
+          "weight": 0.003950217344594483,
+          "now": 29,
+          "sixMonths": 34.438,
+          "twelveMonths": 38.688939999999995
+        },
+        {
+          "id": "ad_sales",
+          "weight": 0.001520585756078211,
+          "now": 36.4,
+          "sixMonths": 43.260000000000005,
+          "twelveMonths": 48.56100000000001
+        },
+        {
+          "id": "sales_services",
+          "weight": 0.020759301191676446,
+          "now": 42.7,
+          "sixMonths": 48.685,
+          "twelveMonths": 53.26225
+        },
+        {
+          "id": "sales_super",
+          "weight": 0.0035370146934862734,
+          "now": 25.05,
+          "sixMonths": 31.029,
+          "twelveMonths": 35.680170000000004
+        },
+        {
+          "id": "csr",
+          "weight": 0.042906963291076475,
+          "now": 79.35000000000001,
+          "sixMonths": 84.625,
+          "twelveMonths": 87.86875
+        },
+        {
+          "id": "office_clerk",
+          "weight": 0.040741781399269456,
+          "now": 67.50000000000001,
+          "sixMonths": 73.776,
+          "twelveMonths": 77.60208000000002
+        },
+        {
+          "id": "secretary",
+          "weight": 0.028213477017668544,
+          "now": 69.35,
+          "sixMonths": 76.614,
+          "twelveMonths": 81.01271999999999
+        },
+        {
+          "id": "exec_asst",
+          "weight": 0.007602928780391055,
+          "now": 58.8,
+          "sixMonths": 67.17,
+          "twelveMonths": 72.54450000000001
+        },
+        {
+          "id": "med_secretary",
+          "weight": 0.015900038014643902,
+          "now": 75.5,
+          "sixMonths": 83.74,
+          "twelveMonths": 88.684
+        },
+        {
+          "id": "bookkeeper",
+          "weight": 0.022709617704907193,
+          "now": 74.15,
+          "sixMonths": 83.37,
+          "twelveMonths": 88.902
+        },
+        {
+          "id": "receptionist",
+          "weight": 0.015040576500338826,
+          "now": 58.4,
+          "sixMonths": 64.2,
+          "twelveMonths": 67.7808
+        },
+        {
+          "id": "office_super",
+          "weight": 0.023750888385699883,
+          "now": 44.45,
+          "sixMonths": 50.67649999999999,
+          "twelveMonths": 54.938045
+        },
+        {
+          "id": "billing",
+          "weight": 0.009206155066690909,
+          "now": 75.45,
+          "sixMonths": 84.07,
+          "twelveMonths": 89.242
+        },
+        {
+          "id": "data_entry",
+          "weight": 0.0020990694676297043,
+          "now": 83.95,
+          "sixMonths": 89.85,
+          "twelveMonths": 93.39
+        },
+        {
+          "id": "ins_clerk",
+          "weight": 0.0035370146934862734,
+          "now": 80.2,
+          "sixMonths": 86.84,
+          "twelveMonths": 90.824
+        },
+        {
+          "id": "collectors",
+          "weight": 0.0026279688610482124,
+          "now": 65.30000000000001,
+          "sixMonths": 71.19,
+          "twelveMonths": 75.1965
+        },
+        {
+          "id": "expediting",
+          "weight": 0.006445961357288068,
+          "now": 51.800000000000004,
+          "sixMonths": 59.778000000000006,
+          "twelveMonths": 64.78793999999999
+        },
+        {
+          "id": "tellers",
+          "weight": 0.005437746888584037,
+          "now": 50.1,
+          "sixMonths": 55.402,
+          "twelveMonths": 58.86166000000001
+        },
+        {
+          "id": "dispatchers",
+          "weight": 0.0033552055269986613,
+          "now": 72.7,
+          "sixMonths": 81.9,
+          "twelveMonths": 87.42
+        },
+        {
+          "id": "loan_clerks",
+          "weight": 0.003338677420954333,
+          "now": 77,
+          "sixMonths": 84.02,
+          "twelveMonths": 88.23200000000001
+        },
+        {
+          "id": "legal_secretary",
+          "weight": 0.0025783845429152275,
+          "now": 77.39999999999999,
+          "sixMonths": 85.08,
+          "twelveMonths": 89.68799999999999
+        }
+      ]
+    }
+  }
+}
