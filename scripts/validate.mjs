@@ -20,8 +20,9 @@ const assessment = assessments[id];
 const pct = (x) => x.toFixed(1).padStart(5);
 for (const weight of ["wage", "employment"]) {
   const m = computeModel({ taxonomy, occupations, assessment, weight });
-  const { f0, f1, f2, limit, flatAt, band, confidence } = m.index;
-  console.log(`${id} weighted by ${weight}: Frontier ${pct(f0)}  F+1 ${pct(f1)} ±${band.f1.toFixed(1)}  F+2 ${pct(f2)} ±${band.f2.toFixed(1)}  ceiling ${pct(limit)}  gains < 1pt/gen at gen ${flatAt}  confidence high/medium/low ${pct(confidence.high)}/${pct(confidence.medium)}/${pct(confidence.low)}%`);
+  const { f0, f1, f2, limit, flatAt, range, confidence } = m.index;
+  const span = ([lo, hi]) => `(${lo.toFixed(1)}–${hi.toFixed(1)})`;
+  console.log(`${id} weighted by ${weight}: Frontier ${pct(f0)}  F+1 ${pct(f1)} ${span(range.f1)}  F+2 ${pct(f2)} ${span(range.f2)}  ceiling ${pct(limit)}  gains < 1pt/gen at gen ${flatAt}  confidence high/medium/low ${pct(confidence.high)}/${pct(confidence.medium)}/${pct(confidence.low)}%`);
 }
 for (const sid of index.assessments) {
   const a = assessments[sid];

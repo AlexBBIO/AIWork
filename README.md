@@ -12,11 +12,11 @@ A regularly updated model of how much U.S. white-collar work AI models can do, a
 
 Each task type also has a **ceiling**: the most of that task AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference. Past Frontier+2 the model keeps closing each task type's remaining gap to its ceiling at the rate implied by its last step, unless the assessment states an explicit lower `asymptote` for that type. The **saturation point** is the first generation that adds less than one point to the overall index; the one-point threshold is a convention.
 
-Frontier+1 and Frontier+2 are not separate judgments: each is Now + g × (Ceiling − Now), applied twice, with a closure rate g per cluster of task types (see the report). Every task type carries a **confidence** (high, medium, low) and a forecast **range**: ±5 points at Frontier+1 and ±8 at Frontier+2 for medium confidence, scaled by 0.6 for high and 1.4 for low (`uncertainty` in the assessment). The index range sums the task-type ranges, which assumes their errors move together.
+Frontier+1 and Frontier+2 are not separate judgments: each is Now + g × (Ceiling − Now), applied twice, with a closure rate g per cluster of task types (see the report). Every task type carries a **confidence** (high, medium, low) and a forecast **range**: 5 points either side at Frontier+1 and 8 at Frontier+2 for medium confidence, scaled by 0.6 for high and 1.4 for low (`uncertainty` in the assessment), and cut off at today's score and at the ceiling, since scores do not fall and cannot pass the ceiling. The index range sums the task-type ranges, which assumes their errors move together.
 
 Occupations are weighted by **wages** (employment × mean wage) or by **people** (headcount).
 
-**History:** each Claude Opus release since Opus 4.1 (Aug 2025) is a dated snapshot. Earlier snapshots are *backfilled*: scored after the fact from benchmark results, for the frontier only, and the point reflects the best public model on that date even when it was not the Opus model (the Opus 5 point is scored at Fable 5 level). The live snapshot also carries forecasts for Frontier+1 and Frontier+2 with explicit dates. The research behind the scores is in `reports/` and `research_notes/`; `reports/site_audit_2026-10-27.md` is an audit of the site and its sources.
+**History:** each Claude Opus release since Opus 4.1 (Aug 2025) is a dated snapshot. Earlier snapshots are *backfilled*: scored after the fact from benchmark results, for the frontier only, and the point reflects the best public model on that date even when it was not the Opus model (the Opus 5 point is scored at Fable 5 level). The live snapshot also carries forecasts for Frontier+1 and Frontier+2 with explicit dates. The research behind the scores is in `reports/` and `research_notes/`; `reports/site_audit_2026-10-27.md` is an audit of the site and its sources, and `reports/site_audit_2026-10-27_second_pass.md` a follow-up check.
 
 ## Files
 
@@ -57,6 +57,7 @@ The site is addressable: `#jobs/<occupation id>` opens a job, `#tasks/<task type
 3. For an occupation where a task type behaves differently, add an override: `"overrides": {"lawyer:draft": {"f0": 60, "f1": 78, "f2": 88, "ceiling": 95}}`.
 4. Change the previous live file's `kind` to `backfill` but **keep** its `f1`, `f2`, `ceiling` and `forecast_dates`: the Method tab scores each retired forecast against the snapshot closest to its due date.
 5. Add the id to `index.json`, set `latest`, and run `node scripts/validate.mjs` and `node --test`. The validator rejects a `latest` that is not live, missing evidence or confidence, unknown source ids, a score that falls between snapshots, and malformed dates.
+6. Update `assets/og.png`, the share image: it shows the headline percentage and the band split as a static picture.
 
 ## Caveats
 

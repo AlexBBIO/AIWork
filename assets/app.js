@@ -6,6 +6,7 @@ const HOURS = 40;
 const VIEWS = ["overview", "jobs", "tasks", "method"];
 const r0 = (x) => Math.round(x);
 const pct = (x) => `${r0(x)}%`;
+const span = ([lo, hi]) => `${r0(lo)}–${r0(hi)}`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const jobs = (k) => (k >= 1000 ? `${(k / 1000).toFixed(k >= 10000 ? 0 : 1)}M` : `${r0(k)}k`);
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -164,7 +165,7 @@ function setupControls() {
   $("reset-edits").addEventListener("click", reset);
   $("reset-edits-top").addEventListener("click", reset);
   $("copy-link").addEventListener("click", async () => {
-    const url = `${location.origin}${location.pathname}#tasks?e=${encodeEdits(state.edits)}`;
+    const url = `${location.origin}${location.pathname}#tasks?w=${state.weight}&e=${encodeEdits(state.edits)}`;
     try { await navigator.clipboard.writeText(url); $("copy-status").textContent = "Link copied."; }
     catch { $("copy-status").textContent = url; }
   });
@@ -230,7 +231,7 @@ const confChip = (c) => `<span class="chip ${c}">${c} confidence</span>`;
 
 function renderOverview() {
   const a = live();
-  const { proj, limit, flatAt, band, confidence } = model.index;
+  const { proj, limit, flatAt, range, confidence } = model.index;
   const first = snaps[0];
   const d1 = tierDate(1), d2 = tierDate(2);
 
@@ -238,7 +239,7 @@ function renderOverview() {
   $("lead-h1").innerHTML = `AI can now do about <em>${pct(proj[0])}</em> of U.S. white-collar work.`;
   $("lead-lede").textContent =
     (snaps.length > 1 ? `That's up from ${pct(first.m.index.f0)} when ${first.a.anchor} was the frontier in ${monthYear(parseDate(first.a.date))}. ` : "") +
-    `The next two model generations, expected around ${monthYear(d1)} and ${monthYear(d2)}, take it to about ${pct(proj[1])} (± ${r0(band.f1)}) and ${pct(proj[2])} (± ${r0(band.f2)}). ` +
+    `The next two model generations, expected around ${monthYear(d1)} and ${monthYear(d2)}, take it to about ${pct(proj[1])} (range ${span(range.f1)}) and ${pct(proj[2])} (${span(range.f2)}). ` +
     `Progress flattens near ${pct(limit)}; the remaining ${pct(100 - limit)} needs a person in the room, a signature, or a relationship. ` +
     `Figures are ${weightPhrase()} across ${model.occupations.length} occupations and ${jobs(model.totals.employment)} jobs; ${weightPhrase(otherWeight())} it is ${pct(altIndex.f0)}.`;
 
@@ -247,11 +248,11 @@ function renderOverview() {
   const flattens = flatAt !== null;
   $("readout").innerHTML =
     stat("Now", sw("var(--t0)"), `${r0(proj[0])}<small>%</small>`, `${esc(shortModel(a.anchor))}, ${monthYear(parseDate(a.date))}`) +
-    stat("Next generation", sw("var(--t1)"), `${r0(proj[1])}<small>%</small><span class="range">± ${r0(band.f1)}</span>`, `+${r0(proj[1] - proj[0])} pts, around ${monthYear(d1)}`) +
-    stat("Generation after", sw("var(--t2)"), `${r0(proj[2])}<small>%</small><span class="range">± ${r0(band.f2)}</span>`, `+${r0(proj[2] - proj[1])} pts, around ${monthYear(d2)}`) +
+    stat("Next generation", sw("var(--t1)"), `${r0(proj[1])}<small>%</small><span class="range">(${span(range.f1)})</span>`, `+${r0(proj[1] - proj[0])} pts, around ${monthYear(d1)}`) +
+    stat("Generation after", sw("var(--t2)"), `${r0(proj[2])}<small>%</small><span class="range">(${span(range.f2)})</span>`, `+${r0(proj[2] - proj[1])} pts, around ${monthYear(d2)}`) +
     stat("Ceiling", '<span class="swatch line"></span>', `${r0(limit)}<small>%</small>`, `Needs a person: ${pct(100 - limit)}`) +
-    stat("Saturation", '<span class="swatch human"></span>', flattens ? `~${tierDate(flatAt).getUTCFullYear()}` : `after ${tierDate(HORIZON).getUTCFullYear()}`,
-      flattens ? `Gains fall under 1 pt a generation from ${monthYear(tierDate(flatAt))}` : "Still gaining over 1 pt a generation at the end of the projection");
+    stat("Saturation", '<span class="swatch trend"></span>', flattens ? `~${tierDate(flatAt).getUTCFullYear()}` : `after ${tierDate(HORIZON).getUTCFullYear()}`,
+      flattens ? `About ${pct(proj[flatAt])} by ${monthYear(tierDate(flatAt))}, when gains fall under 1 pt a generation` : "Still gaining over 1 pt a generation at the end of the projection");
 
   renderTimeline();
   renderWeek();
@@ -263,8 +264,8 @@ function renderOverview() {
 
   const g = [
     [sw("var(--t0)"), "Frontier", `The best publicly available model on the snapshot date. Today that's ${a.anchor}. Earlier snapshots track each Opus release back to ${first.a.anchor}; where another public model led, the score follows the leader.`],
-    [sw("var(--t1)"), "Next generation and the one after", `Frontier+1 and Frontier+2: the next two capability steps, roughly two or three point releases each. They are not separate judgments: each closes a fixed share of the gap to the ceiling, the share the last ten months closed.`],
-    ["", "Range", `The ± figures are the forecast range: 5 points at Frontier+1 and 8 at Frontier+2 for a task type with medium-confidence evidence, narrower with a direct benchmark, wider without one.`],
+    [sw("var(--t1)"), "Next generation and the one after", `Frontier+1 and Frontier+2: the next two capability steps, roughly two or three point releases each. They are not separate judgments: each closes a fixed share of the remaining gap to the ceiling, set by the pace of the last ten months.`],
+    ["", "Range", `The forecast range: 5 points either side at Frontier+1 and 8 at Frontier+2 for a task type with medium-confidence evidence, narrower with a direct benchmark, wider without one, and never below today's score or above the ceiling.`],
     ["", "Can do", "AI can do the task at the quality of a competent professional, with no more than light review. This measures capability, not whether employers have adopted it."],
     ['<span class="swatch line"></span>', "Ceiling", "The most of a task AI could ever take, even with unlimited intelligence. Above it sits work that needs physical presence, legal accountability, or a human relationship."],
     ["", "Wages or people", "Wages weights each job by its total pay, so the index reads as a share of what employers spend. People weights by headcount, so it reads as a share of working time."],
@@ -277,14 +278,14 @@ function renderOverview() {
 
 function renderTimeline() {
   const box = $("timeline");
-  const { proj, limit, flatAt, band } = model.index;
+  const { proj, limit, flatAt, range } = model.index;
   const W = Math.max(320, Math.min(980, box.clientWidth || 980));
   const narrow = W < 640;
   const H = narrow ? 280 : 340;
   const m = { l: 46, r: 14, t: 18, b: 40 };
   const lastGen = Math.min(HORIZON, Math.max(flatAt ?? HORIZON, 4));
   const past = snaps.map(({ a, m: mm }) => ({ d: parseDate(a.date), v: mm.index.f0, label: shortModel(a.anchor), a }));
-  const future = Array.from({ length: lastGen }, (_, i) => ({ n: i + 1, d: tierDate(i + 1), v: proj[i + 1], b: i === 0 ? band.f1 : i === 1 ? band.f2 : 0 }));
+  const future = Array.from({ length: lastGen }, (_, i) => ({ n: i + 1, d: tierDate(i + 1), v: proj[i + 1], r: i === 0 ? range.f1 : i === 1 ? range.f2 : null }));
   const t0 = addMonths(past[0].d, -1).getTime(), t1 = future[future.length - 1].d.getTime();
   const x = (d) => m.l + ((d.getTime() - t0) / (t1 - t0)) * (W - m.l - m.r);
   const y = (v) => m.t + (1 - v / 100) * (H - m.t - m.b);
@@ -314,7 +315,7 @@ function renderTimeline() {
   }
 
   // Forecast range: widens from today's point to Frontier+2
-  s += `<path d="M${pt(now.d, now.v)} L${pt(f1.d, f1.v + f1.b)} L${pt(f2.d, f2.v + f2.b)} L${pt(f2.d, f2.v - f2.b)} L${pt(f1.d, f1.v - f1.b)} Z" fill="var(--t1)" opacity="0.18"/>`;
+  s += `<path d="M${pt(now.d, now.v)} L${pt(f1.d, f1.r[1])} L${pt(f2.d, f2.r[1])} L${pt(f2.d, f2.r[0])} L${pt(f1.d, f1.r[0])} Z" fill="var(--t1)" opacity="0.18"/>`;
   s += `<path d="${path(future.slice(1))}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.8"/>
     <path d="${path([now, f1, f2])}" fill="none" stroke="var(--t1)" stroke-width="2"/>
     <path d="${path(past)}" fill="none" stroke="var(--t0)" stroke-width="2.5"/>`;
@@ -331,10 +332,11 @@ function renderTimeline() {
   future.forEach((p) => {
     const scored = p.n <= 2;
     s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
-    // F+1 sits below-left of the band, F+2 above-right, so the two labels never collide.
+    // Both labels sit under the band, F+1 centred on its point and F+2 starting at its
+    // point, so they clear each other, the ceiling line and the trend.
     if (scored) {
-      const below = p.n === 1;
-      s += `<text x="${x(p.d) + (below ? 4 : -4)}" y="${below ? y(p.v - p.b) + 18 : y(p.v + p.b) - 8}" text-anchor="${below ? "end" : "start"}" class="lbl-strong">${narrow ? `F+${p.n}` : `F+${p.n} · ${pct(p.v)} ± ${r0(p.b)}`}</text>`;
+      const first = p.n === 1;
+      s += `<text x="${x(p.d) - (first ? 0 : 4)}" y="${y(p.r[0]) + 18}" text-anchor="${first ? "middle" : "start"}" class="lbl-strong">${narrow ? `F+${p.n}` : `F+${p.n} · ${pct(p.v)} (${span(p.r)})`}</text>`;
     }
   });
   const lastF = future[future.length - 1];
@@ -343,17 +345,32 @@ function renderTimeline() {
   // Hover targets
   const pts = [
     ...past.map((p) => ({ ...p, tip: `${p.a.anchor}|${monthYear(p.d)}|AI can do ${pct(p.v)}${p.a.kind === "backfill" ? "|Backfilled: scored after the fact" : "|Live snapshot"}${p.a.frontier ? `|Frontier then: ${p.a.frontier}` : ""}` })),
-    ...future.map((p) => ({ ...p, tip: `Frontier+${p.n}|Around ${monthYear(p.d)}|${pct(p.v)}${p.n <= 2 ? ` ± ${r0(p.b)} (forecast)` : " (trend, not a forecast)"}` })),
+    ...future.map((p) => ({ ...p, tip: `Frontier+${p.n}|Around ${monthYear(p.d)}|${pct(p.v)}${p.n <= 2 ? `, range ${span(p.r)} (forecast)` : " (trend, not a forecast)"}` })),
   ];
   pts.forEach((p) => { s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent" data-tip="${esc(p.tip)}"/>`; });
   box.innerHTML = s + "</svg>";
 
-  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are the next two generations with their forecast range; the dashed line extends each task type's gap-closure rate toward its ceiling and is a trend, not a forecast.`;
+  $("timeline-h").textContent = `From ${shortModel(past[0].a.anchor)} to saturation`;
+  const pace = recentPace();
+  $("timeline-note").textContent = `Each point on the dark line is one Opus release, scored for what the public frontier could do at the time (hollow points were scored after the fact). The blue points are the next two generations with their forecast range.` +
+    (pace ? ` Frontier+1 closes ${pct(pace.ahead * 100)} of the remaining gap to the ceiling in ${pace.months} months; the ${pace.months} months before ${shortModel(now.a.anchor)} closed ${pct(pace.behind * 100)}.` : "") +
+    ` The dashed line carries each task type's gap-closure rate past Frontier+2 and is a trend, not a forecast.`;
   $("timeline-legend").innerHTML = `<span><span class="dot hollow"></span>Backfilled snapshots</span>
     <span><span class="dot" style="background:var(--t0)"></span>Live snapshot</span>
     <span><span class="band"></span>Forecast, next two generations, with range</span>
     <span><span class="dot trend"></span>Trend projection</span>
     <span><span class="swatch human"></span>Needs a person</span>`;
+}
+
+// Share of the gap to the ceiling that Frontier+1 closes, against the share closed over the
+// same span before the live snapshot (read off the frontier on that earlier date).
+function recentPace() {
+  const a = live(), { f0, f1, limit } = model.index;
+  const months = Math.round((tierDate(1) - parseDate(a.date)) / (1000 * 60 * 60 * 24 * 30.44));
+  const then = addMonths(parseDate(a.date), -months);
+  const before = snaps.filter((x) => parseDate(x.a.date) <= then).pop();
+  if (!before || !(limit > before.m.index.f0) || !(limit > f0)) return null;
+  return { months, ahead: (f1 - f0) / (limit - f0), behind: (f0 - before.m.index.f0) / (limit - before.m.index.f0) };
 }
 
 // Largest-remainder rounding so whole hours sum to the week.
@@ -448,7 +465,7 @@ function occRow(o, archName, groupLabel) {
       <span class="nums"><b>${pct(o.proj[0])}</b> now → ${pct(o.proj[2])}</span>
     </button>
     ${open ? `<div class="occ-detail">
-      <p class="note">In a 40-hour week, AI could handle about <b>${h(o.proj[0])} hours</b> of this job today and ${h(o.proj[2])} hours (± ${h(o.band.f2)}) two generations from now. About ${h(100 - o.limit)} hours need a person regardless. Bar length is each task's share of the week; the colours show how much of it AI can do. The task mix is an estimate.${lowNote}</p>
+      <p class="note">In a 40-hour week, AI could handle about <b>${h(o.proj[0])} hours</b> of this job today and ${h(o.proj[2])} hours (range ${h(o.range.f2[0])}–${h(o.range.f2[1])}) two generations from now. About ${h(100 - o.limit)} hours need a person regardless. Bar length is each task's share of the week; the colours show how much of it AI can do. The task mix is an estimate.${lowNote}</p>
       ${o.tasks.map((t) => `<div class="task-row">
         <span class="tname">${esc(t.name)}<span class="ttype">${esc(archName[t.arch])}</span></span>
         ${stackBar(t.proj, t.limit, { scale: (t.share / maxShare) * 100, label: t.name })}
@@ -486,7 +503,7 @@ function renderTasks() {
       <button type="button" class="row-btn" data-arch="${r.id}" aria-expanded="${open}">
         <span class="chev" aria-hidden="true">▶</span>
         <span class="title">${esc(r.name)}<span class="meta">${r.share < 0.001 ? "under 0.1" : (r.share * 100).toFixed(1)}% of all work ${confChip(r.confidence)}</span></span>
-        <span class="dot-track" data-tip="${esc(`${r.name}|${hist.map((h) => `${h.label} ${h.v}`).join("|")}${hist.length ? "|" : ""}Now ${r.f0} · F+1 ${r.f1} ± ${r0(r.band.f1)} · F+2 ${r.f2} ± ${r0(r.band.f2)}|Ceiling ${r.ceiling}`)}" role="img" aria-label="${esc(r.name)}: now ${r.f0}, next generation ${r.f1}, generation after ${r.f2}, ceiling ${r.ceiling}">
+        <span class="dot-track" data-tip="${esc(`${r.name}|${hist.map((h) => `${h.label} ${h.v}`).join("|")}${hist.length ? "|" : ""}Now ${r.f0} · F+1 ${r.f1} (${span(r.range.f1)}) · F+2 ${r.f2} (${span(r.range.f2)})|Ceiling ${r.ceiling}`)}" role="img" aria-label="${esc(r.name)}: now ${r.f0}, next generation ${r.f1}, generation after ${r.f2}, ceiling ${r.ceiling}">
           <span class="line"></span>
           <span class="reach" style="left:${r.f0}%;width:${r.f2 - r.f0}%"></span>
           <span class="ceil" style="left:calc(${r.ceiling}% - 1px)"></span>
@@ -496,7 +513,7 @@ function renderTasks() {
         <span class="nums"><b>${r.f0}</b></span>
       </button>
       ${open ? `<div class="dot-detail">
-        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1} ± ${r0(r.band.f1)}</span><span>F+2 ${r.f2} ± ${r0(r.band.f2)}</span><span>Ceiling ${r.ceiling}</span><span>${esc(r.confidence)} confidence${edited}</span></div>
+        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1} (${span(r.range.f1)})</span><span>F+2 ${r.f2} (${span(r.range.f2)})</span><span>Ceiling ${r.ceiling}</span><span>${esc(r.confidence)} confidence${edited}</span></div>
         ${a.evidence?.[r.id] ? `<p>${esc(a.evidence[r.id])}</p>` : `<p class="note">No evidence note for this task type yet.</p>`}
         ${srcs.length ? `<p class="srcs">Sources: ${srcs.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a><span class="chip ${esc(s.tier || "secondary")}">${esc(s.tier || "secondary")}</span>`).join(" ")}</p>` : ""}
         ${edited ? `<p class="note">Published: now ${published.f0}, F+1 ${published.f1}, F+2 ${published.f2}, ceiling ${published.ceiling}.</p>` : ""}
@@ -598,23 +615,36 @@ function renderMethod() {
     ["Structure", [`${model.occupations.length} occupations from BLS OEWS (${data.occupations.reference || "May 2025"}) are split into tasks with a share of working time. Each task maps to one of ${model.archetypes.length} task types, and each task type is scored 0 to 100 at every snapshot.`, data.occupations.task_basis].filter(Boolean)],
     ["Snapshots and forecasts", [`Each Opus release since ${snaps[0].a.anchor} is a snapshot that scores what the public frontier could do on that date. The live snapshot also carries forecasts for Frontier+1 (${monthYear(tierDate(1))}) and Frontier+2 (${monthYear(tierDate(2))}); later generations are spaced ${a.cadence_months} months apart.`, "When a forecast date arrives, the next snapshot is scored against the forecast on this page, so the method is tested, not just restated."]],
     ["Ceiling and saturation", ["Each task type has a ceiling: the most AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference.", "Past Frontier+2, each task type's remaining gap to its ceiling keeps closing at the rate implied by its last step. The saturation point is the first generation that adds under one point to the index; that one-point threshold is a convention."]],
-    ["Uncertainty", [`Forecast ranges are ±${(a.uncertainty?.f1 ?? 5)} points at Frontier+1 and ±${(a.uncertainty?.f2 ?? 8)} at Frontier+2 for a task type with medium-confidence evidence, narrower for high and wider for low. The index range adds the task-type ranges together, which assumes their errors move in the same direction; independent errors would give a narrower band.`]],
+    ["Uncertainty", [`Forecast ranges are ${(a.uncertainty?.f1 ?? 5)} points either side at Frontier+1 and ${(a.uncertainty?.f2 ?? 8)} at Frontier+2 for a task type with medium-confidence evidence, narrower for high and wider for low, and cut off at today's score and at the ceiling. The index range adds the task-type ranges together, which assumes their errors move in the same direction; independent errors would give a narrower band.`]],
     ["Weights", ["Wages weights each occupation by employment times mean wage. People weights by headcount. The headline uses wages."]],
     ["Limits", a.caveats || []],
   ];
-  $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("");
+  $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("")
+    + (a.report_url ? `<div><h3>Full report</h3><p>The research report behind these scores has the evidence for every score, the derivation of the closure rates and ceilings, and all citations: <a href="${esc(a.report_url)}" target="_blank" rel="noopener">Frontier models absorb codified desk work first</a>.</p></div>` : "");
 
   const cal = a.calibration;
   if (cal) {
-    const rows = model.groups.map((g) => ({ g, ref: cal.values[g.id] })).filter((r) => typeof r.ref === "number").sort((p, q) => q.g.proj[0] - p.g.proj[0]);
-    $("calib-note").textContent = `${cal.label}. Site figures are today's score ${weightPhrase()}. ${cal.note || ""}`;
+    const off = new Set(cal.not_comparable || []);
+    const rows = model.groups.map((g) => ({ g, ref: cal.values[g.id], off: off.has(g.id) })).filter((r) => typeof r.ref === "number").sort((p, q) => q.g.proj[0] - p.g.proj[0]);
+    const gaps = rows.filter((r) => !r.off).map((r) => Math.abs(r.g.proj[0] - r.ref)).sort((p, q) => p - q);
+    const median = gaps.length ? (gaps[(gaps.length - 1) >> 1] + gaps[gaps.length >> 1]) / 2 : 0;
+    $("calib-note").textContent = `${cal.label}. Site figures are today's score ${weightPhrase()}. Across the ${gaps.length} comparable groups the median gap is ${r0(median)} points, and ${gaps.filter((v) => v <= 10).length} are within 10. ${cal.note || ""}`;
     $("calibration").innerHTML = `<thead><tr><th>BLS major group</th><th class="num">Headroom, now</th><th class="num">ESADE replaceable</th><th class="num">Gap</th></tr></thead>
-      <tbody>${rows.map(({ g, ref }) => `<tr><td>${esc(g.name)}</td><td class="num">${pct(g.proj[0])}</td><td class="num">${ref.toFixed(1)}%</td><td class="num diff">${g.proj[0] - ref >= 0 ? "+" : ""}${r0(g.proj[0] - ref)}</td></tr>`).join("")}</tbody>`;
+      <tbody>${rows.map(({ g, ref, off }) => `<tr${off ? ' class="off"' : ""}><td>${esc(g.name)}${off ? ' <span class="note">(not comparable)</span>' : ""}</td><td class="num">${pct(g.proj[0])}</td><td class="num">${ref.toFixed(1)}%</td><td class="num diff">${g.proj[0] - ref >= 0 ? "+" : ""}${r0(g.proj[0] - ref)}</td></tr>`).join("")}</tbody>`;
   }
 
   const groups = {};
   for (const s of a.sources || []) (groups[s.group || "Sources"] ||= []).push(s);
-  const li = (s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a><span class="chip ${esc(s.tier || "secondary")}">${esc(s.tier || "secondary")}</span>${s.note || s.accessed ? `<span class="src-note">${s.note ? esc(s.note) + " · " : ""}${s.accessed ? `accessed ${esc(s.accessed)}` : ""}</span>` : ""}</li>`;
+  // Most sources share one access date: say it once and flag only the exceptions.
+  const counts = {};
+  for (const s of a.sources || []) if (s.accessed) counts[s.accessed] = (counts[s.accessed] || 0) + 1;
+  const usual = Object.entries(counts).sort((p, q) => q[1] - p[1])[0]?.[0];
+  $("src-accessed").textContent = usual ? ` Links were checked on ${usual} unless marked otherwise.` : "";
+  const li = (s) => {
+    const accessed = s.accessed && s.accessed !== usual ? `accessed ${esc(s.accessed)}` : "";
+    const note = [s.note && esc(s.note), accessed].filter(Boolean).join(" · ");
+    return `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a><span class="chip ${esc(s.tier || "secondary")}">${esc(s.tier || "secondary")}</span>${note ? `<span class="src-note">${note}</span>` : ""}</li>`;
+  };
   $("sources").innerHTML = Object.entries(groups).map(([g, list]) => `<div class="src-group"><h3>${esc(g)}</h3><ul>${list
     .sort((p, q) => (TIER_ORDER[p.tier] ?? 9) - (TIER_ORDER[q.tier] ?? 9) || p.title.localeCompare(q.title)).map(li).join("")}</ul></div>`).join("")
     + `<div class="src-group"><h3>Employment and wages</h3><ul><li>${esc(data.occupations.source)}</li></ul></div>`;
@@ -632,15 +662,16 @@ function renderForecastCheck() {
       const due = parseDate(a.forecast_dates[k]);
       const actual = snaps.filter((s) => s.a.id !== a.id && parseDate(s.a.date) > parseDate(a.date) && Math.abs(parseDate(s.a.date) - due) <= DUE_WINDOW)
         .sort((p, q) => Math.abs(parseDate(p.a.date) - due) - Math.abs(parseDate(q.a.date) - due))[0];
-      items.push({ a, n, due, predicted: fm[k], band: fm.band[k], actual });
+      items.push({ a, n, due, predicted: fm[k], range: fm.range[k], actual });
     }
   }
   $("forecast-check").innerHTML = items.length ? items.map((it) => {
-    const diff = it.actual ? it.actual.m.index.f0 - it.predicted : null;
+    const got = it.actual?.m.index.f0;
+    const diff = it.actual ? got - it.predicted : null;
     const verdict = it.actual
-      ? `${pct(it.actual.m.index.f0)} measured (${esc(it.actual.a.anchor)}, ${monthYear(parseDate(it.actual.a.date))}): ${Math.abs(diff) <= it.band ? "within" : "outside"} the range (${diff >= 0 ? "+" : ""}${r0(diff)})`
+      ? `${pct(got)} measured (${esc(it.actual.a.anchor)}, ${monthYear(parseDate(it.actual.a.date))}): ${got >= it.range[0] && got <= it.range[1] ? "within" : "outside"} the range (${diff >= 0 ? "+" : ""}${r0(diff)})`
       : `due ${monthYear(it.due)}`;
-    return `<div class="check"><span>Frontier+${it.n} forecast made ${monthYear(parseDate(it.a.updated || it.a.date))} with ${esc(it.a.anchor)} as the frontier: <b>${pct(it.predicted)} ± ${r0(it.band)}</b> by ${monthYear(it.due)}</span><span class="verdict">${verdict}</span></div>`;
+    return `<div class="check"><span>Frontier+${it.n} forecast made ${monthYear(parseDate(it.a.updated || it.a.date))} with ${esc(it.a.anchor)} as the frontier: <b>${pct(it.predicted)} (${span(it.range)})</b> by ${monthYear(it.due)}</span><span class="verdict">${verdict}</span></div>`;
   }).join("") : `<p class="note">No forecast has come due yet.</p>`;
 }
 

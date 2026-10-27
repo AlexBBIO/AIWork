@@ -4,7 +4,7 @@
   "anchor": "Claude Opus 5",
   "label": "Opus release",
   "kind": "backfill",
-  "peers": "Non-Opus frontier: Claude Fable 5 (public) / Mythos 5 (gated), both Jun 9. GPT-5.6 Sol (Jul 9; AA index 59 vs Fable 5's 60)",
+  "peers": "Claude Fable 5 (public) / Mythos 5 (gated), both Jun 9; GPT-5.6 Sol (Jul 9; AA index 59 vs Fable 5's 60)",
   "highlights": [
     "SWE-bench Pro 79.2% vs Fable 5 80.3%; OSWorld 2.0 70.6% vs GPT-5.6 Sol 62.6% (vendor, via DataCamp)",
     "BrowseComp 90.8%; GDPval-AA v2 1861 vs GPT-5.6 Sol 1736",

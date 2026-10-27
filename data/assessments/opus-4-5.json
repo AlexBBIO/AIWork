@@ -4,7 +4,7 @@
   "anchor": "Claude Opus 4.5",
   "label": "First agentic frontier",
   "kind": "backfill",
-  "peers": "Gemini 3 Pro (Nov 18), GPT-5.1-Codex-Max (Nov 19), GPT-5.2 (Dec). Three-way frontier: GPT-5.2 led GDPval (70.9%) and SWE-bench Pro (55.6%)",
+  "peers": "Gemini 3 Pro (Nov 18), GPT-5.1-Codex-Max (Nov 19), GPT-5.2 (Dec; GDPval 70.9%, SWE-bench Pro 55.6%)",
   "highlights": [
     "SWE-bench Verified 80.9%, OSWorld 66.3% (vendor chart)",
     "METR 4h53m at 50% / 49m at 80% (5h20m / 42m before METR's March 2026 correction)",
@@ -100,6 +100,6 @@
       "f0": 1
     }
   },
-  "frontier": "Three-way: Opus 4.5 (agentic coding, computer use), GPT-5.2 (GDPval, SWE-bench Pro), Gemini 3 Pro",
+  "frontier": "Contested: Opus 4.5 (agentic coding, computer use) and Gemini 3 Pro; GPT-5.2 took GDPval and SWE-bench Pro in December",
   "milestone": true
 }
