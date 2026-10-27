@@ -34,7 +34,7 @@ data/assessments/<id>.json     one snapshot (ids are the anchor model, e.g. opus
                                scores per task type (f0, and for live snapshots f1 / f2 / ceiling,
                                confidence, sources), evidence notes, tiered sources with access dates,
                                forecast_dates, uncertainty, calibration
-data/economics.json            lab revenue reports, AI adoption and scenarios for the Value page
+data/economics.json            lab revenue, its U.S. work scope, price and labs' cut evidence, adoption surveys, scenarios
 reports/, research_notes/      research behind the scores
 assets/model.js                the model (shared by site, validator and tests)
 assets/app.js, style.css       the site

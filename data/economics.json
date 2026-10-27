@@ -148,11 +148,135 @@
       "note": "About $50B net of partners; about $68–70B gross"
     }
   ],
+  "scope": {
+    "anthropic": {
+      "us": 0.72,
+      "work": 0.9,
+      "note": "72% of revenue is billed to U.S. addresses (H1 2026). 80% is usage-based, which is business use; the 20% from subscriptions is taken as half work, in line with Claude.ai use.",
+      "sources": [
+        "anthropic-s1",
+        "anthropic-econ-index-jan26"
+      ]
+    },
+    "openai": {
+      "us": 0.52,
+      "work": 0.77,
+      "note": "Estimate: OpenAI discloses no U.S. split. Enterprise, about half of revenue since August 2026, is taken as 70% U.S. like Anthropic's; consumer as 35% U.S. (about 90% of ChatGPT users are outside the U.S. and Canada, but paying users skew American) and 30% work.",
+      "sources": [
+        "cnbc-openai-friar",
+        "decoder-chatgpt-users",
+        "nber-chatgpt-use"
+      ]
+    }
+  },
+  "scope_note": "The labs' revenue is worldwide and includes personal use, while the wage bill is U.S. white-collar pay. To compare like with like, the model keeps only the part of each lab's revenue that pays for U.S. work: the U.S. share of revenue, then the work share of that.",
+  "price": {
+    "now": 0.25,
+    "note": "What AI agents charge per task, against what the same task costs with a person, runs from a few cents on the dollar (the raw model cost of coding agents) to about 30 cents (support agents billed per resolution, against fully loaded contact-centre costs, which run above wages alone). Raw model costs leave out the apps, seats and human review customers also pay for. The site uses 25¢ per $1 of wages, toward the upper middle of the range; at that price the work implied by revenue lines up with the hours workers say they spend working with AI.",
+    "evidence": [
+      {
+        "what": "Intercom Fin, $0.99 per resolved outcome, against $7.20 per inbound call and about $5.85 per web chat handled by a person (ContactBabel, 2026, fully loaded)",
+        "ratio": 0.15,
+        "sources": [
+          "intercom-pricing",
+          "contactbabel-2026"
+        ]
+      },
+      {
+        "what": "Zendesk AI agents, $1.50 to $2.00 per automated resolution, against the same costs",
+        "ratio": 0.27,
+        "sources": [
+          "zendesk-pricing",
+          "contactbabel-2026"
+        ]
+      },
+      {
+        "what": "Salesforce Agentforce, $2 per conversation, against the same costs",
+        "ratio": 0.31,
+        "sources": [
+          "agentforce-pricing",
+          "contactbabel-2026"
+        ]
+      },
+      {
+        "what": "A coding agent's model cost, about $13 a day, against about $300 a day for a developer (Goldman Sachs, May 2026); raw compute, no app or seat fees",
+        "ratio": 0.045,
+        "sources": [
+          "opus-research-goldman"
+        ]
+      },
+      {
+        "what": "AI agents on real work tasks cost 90% to 96% less than people (CMU and Stanford, Oct 2025); raw agent cost",
+        "ratio": 0.07,
+        "sources": [
+          "wang-agents-human-work"
+        ]
+      },
+      {
+        "what": "GPT-5's API cost per GDPval task against an expert's wage cost, one attempt with no review (OpenAI, Oct 2025)",
+        "ratio": 0.002,
+        "sources": [
+          "gdpval-paper"
+        ]
+      }
+    ],
+    "sources": [
+      "intercom-pricing",
+      "zendesk-pricing",
+      "agentforce-pricing",
+      "contactbabel-2026"
+    ]
+  },
+  "cut": {
+    "now": 0.6,
+    "note": "Customers buy AI work from the labs directly (ChatGPT, Claude, Claude Code and their APIs) or through apps built on the models, which pass much of their revenue back to the labs as model costs. Spending on the labs' own products counts in full, spending on other apps at roughly half, and some goes to Google and other model makers. The site uses 60% for Anthropic and OpenAI together.",
+    "evidence": [
+      {
+        "what": "U.S. enterprises' generative-AI spending on apps and model APIs in 2025: $12.5B on model APIs, $19B on apps (Menlo Ventures, Dec 2025); API share of the two",
+        "ratio": 0.4,
+        "sources": [
+          "menlo-2025"
+        ]
+      },
+      {
+        "what": "Anthropic and OpenAI's share of enterprise model-API spending (Menlo Ventures, Dec 2025): 40% and 27%",
+        "ratio": 0.67,
+        "sources": [
+          "menlo-2025"
+        ]
+      },
+      {
+        "what": "Usage-based (mostly API) share of Anthropic's revenue, H1 2026; the rest is subscriptions to its own apps",
+        "ratio": 0.8,
+        "sources": [
+          "anthropic-s1"
+        ]
+      },
+      {
+        "what": "Average gross margin of AI app companies, 2026 projection (ICONIQ): model and compute costs take much of the rest of their revenue",
+        "ratio": 0.52,
+        "sources": [
+          "iconiq-2026"
+        ]
+      },
+      {
+        "what": "Cursor, the largest coding app, only recently reached slightly positive gross margins (Apr 2026), so most of its revenue goes to model makers",
+        "ratio": null,
+        "sources": [
+          "techcrunch-cursor"
+        ]
+      }
+    ],
+    "sources": [
+      "menlo-2025",
+      "anthropic-s1"
+    ]
+  },
   "adoption": {
     "as_of": "2026-07-01",
     "label": "Q3 2026",
-    "measure": "Hours saved with generative AI, as a share of all work hours, by BLS major occupation group (employed adults 18 to 64, self-reported)",
-    "by_group": {
+    "measure": "Share of work hours, by BLS major occupation group (employed adults 18 to 64, self-reported): hours generative AI saved, and hours worked with generative AI",
+    "saved": {
       "11": 5.22,
       "13": 2.74,
       "15": 3.64,
@@ -166,35 +290,52 @@
       "41": 1.51,
       "43": 1.54
     },
-    "all_workers": 2.08,
-    "year_ago": 2.55,
+    "assisted": {
+      "11": 9.64,
+      "13": 8.19,
+      "15": 11.57,
+      "17": 7.74,
+      "19": 8.84,
+      "21": 3.64,
+      "23": 4.61,
+      "25": 4.32,
+      "27": 4.82,
+      "29": 3.63,
+      "41": 4.33,
+      "43": 4.92
+    },
+    "saved_year_ago": 2.55,
     "sources": [
       "stlfed-rps-time-savings",
+      "stlfed-rps-hours-assisted",
       "fred-blog-time-savings"
     ],
-    "note": "Weighted by each group's share of the covered wage bill. A year earlier (Q3 2025) the same weighting gives 2.55%."
+    "note": "Weighted by each group's share of the covered wage bill. Hours saved a year earlier (Q3 2025), weighted the same way: 2.55%."
   },
   "scenarios": {
     "slow": {
       "label": "Slow",
-      "growth": 1.4,
-      "peak": 0.5,
-      "share": 0.15,
-      "note": "Adoption grows 1.4x in the first year and levels off at half of the work AI can do, held back by integration, trust and regulation. Competition pushes the labs' share down to 15¢ per dollar of pay."
+      "growth": 1.5,
+      "peak": 0.6,
+      "price": 0.12,
+      "cut": 0.5,
+      "note": "Adoption grows 1.5x in the first year and levels off at 60% of the work AI can do, held back by integration, trust and regulation. Competition halves the price to 12¢ per dollar of wages, and apps and rival models take half of the spending."
     },
     "base": {
       "label": "Base",
-      "growth": 1.8,
-      "peak": 0.75,
-      "share": 0.25,
-      "note": "Adoption grows 1.8x in the first year, between the survey's pace of hours saved (about 1.2x in the past year) and revenue's (about 5x), and levels off at three-quarters of the work AI can do. The labs' share settles at 25¢ per dollar. This roughly matches the labs' own revenue projections for 2028 to 2030."
+      "growth": 2.0,
+      "peak": 0.8,
+      "price": 0.2,
+      "cut": 0.7,
+      "note": "Adoption grows 2x in the first year, slower than the past year's roughly 3x at steady prices, and levels off at 80% of the work AI can do. The price eases to 20¢ and the labs' cut rises to 70% as they sell more agents directly. This roughly matches the labs' own revenue projections for 2028 to 2030."
     },
     "fast": {
       "label": "Fast",
-      "growth": 2.5,
+      "growth": 3.0,
       "peak": 0.9,
-      "share": 0.35,
-      "note": "Adoption grows 2.5x in the first year as agents take on whole tasks, and reaches 90% of the work AI can do. Labs keep 35¢ per dollar, billing for agents much as firms pay for outsourced work."
+      "price": 0.25,
+      "cut": 0.75,
+      "note": "Adoption keeps the past year's pace, about 3x, and reaches 90% of the work AI can do as agents take on whole jobs' worth of tasks. Prices hold at 25¢ and the labs keep 75%, selling agents much as firms pay for outsourced work."
     }
   },
   "projections": [
@@ -232,22 +373,22 @@
     [
       "How it is computed",
       [
-        "Lab revenue = U.S. white-collar wage bill × share of that work AI can do × share of that work AI actually does × labs' share of its value. The wage bill is the covered occupations' employment times mean wage (BLS OEWS, May 2025), held at that level so dollars stay comparable. The share AI can do is this site's index, weighted by wages: its two forecasts, then its trend.",
-        "The work AI actually does today comes from the St. Louis Fed's Real-Time Population Survey: the share of work hours that workers say generative AI saved them, by occupation group, weighted by this site's wage bill. Divided by what AI can do, it gives today's adoption. It is projected on an S-curve: it grows at the scenario's first-year rate and slows as it nears the scenario's peak."
+        "Labs' revenue from U.S. work = value of the work AI can do × share of it AI actually does × price customers pay per dollar of wages × share of that spending that reaches the labs. The value of the work AI can do is this site's index, weighted by wages, times the covered occupations' wage bill (BLS OEWS, May 2025), held at that level so dollars stay comparable.",
+        "Price and the labs' cut come from what AI agents charge per task and how customers' AI spending splits between the labs and apps (see the tables above). The share of work AI does today is what revenue implies at that price and cut, and the model checks it against the St. Louis Fed's survey of hours workers save with AI and hours they spend working with it."
       ]
     ],
     [
-      "The labs' share of the value",
+      "How it is projected",
       [
-        "Today's share is lab revenue divided by the pay for the work AI does. It comes out high, about two-thirds, partly because revenue is global and includes consumer subscriptions while the work is U.S. white-collar, and partly because the survey counts only hours that workers save themselves: it misses work agents take on without a worker in the loop and extra output in the same hours. Read it as an upper bound.",
-        "As adoption grows, the share moves to the scenario's long-run value, reaching it at peak adoption. A long-run share of 25% means each dollar of pay for work AI does earns the labs about 25 cents a year; the rest stays with customers as savings, with the software built on the models, and in lower prices as labs compete. It is an assumption, not a measurement; the sliders let you set your own."
+        "Capability follows this site's two forecasts, then its trend. Adoption follows an S-curve: it grows at the scenario's first-year rate and slows as it nears the scenario's peak. Price and the labs' cut move from today's levels to the scenario's long-run values as adoption approaches its peak, so they change most while adoption is spreading.",
+        "Total lab revenue is shown at today's mix, assuming U.S. work stays the same share of it, so it can be compared with the labs' own projections."
       ]
     ],
     [
       "What this is not",
       [
-        "Lab revenue is global, while the wage bill is U.S. white-collar pay, so the ratio is a yardstick for scale rather than a claim that the revenue replaces U.S. wages. About 72% of Anthropic's revenue is billed to U.S. addresses (S-1); OpenAI does not disclose a split; its revenue was about 60% consumer at the start of 2026 and mostly enterprise by August.",
-        "Anthropic books cloud-marketplace sales gross, OpenAI's figures here are net of partners, and Anthropic's latest point is a quarterly average, so today's combined figure is conservative. Hours saved are self-reported. Revenue is not job loss, and the wage bill leaves out the self-employed and occupations outside the 98 covered."
+        "The price is the least certain link: per-task evidence spans more than a factor of ten, and cheap AI work includes tasks no one would have paid a person to do, so the wages it stands in for overstate what it replaces. Survey hours are self-reported. OpenAI's U.S. and work shares are estimates.",
+        "Anthropic books cloud-marketplace sales gross, OpenAI's figures here are net of partners, and Anthropic's latest point is a quarterly average. Revenue is not job loss, and the wage bill leaves out the self-employed and occupations outside the 98 covered."
       ]
     ]
   ],
@@ -383,6 +524,96 @@
       "id": "fred-blog-time-savings",
       "title": "FRED Blog, Does generative AI save time at work? (Aug 2026)",
       "url": "https://fred.stlouisfed.org/blog/2026/08/does-generative-ai-save-time-at-work",
+      "tier": "primary"
+    },
+    {
+      "id": "anthropic-econ-index-jan26",
+      "title": "Anthropic Economic Index, January 2026 report",
+      "url": "https://www.anthropic.com/research/anthropic-economic-index-january-2026-report",
+      "tier": "primary"
+    },
+    {
+      "id": "cnbc-openai-friar",
+      "title": "CNBC, OpenAI CFO tells investors enterprise is now bigger than consumer (Aug 2026)",
+      "url": "https://www.cnbc.com/2026/08/14/openai-cfo-friar-tells-investors-that-enterprise-bigger-than-consumer.html",
+      "tier": "secondary"
+    },
+    {
+      "id": "decoder-chatgpt-users",
+      "title": "The Decoder, Only 5 percent of ChatGPT's 900 million weekly users pay (Jan 2026)",
+      "url": "https://the-decoder.com/only-5-percent-of-chatgpts-900-million-weekly-users-pay-and-reportedly-most-arent-worth-much-to-advertisers/",
+      "tier": "secondary"
+    },
+    {
+      "id": "nber-chatgpt-use",
+      "title": "Chatterji et al., How People Use ChatGPT (NBER w34255, Sep 2025)",
+      "url": "https://www.nber.org/papers/w34255",
+      "tier": "primary"
+    },
+    {
+      "id": "intercom-pricing",
+      "title": "Intercom, Fin pricing",
+      "url": "https://fin.ai/pricing",
+      "tier": "primary"
+    },
+    {
+      "id": "zendesk-pricing",
+      "title": "Zendesk, pricing (AI agents per automated resolution)",
+      "url": "https://www.zendesk.com/pricing/",
+      "tier": "primary"
+    },
+    {
+      "id": "agentforce-pricing",
+      "title": "Salesforce, Agentforce pricing",
+      "url": "https://www.salesforce.com/agentforce/pricing/",
+      "tier": "primary"
+    },
+    {
+      "id": "contactbabel-2026",
+      "title": "ContactBabel, US Contact Center Decision-Makers' Guide (2026)",
+      "url": "https://www.contactbabel.com/the-us-contact-center-decision-makers-guide/",
+      "tier": "independent"
+    },
+    {
+      "id": "opus-research-goldman",
+      "title": "Opus Research, AI economics get awkward in the contact center (Jul 2026), citing Goldman Sachs",
+      "url": "https://opusresearch.net/2026/07/20/ai-economics-get-awkward-in-the-contact-center/",
+      "tier": "secondary"
+    },
+    {
+      "id": "wang-agents-human-work",
+      "title": "Wang et al., How Do AI Agents Do Human Work? (arXiv 2510.22780, Oct 2025)",
+      "url": "https://arxiv.org/abs/2510.22780",
+      "tier": "independent"
+    },
+    {
+      "id": "gdpval-paper",
+      "title": "OpenAI, GDPval (arXiv 2510.04374, Oct 2025)",
+      "url": "https://arxiv.org/abs/2510.04374",
+      "tier": "primary"
+    },
+    {
+      "id": "menlo-2025",
+      "title": "Menlo Ventures, 2025: The State of Generative AI in the Enterprise (Dec 2025)",
+      "url": "https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/",
+      "tier": "independent"
+    },
+    {
+      "id": "iconiq-2026",
+      "title": "SaaStr, takeaways from ICONIQ's State of AI report (Jan 2026)",
+      "url": "https://saastr.com/the-execution-era-of-ai-5-key-takeaways-from-iconiqs-state-of-ai-report",
+      "tier": "secondary"
+    },
+    {
+      "id": "techcrunch-cursor",
+      "title": "TechCrunch, Cursor in talks to raise $2B at $50B valuation (Apr 2026)",
+      "url": "https://techcrunch.com/2026/04/17/sources-cursor-in-talks-to-raise-2b-at-50b-valuation-as-enterprise-growth-surges/",
+      "tier": "secondary"
+    },
+    {
+      "id": "stlfed-rps-hours-assisted",
+      "title": "St. Louis Fed, Generative AI work hours assisted by occupation (Real-Time Population Survey, FRED, Q3 2026)",
+      "url": "https://fred.stlouisfed.org/series/RPSGENAIASSISTWRKHRSALL",
       "tier": "primary"
     }
   ]

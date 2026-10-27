@@ -202,7 +202,8 @@ main { padding-block: var(--s-6) var(--s-7); }
 .fn-bar.next { background: var(--t2); }
 .fn-val { font: 500 0.86rem var(--f-mono); text-align: right; }
 .value-controls { align-items: end; gap: var(--s-3) var(--s-6); }
-.value-controls .slider { min-width: 12rem; }
+.value-controls .sliders { flex: 1 1 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--s-3) var(--s-6); }
+.value-controls .slider { min-width: 0; justify-content: space-between; }
 .value-controls .slider b { font-family: var(--f-mono); color: var(--ink); text-transform: none; letter-spacing: 0; }
 input[type="range"] { accent-color: var(--accent); width: 100%; }
 .value-table td:first-child { white-space: nowrap; }
