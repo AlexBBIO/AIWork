@@ -1,5 +1,6 @@
 // Validate the data, then copy the static sites into dist/ for deployment.
-// The root site goes to dist/, the Opus revision to dist/Opus/.
+// The main site goes to dist/, the archived original to dist/original/, and /Opus/
+// (where the main site was previewed) redirects to /.
 // Usage: node scripts/build.mjs
 import { execFileSync } from "node:child_process";
 import {
@@ -17,7 +18,7 @@ import { validateBundle } from "../astra/model.js";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const SITES = [
   { src: root, out: "" },
-  { src: join(root, "Opus"), out: "Opus", flag: ["--site", "Opus"] },
+  { src: join(root, "original"), out: "original", flag: ["--site", "original"] },
 ];
 
 const dist = join(root, "dist");
@@ -46,17 +47,23 @@ for (const site of SITES) {
       index.assessments.map((id) => [id, read(`assessments/${id}.json`)]),
     ),
   };
-  // Optional: the economic-value page's revenue data (Opus revision).
+  // Optional: the economic-value page's revenue data (main site only).
   if (existsSync(join(site.src, "data", "economics.json")))
     bundle.economics = read("economics.json");
   writeFileSync(join(out, "data", "bundle.json"), JSON.stringify(bundle));
 }
-console.log("✓ built dist/ and dist/Opus/");
+// Old /Opus/ links land on the main site, keeping any #view.
+mkdirSync(join(dist, "Opus"));
+writeFileSync(
+  join(dist, "Opus", "index.html"),
+  `<!doctype html><meta charset="utf-8"><title>Headroom Index</title><link rel="canonical" href="../"><meta http-equiv="refresh" content="0; url=../"><script>location.replace("../" + location.hash)</script><a href="../">Headroom Index</a>`,
+);
+console.log("✓ built dist/, dist/original/ and the /Opus/ redirect");
 
 const bundle = JSON.parse(
-  readFileSync(join(dist, "data", "bundle.json"), "utf8"),
+  readFileSync(join(dist, "original", "data", "bundle.json"), "utf8"),
 );
-// Keep the original site intact; Astra is an independent comparison route.
+// Astra was built against the original site's data; it stays an independent comparison route.
 const astra = {
   ...bundle,
   config: JSON.parse(readFileSync(join(root, "astra", "config.json"), "utf8")),

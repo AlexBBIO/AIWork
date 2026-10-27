@@ -1,5 +1,5 @@
 // Render a site's share image (assets/og.png) from its live assessment, so the picture
-// matches the headline. Usage: node scripts/og.mjs [--site Opus]   (needs playwright)
+// matches the headline. Usage: node scripts/og.mjs [--site original]   (needs playwright)
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
@@ -26,7 +26,7 @@ const bands = [
 ];
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const asOf = new Date(`${assessment.updated || assessment.date}T00:00:00Z`);
-const eyebrow = ["Headroom", site ? `${site.replace("/", "")} revision` : null, `${MONTHS[asOf.getUTCMonth()]} ${asOf.getUTCFullYear()}`].filter(Boolean).join(" · ");
+const eyebrow = ["Headroom", site ? `${site.replace("/", "")} version` : null, `${MONTHS[asOf.getUTCMonth()]} ${asOf.getUTCFullYear()}`].filter(Boolean).join(" · ");
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   body { margin: 0; width: 1200px; height: 630px; background: ${color("bg")}; color: ${color("ink")}; font-family: "Helvetica Neue", Arial, sans-serif; }

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { computeModel, projectArchetype, scoreBand, validate, validateIndex } from "../assets/model.js";
+import { computeModel, projectArchetype, scoreBand, scoreRange, validate, validateIndex } from "../assets/model.js";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../data/${p}`, import.meta.url)));
 const taxonomy = read("taxonomy.json");
@@ -40,7 +40,7 @@ test("backfilled snapshots collapse every tier onto f0", () => {
   const a = assessments[index.assessments[0]];
   assert.equal(a.kind, "backfill");
   const m = computeModel({ taxonomy, occupations, assessment: a });
-  for (const x of m.archetypes) { assert.equal(x.f1, x.f0); assert.equal(x.f2, x.f0); assert.equal(x.band.f1, 0); }
+  for (const x of m.archetypes) { assert.equal(x.f1, x.f0); assert.equal(x.f2, x.f0); assert.deepEqual(x.range.f2, [x.f0, x.f0]); }
   for (const v of m.index.proj) close(v, m.index.f0);
 });
 
@@ -74,7 +74,23 @@ test("uncertainty bands follow confidence", () => {
   assert.ok(high.f1 < low.f1 && high.f2 < low.f2);
   assert.ok(low.f2 > low.f1);
   const m = computeModel({ taxonomy, occupations, assessment: live });
-  assert.ok(m.index.band.f2 > m.index.band.f1 && m.index.band.f1 > 0);
+  const width = (r) => r[1] - r[0];
+  assert.ok(width(m.index.range.f2) > width(m.index.range.f1) && width(m.index.range.f1) > 0);
+});
+
+test("forecast ranges stay between today's score and the ceiling", () => {
+  assert.deepEqual(scoreRange({ f0: 18, f1: 24, f2: 29, ceiling: 55 }, { f1: 7, f2: 11.2 }).f1, [18, 31]);
+  assert.deepEqual(scoreRange({ f0: 88, f1: 92, f2: 95, ceiling: 99 }, { f1: 5, f2: 8 }).f2, [88, 99]);
+  for (const weight of ["wage", "employment"]) {
+    const m = computeModel({ taxonomy, occupations, assessment: live, weight });
+    for (const x of m.archetypes) for (const k of ["f1", "f2"]) {
+      const [lo, hi] = x.range[k];
+      assert.ok(lo >= x.f0 && lo <= x[k] && hi >= x[k] && hi <= x.ceiling, `${x.id} ${k}: ${lo}–${hi}`);
+    }
+    const { f0, f1, f2, limit, range } = m.index;
+    assert.ok(range.f1[0] >= f0 && range.f1[0] < f1 && range.f1[1] > f1 && range.f2[1] <= limit);
+    assert.ok(range.f2[0] < f2 && range.f2[1] > f2);
+  }
 });
 
 test("the shipped data validates", () => {
@@ -87,4 +103,67 @@ test("validation catches a bad index and a missing source", () => {
   assert.ok(bad.some((e) => e.includes("live")));
   const errs = validate({ taxonomy, occupations, assessment: { ...live, scores: { ...live.scores, draft: { ...live.scores.draft, sources: ["nope"] } } } });
   assert.ok(errs.some((e) => e.includes("unknown source id nope")));
+});
+
+test("every meetings task is split into live time and prep and follow-up", () => {
+  for (const o of occupations.occupations) {
+    o.tasks.forEach(([, arch, share], i) => {
+      if (arch !== "meetings") return;
+      const next = o.tasks[i + 1];
+      assert.ok(next && next[1] === "followup", `${o.id}: meetings task without a follow-up task`);
+      close(next[2] * 3, share, 1e-9);
+    });
+    assert.equal(o.tasks.filter((t) => t[1] === "followup").length, o.tasks.filter((t) => t[1] === "meetings").length, o.id);
+  }
+});
+
+test("snapshot highlights cite sources the live snapshot lists", () => {
+  const known = new Set(live.sources.map((s) => s.id));
+  for (const id of index.assessments) for (const h of assessments[id].highlights || []) {
+    assert.ok(typeof h === "object" && h.text && h.sources?.length, `${id}: highlight without sources`);
+    for (const ref of h.sources) assert.ok(known.has(ref), `${id}: unknown source ${ref}`);
+  }
+  const broken = { ...assessments[index.assessments[0]], highlights: [{ text: "x", sources: ["nope"] }] };
+  const errs = validateIndex({ taxonomy, index, assessments: { ...assessments, [broken.id]: broken } });
+  assert.ok(errs.some((e) => e.includes("unknown source nope")));
+});
+
+test("capture starts at today's level, grows at the stated rate and stays under its ceiling", async () => {
+  const { captureAt } = await import("../assets/model.js");
+  const p = { c0: 0.03, growth: 2.5, ceiling: 0.2 };
+  close(captureAt(0, p), 0.03, 1e-12);
+  const early = captureAt(0.01, p) / captureAt(0, p);
+  close(Math.log(early) / 0.01, Math.log(2.5), 0.01);
+  let prev = 0;
+  for (let t = 0; t <= 30; t += 0.5) { const c = captureAt(t, p); assert.ok(c >= prev && c < 0.2); prev = c; }
+  assert.ok(captureAt(30, p) > 0.199);
+  close(captureAt(5, { ...p, growth: 1 }), 0.03, 1e-12);
+});
+
+test("lab revenue interpolates log-linearly and only inside its reports", async () => {
+  const { revenueAt, interpolate } = await import("../assets/model.js");
+  const reports = [{ t: 0, v: 10 }, { t: 1, v: 40 }];
+  close(revenueAt(reports, 0.5), 20, 1e-9);
+  assert.equal(revenueAt(reports, -0.1), null);
+  assert.equal(revenueAt(reports, 1.1), null);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 1), 2, 1e-12);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 5), 3, 1e-12);
+});
+
+test("the shipped revenue data validates and sets a sensible starting capture", async () => {
+  const { validateEconomics, revenueAt } = await import("../assets/model.js");
+  const econ = read("economics.json");
+  assert.deepEqual(validateEconomics(econ, new Set(econ.sources.map((s) => s.id))), []);
+  const bad = { ...econ, revenue: [...econ.revenue, { lab: "nope", date: "2026-01-01", run_rate: -1, sources: ["missing"] }] };
+  const errs = validateEconomics(bad, new Set(econ.sources.map((s) => s.id)));
+  assert.ok(errs.some((e) => e.includes("unknown lab")) && errs.some((e) => e.includes("positive")) && errs.some((e) => e.includes("unknown source")));
+  const m = computeModel({ taxonomy, occupations, assessment: live, weight: "wage" });
+  const latest = econ.labs.reduce((s, l) => { const r = econ.revenue.filter((x) => x.lab === l.id); return s + r[r.length - 1].run_rate; }, 0);
+  const capture = latest / ((m.totals.wageBill / 1000) * (m.index.f0 / 100));
+  assert.ok(capture > 0 && capture < 0.2, `capture ${capture}`);
+  for (const l of econ.labs) {
+    const r = econ.revenue.filter((x) => x.lab === l.id).map((x) => ({ t: Date.parse(x.date), v: x.run_rate }));
+    for (let i = 1; i < r.length; i++) assert.ok(r[i].v >= r[i - 1].v, `${l.id} run-rate falls`);
+    assert.ok(revenueAt(r, (r[0].t + r[r.length - 1].t) / 2) > 0);
+  }
 });

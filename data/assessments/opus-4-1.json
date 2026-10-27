@@ -4,12 +4,33 @@
   "anchor": "Claude Opus 4.1",
   "label": "Before agentic models",
   "kind": "backfill",
-  "peers": "GPT-5 (Aug 2025), Gemini 2.5 Pro. Contested: Opus 4.1 led GDPval, GPT-5 led METR horizon",
+  "peers": "GPT-5 (Aug 7), Gemini 2.5 Pro",
   "highlights": [
-    "GDPval 47.6% wins-or-ties, best of all models tested",
-    "METR 1h40m at 50% / 23m at 80%, vs GPT-5 3h23m / 38m (METR's current results file)",
-    "RLI at launch (Oct 2025): best agent 2.5%, GPT-5 1.67%",
-    "After human review and fixes, GPT-5's GDPval speedup shrank to 1.12–1.39x"
+    {
+      "text": "GDPval 47.6% wins-or-ties, best of all models tested",
+      "sources": [
+        "gdpval-paper"
+      ]
+    },
+    {
+      "text": "METR 1h40m at 50% / 23m at 80%, vs GPT-5 3h23m / 38m (METR's current results file)",
+      "sources": [
+        "metr-results-file"
+      ]
+    },
+    {
+      "text": "RLI at launch (Oct 2025): best agent 2.5%, GPT-5 1.67%",
+      "sources": [
+        "scale-rli",
+        "scale-rli-blog"
+      ]
+    },
+    {
+      "text": "After human review and fixes, GPT-5's GDPval speedup shrank to 1.12–1.39x",
+      "sources": [
+        "gdpval-paper"
+      ]
+    }
   ],
   "scores": {
     "draft": {
@@ -60,6 +81,9 @@
     "project": {
       "f0": 26
     },
+    "followup": {
+      "f0": 36
+    },
     "service": {
       "f0": 56
     },
@@ -85,7 +109,7 @@
       "f0": 6
     },
     "meetings": {
-      "f0": 8
+      "f0": 3
     },
     "people": {
       "f0": 6
@@ -100,6 +124,6 @@
       "f0": 1
     }
   },
-  "frontier": "Contested: Opus 4.1 led GDPval, GPT-5 led METR's horizon",
+  "frontier": "Claude Opus 4.1, best on GDPval; GPT-5 followed two days later and led METR's time horizon",
   "milestone": true
 }

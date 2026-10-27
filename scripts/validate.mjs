@@ -1,5 +1,5 @@
 // Validate the data files and print a summary of the latest assessment.
-// Usage: node scripts/validate.mjs [--site Opus] [assessment-id]
+// Usage: node scripts/validate.mjs [--site original] [assessment-id]
 // --site picks a site folder (default: the root site); each site has its own model and data.
 import { readFileSync, existsSync } from "node:fs";
 

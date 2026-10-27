@@ -1,4 +1,4 @@
-// Browser smoke test: both built sites (/ and /Opus/) render every view without console errors.
+// Browser smoke test: the main site (/), the original (/original/) and Astra render every view without console errors.
 // Usage: node scripts/build.mjs && node scripts/smoke.mjs   (needs playwright and a chromium install)
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
@@ -14,7 +14,7 @@ const types = {
   ".json": "application/json",
   ".png": "image/png",
 };
-// Mirrors Vercel's trailingSlash: true, which sends /Opus to /Opus/.
+// Mirrors Vercel's trailingSlash: true, which sends /original to /original/.
 const server = createServer(async (req, res) => {
   const url = req.url.split("?")[0];
   const path = join(
@@ -62,7 +62,7 @@ try {
       )
         failures.push(`${vp.width}px console: ${m.text()}`);
     });
-    for (const site of ["", "Opus/"]) {
+    for (const site of ["", "original/"]) {
       for (const view of ["overview", "jobs/swe", "tasks/meetings", "value", "method"]) {
         await page.goto(`${base}${site}#${view}`, { waitUntil: "networkidle" });
         await page.waitForFunction(
@@ -79,7 +79,7 @@ try {
             `${vp.width}px /${site}#${view}: horizontal overflow of ${w}px`,
           );
       }
-      // The headline figure is in the h1 on the root site and beside it on /Opus/.
+      // The headline figure is beside the h1 on the main site and in it on /original/.
       const h1 = await page.evaluate(
         () => (document.getElementById("lead-figure") || document.getElementById("lead-h1")).textContent,
       );
@@ -93,12 +93,17 @@ try {
           `${vp.width}px /${site}: deep link #jobs/swe did not open the job`,
         );
     }
-    // Without its trailing slash the Opus page must still load its own files.
-    await page.goto(`${base}Opus#overview`, { waitUntil: "networkidle" });
-    if (!new URL(page.url()).pathname.endsWith("/Opus/"))
+    // Without its trailing slash the original must still load its own files.
+    await page.goto(`${base}original#overview`, { waitUntil: "networkidle" });
+    if (!new URL(page.url()).pathname.endsWith("/original/"))
       failures.push(
-        `${vp.width}px: /Opus did not move to /Opus/ (${page.url()})`,
+        `${vp.width}px: /original did not move to /original/ (${page.url()})`,
       );
+    // Old /Opus links land on the main site with their view.
+    await page.goto(`${base}Opus#value`, { waitUntil: "networkidle" });
+    const moved = new URL(page.url());
+    if (moved.pathname !== "/" || moved.hash !== "#value")
+      failures.push(`${vp.width}px: /Opus#value did not redirect to /#value (${page.url()})`);
     await page.close();
     const astra = await browser.newPage({ viewport: vp });
     astra.on("pageerror", (e) =>

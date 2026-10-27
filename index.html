@@ -19,19 +19,24 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="mast">
-  <div class="wrap mast-row">
-    <a class="brand" href="#overview">
+  <div class="wrap mast-top">
+    <a class="brand" href="#overview" aria-label="Headroom: overview">
+      <span class="brand-mark" aria-hidden="true">H</span>
       <span class="brand-name">Headroom</span>
-      <span class="brand-sub">AI vs. U.S. white-collar work</span>
+      <span class="edition">Index</span>
     </a>
+    <a class="original" href="original/">Original version <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="wrap mast-nav">
     <nav class="tabs" aria-label="Sections">
       <a href="#overview" data-view="overview">Overview</a>
       <a href="#jobs" data-view="jobs">Jobs</a>
       <a href="#tasks" data-view="tasks">Tasks</a>
+      <a href="#value" data-view="value">Value</a>
       <a href="#method" data-view="method">Method</a>
     </nav>
     <div class="measure">
-      <span class="measure-label" id="measure-label">Weight by</span>
+      <span class="sr" id="measure-label">Weight the index by</span>
       <div class="seg" role="radiogroup" aria-labelledby="measure-label" id="weight-seg">
         <button type="button" id="weight-wage" role="radio" data-value="wage" title="Weight each occupation by its total wages (employment × mean wage)">Wages</button>
         <button type="button" id="weight-employment" role="radio" data-value="employment" title="Weight each occupation by headcount">People</button>
@@ -48,12 +53,25 @@
 
   <!-- Overview -->
   <section id="view-overview" class="view" aria-label="Overview">
-    <div class="lead">
-      <p class="eyebrow" id="lead-eyebrow"></p>
-      <h1 id="lead-h1">Loading…</h1>
-      <p class="lede" id="lead-lede"></p>
+    <div class="hero">
+      <div class="hero-main">
+        <p class="eyebrow" id="lead-eyebrow"></p>
+        <h1 id="lead-h1">Loading…</h1>
+        <div class="hero-score"><span class="figure" id="lead-figure"></span><p id="lead-figure-note"></p></div>
+        <p class="def">A task-by-task estimate: work a competent professional would accept after no more than light review. It measures capability, not adoption.</p>
+        <p class="lede" id="lead-lede"></p>
+        <div class="scope" id="lead-scope"></div>
+      </div>
+      <aside class="hero-panel" id="readout" aria-labelledby="readout-h"></aside>
     </div>
-    <div class="readout" id="readout"></div>
+    <form class="search-callout" id="hero-search" role="search">
+      <div><h2>What does this mean for your work?</h2><p>Find an occupation and look inside its working week.</p></div>
+      <div class="search-row">
+        <label class="sr" for="hero-query">Find your occupation</label>
+        <input id="hero-query" type="search" placeholder="Try software developer or teacher" autocomplete="off">
+        <button class="btn primary" type="submit">Explore</button>
+      </div>
+    </form>
 
     <section class="panel" aria-labelledby="timeline-h">
       <div class="panel-head">
@@ -73,7 +91,7 @@
       <div class="legend legend-hours" id="week-legend"></div>
     </section>
 
-    <div class="two-col">
+    <div class="three-col">
       <section class="panel" aria-labelledby="most-h">
         <div class="panel-head"><h2 id="most-h">Most exposed today</h2><p class="note">Share of the job's working time AI can do now. Select a job to open it.</p></div>
         <ol class="rank" id="most"></ol>
@@ -81,6 +99,10 @@
       <section class="panel" aria-labelledby="least-h">
         <div class="panel-head"><h2 id="least-h">Least exposed today</h2><p class="note">Jobs held back by in-person work, people and relationships.</p></div>
         <ol class="rank" id="least"></ol>
+      </section>
+      <section class="panel" aria-labelledby="movers-h">
+        <div class="panel-head"><h2 id="movers-h">Biggest gains</h2><p class="note">Points of working time the next two generations add.</p></div>
+        <ol class="rank" id="movers"></ol>
       </section>
     </div>
 
@@ -122,7 +144,7 @@
   <section id="view-tasks" class="view" aria-labelledby="tasks-h" hidden>
     <div class="lead lead-sm">
       <h1 id="tasks-h">Task types</h1>
-      <p class="lede">Every task in every job maps to one of these 29 types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence and sources behind it.</p>
+      <p class="lede">Every task in every job maps to one of these <span id="arch-count">30</span> types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence and sources behind it.</p>
     </div>
     <div class="filters">
       <label class="ctl"><span>Order by</span>
@@ -144,11 +166,79 @@
     </details>
   </section>
 
+  <!-- Value -->
+  <section id="view-value" class="view" aria-labelledby="value-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="value-h">What is the work worth?</h1>
+      <p class="lede" id="value-lede"></p>
+    </div>
+    <div class="value-stats" id="value-stats"></div>
+
+    <section class="panel" aria-labelledby="funnel-h">
+      <div class="panel-head">
+        <h2 id="funnel-h">From wages to lab revenue</h2>
+        <p class="note" id="funnel-note"></p>
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vpath-h">
+      <div class="panel-head">
+        <h2 id="vpath-h">Lab revenue as a share of white-collar pay</h2>
+        <p class="note" id="vpath-note"></p>
+      </div>
+      <div class="filters value-controls">
+        <div class="ctl"><span id="scen-label">Scenario</span>
+          <div class="seg" role="radiogroup" aria-labelledby="scen-label" id="scen-seg"></div>
+        </div>
+        <label class="ctl slider"><span>Capture growth, first year <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="5" step="0.1"></label>
+        <label class="ctl slider"><span>Capture ceiling <b id="ceiling-out"></b></span><input type="range" id="ceiling-in" min="0.05" max="0.5" step="0.01"></label>
+      </div>
+      <div class="chart-box" id="vchart"></div>
+      <div class="legend" id="vchart-legend"></div>
+      <div class="table-scroll"><table class="data value-table" id="value-table"></table></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vgroups-h">
+      <div class="panel-head">
+        <h2 id="vgroups-h">Where the value sits</h2>
+        <p class="note" id="vgroups-note"></p>
+      </div>
+      <div class="vgroups" id="vgroups"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="vdata-h">
+      <div class="panel-head">
+        <h2 id="vdata-h">Revenue data and assumptions</h2>
+        <p class="note" id="vdata-note"></p>
+      </div>
+      <div class="table-scroll"><table class="data" id="revenue-table"></table></div>
+      <h3 class="sub-h">What the labs project</h3>
+      <p class="note" id="vproj-note"></p>
+      <div class="table-scroll"><table class="data" id="projection-table"></table></div>
+      <div class="method-grid" id="value-method"></div>
+    </section>
+  </section>
+
   <!-- Method -->
   <section id="view-method" class="view" aria-labelledby="method-h" hidden>
     <div class="lead lead-sm">
       <h1 id="method-h">Method and sources</h1>
     </div>
+    <section class="panel" aria-labelledby="rev-h">
+      <div class="panel-head">
+        <h2 id="rev-h">What changed from the original</h2>
+        <p class="note">This version was rebuilt from an audit of the original Headroom site, which is kept for comparison at <a href="original/">/original</a>. The audit write-ups are in the <a href="https://github.com/AlexBBIO/AIWork/tree/HEAD/reports" target="_blank" rel="noopener">project repository</a>.</p>
+      </div>
+      <ul class="revision">
+        <li><b>Meetings is split in two.</b> Live meetings and discussion stay a human task type; meeting prep, notes and follow-up is its own type, scored like other codified writing work. A quarter of each job's meetings time is treated as prep and follow-up. This adds under a point to today's figure.</li>
+        <li><b>Forecast ranges stop at today's score and at the ceiling</b>, since scores do not fall and cannot pass the ceiling.</li>
+        <li><b>Every snapshot highlight links to its sources</b>, and the source tiers are defined by who ran the evaluation.</li>
+        <li><b>Corrections from three source checks</b>: METR horizons and doubling time, the OSWorld and τ²-bench airline figures, Mercor's wording, the frontier on each snapshot date, and primary pages in place of aggregators for GDPval-AA and τ²-bench telecom.</li>
+        <li><b>A Value page</b> that sets the frontier labs' revenue against the white-collar wage bill and projects it as models can do more of the work and labs earn more of what that work is worth, with adjustable scenarios.</li>
+        <li><b>Reading aids</b>: a definition under the headline, the level at saturation, a biggest-gains list, a pace check beside the forecasts, a colour scheme where blue is AI capability and clay is the work that needs a person, and tooltips that explain and highlight each band, step through a task type's history and open the evidence behind each snapshot.</li>
+      </ul>
+    </section>
     <section class="panel" aria-labelledby="hist-h">
       <div class="panel-head">
         <h2 id="hist-h">Snapshots</h2>
@@ -156,7 +246,7 @@
       </div>
       <div class="snapshots" id="snapshots"></div>
     </section>
-    <section class="panel" aria-labelledby="check-h">
+    <section class="panel" id="m-forecasts" aria-labelledby="check-h">
       <div class="panel-head">
         <h2 id="check-h">Checking the forecasts</h2>
         <p class="note">Each live snapshot's Frontier+1 and Frontier+2 forecasts are kept when it is retired, so the next snapshots can be scored against them.</p>
@@ -178,14 +268,14 @@
     <section class="panel" aria-labelledby="src-h">
       <div class="panel-head">
         <h2 id="src-h">Sources</h2>
-        <p class="note">Primary: the lab, benchmark author or study itself. Independent: a third-party evaluator. Secondary: news, aggregators and blogs relaying someone else's figures. Each task type on the Tasks tab links to its own sources.</p>
+        <p class="note">Primary: a model's own lab, or the paper or study that produced the figure. Independent: a third party that runs its own benchmark or evaluation on other companies' models. Secondary: news, aggregators and blogs relaying someone else's figures. Each task type on the Tasks tab links to its own sources.<span id="src-accessed"></span></p>
       </div>
       <div class="sources" id="sources"></div>
     </section>
   </section>
 </main>
 
-<div id="tooltip" class="tooltip" aria-hidden="true" hidden></div>
+<div id="tooltip" class="tooltip" aria-hidden="true"></div>
 <script type="module" src="assets/app.js"></script>
 </body>
 </html>
