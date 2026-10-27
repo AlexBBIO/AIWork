@@ -1,0 +1,130 @@
+{
+  "id": "opus-4-6",
+  "date": "2026-02-05",
+  "anchor": "Claude Opus 4.6",
+  "label": "Opus release",
+  "kind": "backfill",
+  "peers": "GPT-5.3-Codex (same day; TB 2.0 77.3%), Gemini 3.1 Pro (Feb 19; top of AA index), GPT-5.4 (Mar 5; GDPval 83.0%, OSWorld-V 75.0%)",
+  "highlights": [
+    {
+      "text": "METR 11h59m / 1h10m",
+      "sources": [
+        "metr-results-file"
+      ]
+    },
+    {
+      "text": "OSWorld-Verified 72.7%; GDPval-AA +144 Elo over GPT-5.2 and +190 over Opus 4.5",
+      "sources": [
+        "anthropic-opus-4-6",
+        "vellum-opus-4-6"
+      ]
+    },
+    {
+      "text": "BigLaw Bench 90.2% (Harvey), tau2 telecom 99%",
+      "sources": [
+        "anthropic-opus-4-6",
+        "llmlearner-tau2-telecom"
+      ]
+    },
+    {
+      "text": "FrontierFinance 61.8% vs human experts' 77.2%; RLI 4.17% (Cowork)",
+      "sources": [
+        "frontierfinance",
+        "scale-rli"
+      ]
+    }
+  ],
+  "scores": {
+    "draft": {
+      "f0": 72
+    },
+    "edit": {
+      "f0": 80
+    },
+    "translate": {
+      "f0": 70
+    },
+    "research": {
+      "f0": 66
+    },
+    "analysis": {
+      "f0": 50
+    },
+    "expert": {
+      "f0": 44
+    },
+    "diagnosis": {
+      "f0": 45
+    },
+    "code": {
+      "f0": 64
+    },
+    "debug": {
+      "f0": 50
+    },
+    "design_tech": {
+      "f0": 36
+    },
+    "entry": {
+      "f0": 67
+    },
+    "docproc": {
+      "f0": 62
+    },
+    "accounting": {
+      "f0": 51
+    },
+    "compliance": {
+      "f0": 51
+    },
+    "scheduling": {
+      "f0": 48
+    },
+    "project": {
+      "f0": 41
+    },
+    "followup": {
+      "f0": 56
+    },
+    "service": {
+      "f0": 73
+    },
+    "support": {
+      "f0": 57
+    },
+    "creative": {
+      "f0": 47
+    },
+    "media": {
+      "f0": 21
+    },
+    "grading": {
+      "f0": 60
+    },
+    "teaching": {
+      "f0": 6
+    },
+    "sales": {
+      "f0": 17
+    },
+    "relationship": {
+      "f0": 8
+    },
+    "meetings": {
+      "f0": 5
+    },
+    "people": {
+      "f0": 9
+    },
+    "strategy": {
+      "f0": 20
+    },
+    "care": {
+      "f0": 6
+    },
+    "physical": {
+      "f0": 2
+    }
+  },
+  "frontier": "Contested: Opus 4.6 and GPT-5.3-Codex, released the same day; Gemini 3.1 Pro (Feb 19) and GPT-5.4 (Mar 5) followed within a month"
+}

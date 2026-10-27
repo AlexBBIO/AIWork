@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Headroom Index (Opus revision)</title>
+<meta name="description" content="How much U.S. white-collar work AI models can do, task by task, how fast that has changed since the first agentic models, and how far it is from saturation.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Headroom (Opus revision): how much U.S. white-collar work AI can do">
+<meta property="og:description" content="A task-by-task model of what frontier AI can do across 98 occupations and 60 million jobs, with forecasts for the next two model generations and a ceiling set by presence, accountability and preference.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23104281'/%3E%3Crect x='6' y='18' width='20' height='6' fill='%23ffffff'/%3E%3Crect x='6' y='9' width='12' height='6' fill='%2386b6ef'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <div class="wrap mast-row">
+    <a class="brand" href="#overview">
+      <span class="brand-name">Headroom</span>
+      <span class="brand-sub">AI vs. U.S. white-collar work</span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#overview" data-view="overview">Overview</a>
+      <a href="#jobs" data-view="jobs">Jobs</a>
+      <a href="#tasks" data-view="tasks">Tasks</a>
+      <a href="#method" data-view="method">Method</a>
+    </nav>
+    <div class="measure">
+      <span class="measure-label" id="measure-label">Weight by</span>
+      <div class="seg" role="radiogroup" aria-labelledby="measure-label" id="weight-seg">
+        <button type="button" id="weight-wage" role="radio" data-value="wage" title="Weight each occupation by its total wages (employment × mean wage)">Wages</button>
+        <button type="button" id="weight-employment" role="radio" data-value="employment" title="Weight each occupation by headcount">People</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div id="edits-banner" class="banner" hidden>
+    <span>You're viewing your own edited task scores, not the published assessment.</span>
+    <button type="button" id="reset-edits-top" class="link-btn">Reset to published</button>
+  </div>
+
+  <!-- Overview -->
+  <section id="view-overview" class="view" aria-label="Overview">
+    <div class="lead">
+      <p class="eyebrow" id="lead-eyebrow"></p>
+      <h1 id="lead-h1">Loading…</h1>
+      <p class="def">Share of working time spent on tasks the best public AI model can do to a competent professional's standard, with no more than light review. It measures capability, not adoption.</p>
+      <p class="lede" id="lead-lede"></p>
+    </div>
+    <div class="readout" id="readout"></div>
+
+    <section class="panel" aria-labelledby="timeline-h">
+      <div class="panel-head">
+        <h2 id="timeline-h">From the first agentic models to saturation</h2>
+        <p class="note" id="timeline-note"></p>
+      </div>
+      <div class="chart-box" id="timeline"></div>
+      <div class="legend" id="timeline-legend"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="week-h">
+      <div class="panel-head">
+        <h2 id="week-h">An average white-collar workweek</h2>
+        <p class="note" id="week-note"></p>
+      </div>
+      <div class="week" id="week" role="img"></div>
+      <div class="legend legend-hours" id="week-legend"></div>
+    </section>
+
+    <div class="three-col">
+      <section class="panel" aria-labelledby="most-h">
+        <div class="panel-head"><h2 id="most-h">Most exposed today</h2><p class="note">Share of the job's working time AI can do now. Select a job to open it.</p></div>
+        <ol class="rank" id="most"></ol>
+      </section>
+      <section class="panel" aria-labelledby="least-h">
+        <div class="panel-head"><h2 id="least-h">Least exposed today</h2><p class="note">Jobs held back by in-person work, people and relationships.</p></div>
+        <ol class="rank" id="least"></ol>
+      </section>
+      <section class="panel" aria-labelledby="movers-h">
+        <div class="panel-head"><h2 id="movers-h">Biggest gains</h2><p class="note">Points of working time the next two generations add.</p></div>
+        <ol class="rank" id="movers"></ol>
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="glossary-h">
+      <h2 id="glossary-h">How to read this</h2>
+      <dl class="glossary" id="glossary"></dl>
+    </section>
+  </section>
+
+  <!-- Jobs -->
+  <section id="view-jobs" class="view" aria-labelledby="jobs-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="jobs-h">Jobs</h1>
+      <p class="lede">Each occupation is split into the tasks that fill its week. Open a group, then a job, to see which hours AI can take now and in the next two generations. Task mixes are estimates, so read the hours as rough.</p>
+    </div>
+    <div class="filters">
+      <label class="ctl grow"><span>Find a job</span><input id="occ-search" type="search" placeholder="e.g. paralegal, 15-1252, legal"></label>
+      <label class="ctl"><span>Sort jobs by</span>
+        <select id="occ-sort">
+          <option value="now">Most exposed now</option>
+          <option value="jump">Biggest gain next two generations</option>
+          <option value="size">Most people employed</option>
+          <option value="title">A to Z</option>
+        </select>
+      </label>
+      <div class="ctl"><span id="occ-view-label">Show as</span>
+        <div class="seg" role="radiogroup" aria-labelledby="occ-view-label" id="occ-view">
+          <button type="button" role="radio" data-value="groups">Groups</button>
+          <button type="button" role="radio" data-value="flat">One ranked list</button>
+        </div>
+      </div>
+    </div>
+    <div class="legend" id="jobs-legend"></div>
+    <div class="groups-head" id="groups-head" aria-hidden="true"></div>
+    <div class="groups" id="groups"></div>
+  </section>
+
+  <!-- Tasks -->
+  <section id="view-tasks" class="view" aria-labelledby="tasks-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="tasks-h">Task types</h1>
+      <p class="lede">Every task in every job maps to one of these 29 types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence and sources behind it.</p>
+    </div>
+    <div class="filters">
+      <label class="ctl"><span>Order by</span>
+        <select id="arch-sort">
+          <option value="share">Share of all work, by family</option>
+          <option value="score">Score today</option>
+          <option value="gain">Biggest gain next two generations</option>
+          <option value="name">A to Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="legend" id="dots-legend"></div>
+    <div class="dots" id="dots"></div>
+    <details class="panel editor" id="editor">
+      <summary><span>Adjust the scores</span><span class="note">Test your own assumptions. Changes stay in this browser, or share them with a link.</span></summary>
+      <div class="editor-readout" id="editor-readout"></div>
+      <div class="filters"><button type="button" id="reset-edits" class="btn" disabled>Reset to published</button><button type="button" id="copy-link" class="btn" disabled>Copy link to this scenario</button><span class="note" id="copy-status"></span></div>
+      <div class="table-scroll"><table class="data" id="arch-table"></table></div>
+    </details>
+  </section>
+
+  <!-- Method -->
+  <section id="view-method" class="view" aria-labelledby="method-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="method-h">Method and sources</h1>
+    </div>
+    <section class="panel" aria-labelledby="rev-h">
+      <div class="panel-head">
+        <h2 id="rev-h">This revision</h2>
+        <p class="note">A revised version of Headroom built from an audit of the original, which stays at <a href="../">the main page</a>. The audit write-ups are in the <a href="https://github.com/AlexBBIO/AIWork/tree/HEAD/reports" target="_blank" rel="noopener">project repository</a>.</p>
+      </div>
+      <ul class="revision">
+        <li><b>Meetings is split in two.</b> Live meetings and discussion stay a human task type; meeting prep, notes and follow-up is its own type, scored like other codified writing work. A quarter of each job's meetings time is treated as prep and follow-up. This adds under a point to today's figure.</li>
+        <li><b>Forecast ranges stop at today's score and at the ceiling</b>, since scores do not fall and cannot pass the ceiling.</li>
+        <li><b>Every snapshot highlight links to its sources</b>, and the source tiers are defined by who ran the evaluation.</li>
+        <li><b>Corrections from two source checks</b>: METR horizons and doubling time, the OSWorld figures, Mercor's wording, and the frontier on each snapshot date.</li>
+        <li><b>Reading aids</b>: a definition under the headline, the level at saturation, a biggest-gains list, a pace check under the timeline, and higher-contrast tier colours.</li>
+      </ul>
+    </section>
+    <section class="panel" aria-labelledby="hist-h">
+      <div class="panel-head">
+        <h2 id="hist-h">Snapshots</h2>
+        <p class="note">One snapshot per Claude Opus release. Each scores what the best publicly available model could do on that date, which is not always the Opus model itself. Earlier snapshots were scored afterwards from benchmark results and are marked as backfilled. Abbreviations: GDPval, expert-graded comparison with professionals' deliverables; METR, length of task a model finishes on its own; RLI, Remote Labor Index, share of whole freelance projects done to professional standard; OSWorld, computer use.</p>
+      </div>
+      <div class="snapshots" id="snapshots"></div>
+    </section>
+    <section class="panel" aria-labelledby="check-h">
+      <div class="panel-head">
+        <h2 id="check-h">Checking the forecasts</h2>
+        <p class="note">Each live snapshot's Frontier+1 and Frontier+2 forecasts are kept when it is retired, so the next snapshots can be scored against them.</p>
+      </div>
+      <div class="checks" id="forecast-check"></div>
+    </section>
+    <section class="panel method" aria-labelledby="how-h">
+      <h2 id="how-h">How the numbers are built</h2>
+      <div class="evidence" id="evidence"></div>
+      <div class="method-grid" id="method-grid"></div>
+    </section>
+    <section class="panel" aria-labelledby="calib-h">
+      <div class="panel-head">
+        <h2 id="calib-h">Calibration</h2>
+        <p class="note" id="calib-note"></p>
+      </div>
+      <div class="table-scroll"><table class="data calib" id="calibration"></table></div>
+    </section>
+    <section class="panel" aria-labelledby="src-h">
+      <div class="panel-head">
+        <h2 id="src-h">Sources</h2>
+        <p class="note">Primary: a model's own lab, or the paper or study that produced the figure. Independent: a third party that runs its own benchmark or evaluation on other companies' models. Secondary: news, aggregators and blogs relaying someone else's figures. Each task type on the Tasks tab links to its own sources.<span id="src-accessed"></span></p>
+      </div>
+      <div class="sources" id="sources"></div>
+    </section>
+  </section>
+</main>
+
+<div id="tooltip" class="tooltip" aria-hidden="true" hidden></div>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

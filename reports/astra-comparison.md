@@ -1,6 +1,6 @@
 # Astra comparison version
 
-Published route: `/astra`. The root homepage, its assets, and its assessment data are preserved. This version builds on repository commit `1fc936f1c7166da1cf988a58daa7530932c975ce`, including the other audit work merged after the initial cloud checkout.
+Published route: `/astra`. The root homepage, the separate `/Opus/` comparison, and their assets and assessment data are preserved. This version builds on repository commit `1fc936f1c7166da1cf988a58daa7530932c975ce`, including the other audit work merged after the initial cloud checkout.
 
 ## Model changes
 
@@ -33,7 +33,7 @@ The Method view explains the benchmark-to-task-time calibration gap, task-share 
 
 ## Development and publication
 
-`node scripts/build.mjs` validates both versions, generates `dist/astra/bundle.json`, and preserves the original build output. `vercel.json` maps `/astra` to the comparison document; assets use `/astra/` as their base. `dist/astra/version.json` records the deployed Git revision for post-deployment verification.
+`node scripts/build.mjs` validates both versions, generates `dist/astra/bundle.json`, and preserves the original build output. `vercel.json` preserves the production trailing-slash policy, resolving `/astra` to `/astra/`; assets use `/astra/` as their base. `dist/astra/version.json` records the deployed Git revision for post-deployment verification.
 
 Run `node --test` and the build. `scripts/smoke.mjs` now exercises both versions, including Astra routes, constituent SOC search, applying a scenario, restoring it in a new browser context and resetting it. It accepts `CHROMIUM_PATH` for an installed browser. It keeps application/local asset errors fatal while treating unavailable optional Google Fonts separately.
 

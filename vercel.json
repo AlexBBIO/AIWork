@@ -4,5 +4,5 @@
   "installCommand": "",
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/astra", "destination": "/astra/index.html" }]
+  "trailingSlash": true
 }

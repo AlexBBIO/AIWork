@@ -1,7 +1,7 @@
-// Browser smoke test: the built site renders every view without console errors.
+// Browser smoke test: both built sites (/ and /Opus/) render every view without console errors.
 // Usage: node scripts/build.mjs && node scripts/smoke.mjs   (needs playwright and a chromium install)
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join, extname } from "node:path";
 import { createRequire } from "node:module";
@@ -14,16 +14,23 @@ const types = {
   ".json": "application/json",
   ".png": "image/png",
 };
+// Mirrors Vercel's trailingSlash: true, which sends /Opus to /Opus/.
 const server = createServer(async (req, res) => {
+  const url = req.url.split("?")[0];
   const path = join(
     root,
-    decodeURIComponent(req.url.split("?")[0].replace(/\/$/, "/index.html")),
+    decodeURIComponent(url.replace(/\/$/, "/index.html")),
   );
   try {
+    if ((await stat(path)).isDirectory()) {
+      res.writeHead(308, { location: `${url}/` });
+      return res.end();
+    }
+    const body = await readFile(path);
     res.writeHead(200, {
       "content-type": types[extname(path)] || "application/octet-stream",
     });
-    res.end(await readFile(path));
+    res.end(body);
   } catch {
     res.writeHead(404);
     res.end();
@@ -47,34 +54,48 @@ try {
     const page = await browser.newPage({ viewport: vp });
     page.on("pageerror", (e) => failures.push(`${vp.width}px: ${e.message}`));
     page.on("console", (m) => {
-      // Optional web fonts can be blocked in the cloud runner. Keep application
-      // and local asset errors fatal; font availability is checked separately.
-      const url = m.location().url || "";
       if (
         m.type() === "error" &&
-        !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url)
+        !/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(
+          m.location().url || "",
+        )
       )
         failures.push(`${vp.width}px console: ${m.text()}`);
     });
-    for (const view of ["overview", "jobs/swe", "tasks/meetings", "method"]) {
-      await page.goto(`${base}#${view}`, { waitUntil: "networkidle" });
-      await page.waitForFunction(
-        () =>
-          !document.getElementById("lead-h1").textContent.startsWith("Loading"),
-      );
-      const w = await page.evaluate(
-        () => document.documentElement.scrollWidth - window.innerWidth,
-      );
-      if (w > 0)
-        failures.push(`${vp.width}px #${view}: horizontal overflow of ${w}px`);
+    for (const site of ["", "Opus/"]) {
+      for (const view of ["overview", "jobs/swe", "tasks/meetings", "method"]) {
+        await page.goto(`${base}${site}#${view}`, { waitUntil: "networkidle" });
+        await page.waitForFunction(
+          () =>
+            !document
+              .getElementById("lead-h1")
+              .textContent.startsWith("Loading"),
+        );
+        const w = await page.evaluate(
+          () => document.documentElement.scrollWidth - window.innerWidth,
+        );
+        if (w > 0)
+          failures.push(
+            `${vp.width}px /${site}#${view}: horizontal overflow of ${w}px`,
+          );
+      }
+      const h1 = await page.textContent("#lead-h1");
+      if (!/\d+%/.test(h1))
+        failures.push(
+          `${vp.width}px /${site}: headline has no percentage: ${h1}`,
+        );
+      await page.goto(`${base}${site}#jobs/swe`, { waitUntil: "networkidle" });
+      if (!(await page.$('[data-occ="swe"][aria-expanded="true"]')))
+        failures.push(
+          `${vp.width}px /${site}: deep link #jobs/swe did not open the job`,
+        );
     }
-    const h1 = await page.textContent("#lead-h1");
-    if (!/\d+%/.test(h1))
-      failures.push(`${vp.width}px: headline has no percentage: ${h1}`);
-    const opened = await page.$('[data-occ="swe"][aria-expanded="true"]');
-    await page.goto(`${base}#jobs/swe`, { waitUntil: "networkidle" });
-    if (!(await page.$('[data-occ="swe"][aria-expanded="true"]')))
-      failures.push(`${vp.width}px: deep link #jobs/swe did not open the job`);
+    // Without its trailing slash the Opus page must still load its own files.
+    await page.goto(`${base}Opus#overview`, { waitUntil: "networkidle" });
+    if (!new URL(page.url()).pathname.endsWith("/Opus/"))
+      failures.push(
+        `${vp.width}px: /Opus did not move to /Opus/ (${page.url()})`,
+      );
     await page.close();
     const astra = await browser.newPage({ viewport: vp });
     astra.on("pageerror", (e) =>
@@ -125,6 +146,10 @@ try {
     await astra.locator("#reset").click();
     if (await astra.locator("#scenario").isVisible())
       failures.push("Astra scenario reset failed");
+    await astra.goto(`${base}astra#overview`);
+    await astra.waitForSelector("#content h1");
+    if (!new URL(astra.url()).pathname.endsWith("/astra/"))
+      failures.push("Astra slashless route did not resolve");
     await astra.close();
   }
 } finally {
