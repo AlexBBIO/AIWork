@@ -1,0 +1,3735 @@
+{
+  "version": 1,
+  "source": "BLS Occupational Employment and Wage Statistics (OEWS), May 2025 national estimates (oesm25nat.zip). Employment in thousands and mean annual wage in thousands of USD, rounded. Rows that combine SOC codes sum employment and use an employment-weighted mean wage. OEWS excludes the self-employed.",
+  "units": {
+    "employment": "thousands of jobs",
+    "wage": "mean annual wage, thousands of USD",
+    "tasks": "[task, archetype id, % of working time]"
+  },
+  "groups": [
+    {
+      "id": "11",
+      "name": "Management",
+      "employment_bls": 11133
+    },
+    {
+      "id": "13",
+      "name": "Business & Financial Operations",
+      "employment_bls": 10537
+    },
+    {
+      "id": "15",
+      "name": "Computer & Mathematical",
+      "employment_bls": 5260
+    },
+    {
+      "id": "17",
+      "name": "Architecture & Engineering",
+      "employment_bls": 2617
+    },
+    {
+      "id": "19",
+      "name": "Life, Physical & Social Science",
+      "employment_bls": 1473
+    },
+    {
+      "id": "21",
+      "name": "Community & Social Service",
+      "employment_bls": 2669
+    },
+    {
+      "id": "23",
+      "name": "Legal",
+      "employment_bls": 1306
+    },
+    {
+      "id": "25",
+      "name": "Educational Instruction & Library",
+      "employment_bls": 9101
+    },
+    {
+      "id": "27",
+      "name": "Arts, Design, Entertainment & Media",
+      "employment_bls": 2046
+    },
+    {
+      "id": "29",
+      "name": "Healthcare Practitioners (selected)",
+      "employment_bls": 9824
+    },
+    {
+      "id": "41",
+      "name": "Sales (non-retail)",
+      "employment_bls": 13424
+    },
+    {
+      "id": "43",
+      "name": "Office & Administrative Support",
+      "employment_bls": 17753
+    }
+  ],
+  "occupations": [
+    {
+      "id": "gen_ops_mgr",
+      "soc": "11-1021",
+      "group": "11",
+      "title": "General & Operations Managers",
+      "employment": 3503,
+      "wage": 135,
+      "tasks": [
+        [
+          "Set priorities and make operating decisions",
+          "strategy",
+          20
+        ],
+        [
+          "Supervise, hire and develop staff",
+          "people",
+          25
+        ],
+        [
+          "Run and attend coordination meetings",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Plan and track operational projects",
+          "project",
+          15
+        ],
+        [
+          "Review budgets and performance metrics",
+          "analysis",
+          10
+        ],
+        [
+          "Write reports, memos and policies",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "ceo",
+      "soc": "11-1011",
+      "group": "11",
+      "title": "Chief Executives",
+      "employment": 204,
+      "wage": 270,
+      "tasks": [
+        [
+          "Set strategy and make final calls",
+          "strategy",
+          35
+        ],
+        [
+          "Represent the firm to investors, boards and partners",
+          "relationship",
+          20
+        ],
+        [
+          "Lead executive meetings",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Select and manage senior leaders",
+          "people",
+          15
+        ],
+        [
+          "Review financial and operating results",
+          "analysis",
+          5
+        ],
+        [
+          "Write communications to staff and stakeholders",
+          "draft",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "fin_mgr",
+      "soc": "11-3031",
+      "group": "11",
+      "title": "Financial Managers",
+      "employment": 842,
+      "wage": 187,
+      "tasks": [
+        [
+          "Prepare forecasts and financial analyses",
+          "analysis",
+          25
+        ],
+        [
+          "Decide on investments, funding and risk",
+          "strategy",
+          15
+        ],
+        [
+          "Manage finance and accounting staff",
+          "people",
+          20
+        ],
+        [
+          "Oversee controls, audits and regulatory filings",
+          "compliance",
+          15
+        ],
+        [
+          "Meet with executives and auditors",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Write financial reports and board materials",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "it_mgr",
+      "soc": "11-3021",
+      "group": "11",
+      "title": "Computer & Information Systems Managers",
+      "employment": 671,
+      "wage": 192,
+      "tasks": [
+        [
+          "Manage engineering and IT teams",
+          "people",
+          25
+        ],
+        [
+          "Choose technology direction and vendors",
+          "strategy",
+          15
+        ],
+        [
+          "Review system architecture and designs",
+          "design_tech",
+          15
+        ],
+        [
+          "Plan and track technology projects",
+          "project",
+          20
+        ],
+        [
+          "Coordinate with business stakeholders",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Write plans, budgets and status updates",
+          "draft",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "mkt_mgr",
+      "soc": "11-2021",
+      "group": "11",
+      "title": "Marketing Managers",
+      "employment": 395,
+      "wage": 178,
+      "tasks": [
+        [
+          "Set positioning and campaign strategy",
+          "strategy",
+          20
+        ],
+        [
+          "Develop campaign concepts",
+          "creative",
+          15
+        ],
+        [
+          "Analyze campaign and market data",
+          "analysis",
+          15
+        ],
+        [
+          "Manage marketing staff and agencies",
+          "people",
+          20
+        ],
+        [
+          "Coordinate with sales and product teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Write briefs, copy and plans",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "sales_mgr",
+      "soc": "11-2022",
+      "group": "11",
+      "title": "Sales Managers",
+      "employment": 637,
+      "wage": 164,
+      "tasks": [
+        [
+          "Coach, hire and manage sales reps",
+          "people",
+          30
+        ],
+        [
+          "Close and negotiate key deals",
+          "sales",
+          20
+        ],
+        [
+          "Maintain major-account relationships",
+          "relationship",
+          15
+        ],
+        [
+          "Forecast pipeline and analyze sales data",
+          "analysis",
+          15
+        ],
+        [
+          "Run sales meetings and reviews",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Write proposals and territory plans",
+          "draft",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "health_mgr",
+      "soc": "11-9111",
+      "group": "11",
+      "title": "Medical & Health Services Managers",
+      "employment": 597,
+      "wage": 141,
+      "tasks": [
+        [
+          "Manage clinical and administrative staff",
+          "people",
+          25
+        ],
+        [
+          "Ensure regulatory and accreditation compliance",
+          "compliance",
+          20
+        ],
+        [
+          "Plan facility and service projects",
+          "project",
+          15
+        ],
+        [
+          "Meet with clinicians and administrators",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Analyze budgets, volumes and quality data",
+          "analysis",
+          10
+        ],
+        [
+          "Process records, billing and policy documents",
+          "docproc",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "hr_mgr",
+      "soc": "11-3121",
+      "group": "11",
+      "title": "Human Resources Managers",
+      "employment": 221,
+      "wage": 164,
+      "tasks": [
+        [
+          "Handle employee relations and staff management",
+          "people",
+          30
+        ],
+        [
+          "Ensure employment-law compliance",
+          "compliance",
+          20
+        ],
+        [
+          "Design compensation and workforce plans",
+          "strategy",
+          15
+        ],
+        [
+          "Meet with leaders and employees",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Write policies and handbooks",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "edu_admin",
+      "soc": "11-9030",
+      "group": "11",
+      "title": "Education Administrators",
+      "employment": 638,
+      "wage": 112,
+      "tasks": [
+        [
+          "Supervise and evaluate teachers and staff",
+          "people",
+          30
+        ],
+        [
+          "Meet with parents, staff and boards",
+          "meetings",
+          18.75
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          6.25
+        ],
+        [
+          "Ensure policy and regulatory compliance",
+          "compliance",
+          15
+        ],
+        [
+          "Handle student discipline and support cases",
+          "care",
+          10
+        ],
+        [
+          "Write reports, plans and communications",
+          "draft",
+          10
+        ],
+        [
+          "Build schedules and coordinate programs",
+          "scheduling",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "constr_mgr",
+      "soc": "11-9021",
+      "group": "11",
+      "title": "Construction Managers",
+      "employment": 380,
+      "wage": 124,
+      "tasks": [
+        [
+          "Inspect and direct work on site",
+          "physical",
+          25
+        ],
+        [
+          "Plan schedules and track project progress",
+          "project",
+          25
+        ],
+        [
+          "Supervise crews and subcontractors",
+          "people",
+          20
+        ],
+        [
+          "Work with owners, architects and inspectors",
+          "relationship",
+          10
+        ],
+        [
+          "Estimate costs and review budgets",
+          "analysis",
+          10
+        ],
+        [
+          "Process permits, contracts and change orders",
+          "docproc",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "admin_mgr",
+      "soc": "11-3012",
+      "group": "11",
+      "title": "Administrative Services Managers",
+      "employment": 264,
+      "wage": 130,
+      "tasks": [
+        [
+          "Supervise administrative staff",
+          "people",
+          30
+        ],
+        [
+          "Plan office services, budgets and vendors",
+          "project",
+          20
+        ],
+        [
+          "Manage records, facilities and policy compliance",
+          "compliance",
+          15
+        ],
+        [
+          "Coordinate with other departments",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Write procedures and reports",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "arch_eng_mgr",
+      "soc": "11-9041",
+      "group": "11",
+      "title": "Architectural & Engineering Managers",
+      "employment": 220,
+      "wage": 182,
+      "tasks": [
+        [
+          "Lead engineering teams",
+          "people",
+          25
+        ],
+        [
+          "Review designs and technical decisions",
+          "design_tech",
+          20
+        ],
+        [
+          "Plan and track engineering projects",
+          "project",
+          20
+        ],
+        [
+          "Set technical direction and budgets",
+          "strategy",
+          15
+        ],
+        [
+          "Coordinate with executives and clients",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ]
+      ]
+    },
+    {
+      "id": "prod_mgr",
+      "soc": "11-3051/71",
+      "group": "11",
+      "title": "Industrial Production & Distribution Managers",
+      "employment": 467,
+      "wage": 128,
+      "tasks": [
+        [
+          "Oversee plant and warehouse operations on site",
+          "physical",
+          25
+        ],
+        [
+          "Supervise production and logistics staff",
+          "people",
+          25
+        ],
+        [
+          "Plan schedules and capacity",
+          "scheduling",
+          15
+        ],
+        [
+          "Analyze output, cost and quality data",
+          "analysis",
+          15
+        ],
+        [
+          "Coordinate with suppliers and departments",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Write reports and procedures",
+          "draft",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "property_mgr",
+      "soc": "11-9141",
+      "group": "11",
+      "title": "Property, Real Estate & Community Association Managers",
+      "employment": 311,
+      "wage": 84,
+      "tasks": [
+        [
+          "Inspect properties and oversee maintenance",
+          "physical",
+          25
+        ],
+        [
+          "Handle tenant and owner relationships",
+          "relationship",
+          20
+        ],
+        [
+          "Answer tenant requests and complaints",
+          "service",
+          15
+        ],
+        [
+          "Manage leases, budgets and rent collection",
+          "accounting",
+          20
+        ],
+        [
+          "Negotiate leases and vendor contracts",
+          "sales",
+          10
+        ],
+        [
+          "Supervise property staff",
+          "people",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "mgr_other",
+      "soc": "11-9199",
+      "group": "11",
+      "title": "Managers, All Other",
+      "employment": 622,
+      "wage": 154,
+      "tasks": [
+        [
+          "Supervise staff and programs",
+          "people",
+          25
+        ],
+        [
+          "Make program and operating decisions",
+          "strategy",
+          20
+        ],
+        [
+          "Run coordination meetings",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Plan and track initiatives",
+          "project",
+          15
+        ],
+        [
+          "Review budgets and performance",
+          "analysis",
+          10
+        ],
+        [
+          "Write reports and policies",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "accountant",
+      "soc": "13-2011",
+      "group": "13",
+      "title": "Accountants & Auditors",
+      "employment": 1450,
+      "wage": 95,
+      "tasks": [
+        [
+          "Reconcile accounts and close the books",
+          "accounting",
+          30
+        ],
+        [
+          "Audit records and test controls",
+          "compliance",
+          25
+        ],
+        [
+          "Analyze financial statements and variances",
+          "analysis",
+          15
+        ],
+        [
+          "Prepare tax returns and filings",
+          "docproc",
+          10
+        ],
+        [
+          "Advise clients and managers",
+          "relationship",
+          10
+        ],
+        [
+          "Write reports and audit memos",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "mgmt_analyst",
+      "soc": "13-1111",
+      "group": "13",
+      "title": "Management Analysts",
+      "employment": 898,
+      "wage": 114,
+      "tasks": [
+        [
+          "Analyze operational and financial data",
+          "analysis",
+          25
+        ],
+        [
+          "Research industries, practices and options",
+          "research",
+          20
+        ],
+        [
+          "Write reports, decks and recommendations",
+          "draft",
+          20
+        ],
+        [
+          "Run workshops and stakeholder meetings",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Manage client relationships",
+          "relationship",
+          10
+        ],
+        [
+          "Shape recommendations clients commit to",
+          "strategy",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "proj_mgmt",
+      "soc": "13-1082",
+      "group": "13",
+      "title": "Project Management Specialists",
+      "employment": 1067,
+      "wage": 111,
+      "tasks": [
+        [
+          "Build plans and track progress and risks",
+          "project",
+          35
+        ],
+        [
+          "Run status meetings and resolve blockers",
+          "meetings",
+          18.75
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          6.25
+        ],
+        [
+          "Schedule resources and coordinate vendors",
+          "scheduling",
+          15
+        ],
+        [
+          "Write status reports and documentation",
+          "draft",
+          15
+        ],
+        [
+          "Guide and motivate project teams",
+          "people",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "mkt_research",
+      "soc": "13-1161",
+      "group": "13",
+      "title": "Market Research Analysts & Marketing Specialists",
+      "employment": 900,
+      "wage": 89,
+      "tasks": [
+        [
+          "Gather market and competitor information",
+          "research",
+          25
+        ],
+        [
+          "Analyze surveys and sales data",
+          "analysis",
+          25
+        ],
+        [
+          "Write reports, copy and content",
+          "draft",
+          20
+        ],
+        [
+          "Develop campaign ideas",
+          "creative",
+          15
+        ],
+        [
+          "Present findings and coordinate with teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "hr_spec",
+      "soc": "13-1071",
+      "group": "13",
+      "title": "Human Resources Specialists",
+      "employment": 912,
+      "wage": 82,
+      "tasks": [
+        [
+          "Process hiring, onboarding and benefits paperwork",
+          "docproc",
+          25
+        ],
+        [
+          "Answer employee questions on policy and benefits",
+          "service",
+          20
+        ],
+        [
+          "Check employment-law and policy compliance",
+          "compliance",
+          15
+        ],
+        [
+          "Recruit and persuade candidates",
+          "sales",
+          15
+        ],
+        [
+          "Schedule interviews and coordinate hiring",
+          "scheduling",
+          15
+        ],
+        [
+          "Meet with hiring managers",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "fin_analyst",
+      "soc": "13-2051",
+      "group": "13",
+      "title": "Financial & Investment Analysts",
+      "employment": 362,
+      "wage": 117,
+      "tasks": [
+        [
+          "Build financial models and valuations",
+          "analysis",
+          40
+        ],
+        [
+          "Research companies, markets and filings",
+          "research",
+          25
+        ],
+        [
+          "Write research notes and recommendations",
+          "draft",
+          15
+        ],
+        [
+          "Talk with management teams and clients",
+          "relationship",
+          10
+        ],
+        [
+          "Present to investment committees",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "fin_advisor",
+      "soc": "13-2052",
+      "group": "13",
+      "title": "Personal Financial Advisors",
+      "employment": 267,
+      "wage": 157,
+      "tasks": [
+        [
+          "Build and maintain client relationships",
+          "relationship",
+          35
+        ],
+        [
+          "Win new clients",
+          "sales",
+          20
+        ],
+        [
+          "Analyze portfolios and build financial plans",
+          "analysis",
+          20
+        ],
+        [
+          "Meet suitability and regulatory requirements",
+          "compliance",
+          10
+        ],
+        [
+          "Write plans and client communications",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "claims_adj",
+      "soc": "13-1031",
+      "group": "13",
+      "title": "Claims Adjusters, Examiners & Investigators",
+      "employment": 324,
+      "wage": 80,
+      "tasks": [
+        [
+          "Review claim files and documentation",
+          "docproc",
+          35
+        ],
+        [
+          "Check coverage and policy rules",
+          "compliance",
+          20
+        ],
+        [
+          "Inspect damage on site",
+          "physical",
+          15
+        ],
+        [
+          "Talk with claimants and agents",
+          "service",
+          15
+        ],
+        [
+          "Write claim reports and settlement letters",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "loan_officer",
+      "soc": "13-2072",
+      "group": "13",
+      "title": "Loan Officers",
+      "employment": 274,
+      "wage": 88,
+      "tasks": [
+        [
+          "Find and win borrowers",
+          "sales",
+          25
+        ],
+        [
+          "Collect and review loan documents",
+          "docproc",
+          25
+        ],
+        [
+          "Check underwriting and lending rules",
+          "compliance",
+          20
+        ],
+        [
+          "Maintain borrower and referral relationships",
+          "relationship",
+          20
+        ],
+        [
+          "Analyze creditworthiness",
+          "analysis",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "compliance_off",
+      "soc": "13-1041",
+      "group": "13",
+      "title": "Compliance Officers",
+      "employment": 417,
+      "wage": 88,
+      "tasks": [
+        [
+          "Review activities against regulations",
+          "compliance",
+          40
+        ],
+        [
+          "Research rules and regulatory changes",
+          "research",
+          20
+        ],
+        [
+          "Write policies, findings and filings",
+          "draft",
+          20
+        ],
+        [
+          "Meet with business units and regulators",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Conduct on-site inspections",
+          "physical",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "buyer",
+      "soc": "13-1020",
+      "group": "13",
+      "title": "Buyers & Purchasing Agents",
+      "employment": 491,
+      "wage": 84,
+      "tasks": [
+        [
+          "Negotiate prices and contracts",
+          "sales",
+          25
+        ],
+        [
+          "Compare suppliers, bids and costs",
+          "analysis",
+          20
+        ],
+        [
+          "Process purchase orders and contracts",
+          "docproc",
+          20
+        ],
+        [
+          "Manage supplier relationships",
+          "relationship",
+          20
+        ],
+        [
+          "Coordinate deliveries and inventory needs",
+          "scheduling",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "training",
+      "soc": "13-1151",
+      "group": "13",
+      "title": "Training & Development Specialists",
+      "employment": 458,
+      "wage": 76,
+      "tasks": [
+        [
+          "Deliver live training sessions",
+          "teaching",
+          35
+        ],
+        [
+          "Design course concepts and exercises",
+          "creative",
+          15
+        ],
+        [
+          "Write training materials and guides",
+          "draft",
+          25
+        ],
+        [
+          "Meet with managers on training needs",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Evaluate training results",
+          "analysis",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "logistician",
+      "soc": "13-1081",
+      "group": "13",
+      "title": "Logisticians",
+      "employment": 251,
+      "wage": 90,
+      "tasks": [
+        [
+          "Plan and coordinate shipments and supply",
+          "scheduling",
+          35
+        ],
+        [
+          "Analyze logistics costs and performance",
+          "analysis",
+          25
+        ],
+        [
+          "Work with suppliers and carriers",
+          "relationship",
+          15
+        ],
+        [
+          "Process shipping and customs documents",
+          "docproc",
+          15
+        ],
+        [
+          "Coordinate with internal teams",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "underwriter",
+      "soc": "13-2053",
+      "group": "13",
+      "title": "Insurance Underwriters",
+      "employment": 105,
+      "wage": 94,
+      "tasks": [
+        [
+          "Apply underwriting guidelines to applications",
+          "compliance",
+          35
+        ],
+        [
+          "Assess risk and price policies",
+          "analysis",
+          30
+        ],
+        [
+          "Review applications and supporting documents",
+          "docproc",
+          25
+        ],
+        [
+          "Work with brokers and agents",
+          "relationship",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "cost_estimator",
+      "soc": "13-1051",
+      "group": "13",
+      "title": "Cost Estimators",
+      "employment": 224,
+      "wage": 85,
+      "tasks": [
+        [
+          "Build cost estimates from plans and quantities",
+          "analysis",
+          40
+        ],
+        [
+          "Review drawings, specs and bids",
+          "docproc",
+          20
+        ],
+        [
+          "Visit sites and inspect conditions",
+          "physical",
+          15
+        ],
+        [
+          "Work with contractors and suppliers",
+          "relationship",
+          15
+        ],
+        [
+          "Write estimate reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "bizops_other",
+      "soc": "13-1199",
+      "group": "13",
+      "title": "Business Operations Specialists, All Other",
+      "employment": 1087,
+      "wage": 94,
+      "tasks": [
+        [
+          "Process operational documents and requests",
+          "docproc",
+          20
+        ],
+        [
+          "Analyze operational data",
+          "analysis",
+          20
+        ],
+        [
+          "Coordinate projects and initiatives",
+          "project",
+          20
+        ],
+        [
+          "Write reports and procedures",
+          "draft",
+          15
+        ],
+        [
+          "Attend coordination meetings",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Respond to internal customer requests",
+          "service",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "swe",
+      "soc": "15-1252",
+      "group": "15",
+      "title": "Software Developers",
+      "employment": 1688,
+      "wage": 148,
+      "tasks": [
+        [
+          "Write and modify application code",
+          "code",
+          40
+        ],
+        [
+          "Debug, test and review code",
+          "debug",
+          20
+        ],
+        [
+          "Design systems and interfaces",
+          "design_tech",
+          15
+        ],
+        [
+          "Plan work with product and engineering teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Write design docs and documentation",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "qa",
+      "soc": "15-1253",
+      "group": "15",
+      "title": "Software QA Analysts & Testers",
+      "employment": 187,
+      "wage": 111,
+      "tasks": [
+        [
+          "Run tests and reproduce defects",
+          "debug",
+          45
+        ],
+        [
+          "Write automated test code",
+          "code",
+          20
+        ],
+        [
+          "Write test plans and bug reports",
+          "draft",
+          15
+        ],
+        [
+          "Coordinate with developers",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ]
+      ]
+    },
+    {
+      "id": "user_support",
+      "soc": "15-1232",
+      "group": "15",
+      "title": "Computer User Support Specialists",
+      "employment": 717,
+      "wage": 67,
+      "tasks": [
+        [
+          "Diagnose and fix user technical problems",
+          "support",
+          50
+        ],
+        [
+          "Answer help-desk tickets and calls",
+          "service",
+          20
+        ],
+        [
+          "Set up and repair hardware on site",
+          "physical",
+          15
+        ],
+        [
+          "Write knowledge-base articles",
+          "draft",
+          10
+        ],
+        [
+          "Log tickets and asset records",
+          "entry",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "sys_analyst",
+      "soc": "15-1211",
+      "group": "15",
+      "title": "Computer Systems Analysts",
+      "employment": 520,
+      "wage": 115,
+      "tasks": [
+        [
+          "Analyze business processes and requirements",
+          "analysis",
+          20
+        ],
+        [
+          "Design system changes and integrations",
+          "design_tech",
+          25
+        ],
+        [
+          "Meet with users and developers",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Write specifications and documentation",
+          "draft",
+          15
+        ],
+        [
+          "Test and troubleshoot systems",
+          "debug",
+          10
+        ],
+        [
+          "Manage stakeholder relationships",
+          "relationship",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "sysadmin",
+      "soc": "15-1244",
+      "group": "15",
+      "title": "Network & Computer Systems Administrators",
+      "employment": 314,
+      "wage": 104,
+      "tasks": [
+        [
+          "Monitor, troubleshoot and maintain systems",
+          "debug",
+          40
+        ],
+        [
+          "Support users with access and issues",
+          "support",
+          20
+        ],
+        [
+          "Install and maintain hardware",
+          "physical",
+          15
+        ],
+        [
+          "Plan network and system upgrades",
+          "design_tech",
+          15
+        ],
+        [
+          "Document configurations and procedures",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "infosec",
+      "soc": "15-1212",
+      "group": "15",
+      "title": "Information Security Analysts",
+      "employment": 191,
+      "wage": 133,
+      "tasks": [
+        [
+          "Monitor alerts and respond to incidents",
+          "debug",
+          25
+        ],
+        [
+          "Audit systems against security standards",
+          "compliance",
+          25
+        ],
+        [
+          "Design security controls and architecture",
+          "design_tech",
+          20
+        ],
+        [
+          "Analyze threats and vulnerabilities",
+          "analysis",
+          15
+        ],
+        [
+          "Write reports and security policies",
+          "draft",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "data_sci",
+      "soc": "15-2051",
+      "group": "15",
+      "title": "Data Scientists",
+      "employment": 262,
+      "wage": 127,
+      "tasks": [
+        [
+          "Analyze data and build statistical models",
+          "analysis",
+          40
+        ],
+        [
+          "Write data pipelines and model code",
+          "code",
+          25
+        ],
+        [
+          "Research methods and prior work",
+          "research",
+          10
+        ],
+        [
+          "Write findings and documentation",
+          "draft",
+          15
+        ],
+        [
+          "Present results to stakeholders",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "web_dev",
+      "soc": "15-1254/55",
+      "group": "15",
+      "title": "Web Developers & Digital Interface Designers",
+      "employment": 184,
+      "wage": 110,
+      "tasks": [
+        [
+          "Build and modify web pages and apps",
+          "code",
+          35
+        ],
+        [
+          "Produce interface layouts and visual assets",
+          "media",
+          20
+        ],
+        [
+          "Develop design concepts",
+          "creative",
+          15
+        ],
+        [
+          "Test and fix site issues",
+          "debug",
+          15
+        ],
+        [
+          "Work with clients and product teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "dba",
+      "soc": "15-1242",
+      "group": "15",
+      "title": "Database Administrators & Architects",
+      "employment": 137,
+      "wage": 127,
+      "tasks": [
+        [
+          "Design database structures",
+          "design_tech",
+          25
+        ],
+        [
+          "Tune, back up and troubleshoot databases",
+          "debug",
+          35
+        ],
+        [
+          "Write queries and scripts",
+          "code",
+          25
+        ],
+        [
+          "Coordinate with application teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "programmer",
+      "soc": "15-1251",
+      "group": "15",
+      "title": "Computer Programmers",
+      "employment": 92,
+      "wage": 105,
+      "tasks": [
+        [
+          "Write and update programs to specification",
+          "code",
+          55
+        ],
+        [
+          "Test and debug programs",
+          "debug",
+          30
+        ],
+        [
+          "Document code",
+          "draft",
+          10
+        ],
+        [
+          "Meet with analysts and developers",
+          "meetings",
+          3.75
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          1.25
+        ]
+      ]
+    },
+    {
+      "id": "ops_research",
+      "soc": "15-2031",
+      "group": "15",
+      "title": "Operations Research Analysts",
+      "employment": 109,
+      "wage": 100,
+      "tasks": [
+        [
+          "Build optimization and simulation models",
+          "analysis",
+          50
+        ],
+        [
+          "Write analysis code",
+          "code",
+          15
+        ],
+        [
+          "Research methods and gather data",
+          "research",
+          15
+        ],
+        [
+          "Write findings and recommendations",
+          "draft",
+          10
+        ],
+        [
+          "Present to decision makers",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "actuary",
+      "soc": "15-2011",
+      "group": "15",
+      "title": "Actuaries & Statisticians",
+      "employment": 56,
+      "wage": 128,
+      "tasks": [
+        [
+          "Build statistical and actuarial models",
+          "analysis",
+          55
+        ],
+        [
+          "Write analysis code",
+          "code",
+          15
+        ],
+        [
+          "Meet regulatory and reporting standards",
+          "compliance",
+          10
+        ],
+        [
+          "Write reports and memos",
+          "draft",
+          15
+        ],
+        [
+          "Present to management",
+          "meetings",
+          3.75
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          1.25
+        ]
+      ]
+    },
+    {
+      "id": "comp_other",
+      "soc": "15-1299",
+      "group": "15",
+      "title": "Computer Occupations, All Other",
+      "employment": 435,
+      "wage": 122,
+      "tasks": [
+        [
+          "Write and configure software",
+          "code",
+          25
+        ],
+        [
+          "Troubleshoot and operate systems",
+          "debug",
+          25
+        ],
+        [
+          "Design technical solutions",
+          "design_tech",
+          15
+        ],
+        [
+          "Track technical projects",
+          "project",
+          15
+        ],
+        [
+          "Coordinate with teams",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ]
+      ]
+    },
+    {
+      "id": "net_architect",
+      "soc": "15-1241/31",
+      "group": "15",
+      "title": "Computer Network Architects & Network Support Specialists",
+      "employment": 326,
+      "wage": 114,
+      "tasks": [
+        [
+          "Design and plan networks",
+          "design_tech",
+          25
+        ],
+        [
+          "Monitor and troubleshoot network issues",
+          "debug",
+          35
+        ],
+        [
+          "Install and test network hardware",
+          "physical",
+          15
+        ],
+        [
+          "Support users with connectivity issues",
+          "support",
+          15
+        ],
+        [
+          "Document configurations",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "civil_eng",
+      "soc": "17-2051",
+      "group": "17",
+      "title": "Civil Engineers",
+      "employment": 368,
+      "wage": 109,
+      "tasks": [
+        [
+          "Perform engineering calculations and reviews",
+          "expert",
+          30
+        ],
+        [
+          "Design structures and site plans",
+          "design_tech",
+          20
+        ],
+        [
+          "Inspect construction sites",
+          "physical",
+          15
+        ],
+        [
+          "Manage project schedules and budgets",
+          "project",
+          15
+        ],
+        [
+          "Write reports and specifications",
+          "draft",
+          10
+        ],
+        [
+          "Coordinate with contractors and agencies",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "mech_eng",
+      "soc": "17-2141",
+      "group": "17",
+      "title": "Mechanical Engineers",
+      "employment": 297,
+      "wage": 114,
+      "tasks": [
+        [
+          "Design machines and components",
+          "design_tech",
+          35
+        ],
+        [
+          "Perform engineering analysis and sign-off",
+          "expert",
+          20
+        ],
+        [
+          "Run simulations and analyze test data",
+          "analysis",
+          15
+        ],
+        [
+          "Build and test prototypes",
+          "physical",
+          10
+        ],
+        [
+          "Coordinate with manufacturing and suppliers",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ],
+        [
+          "Write specifications and reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "ind_eng",
+      "soc": "17-2112",
+      "group": "17",
+      "title": "Industrial Engineers",
+      "employment": 366,
+      "wage": 110,
+      "tasks": [
+        [
+          "Analyze production data and workflows",
+          "analysis",
+          30
+        ],
+        [
+          "Observe and improve processes on the floor",
+          "physical",
+          20
+        ],
+        [
+          "Design production layouts and systems",
+          "design_tech",
+          20
+        ],
+        [
+          "Manage improvement projects",
+          "project",
+          15
+        ],
+        [
+          "Work with operations teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "elec_eng",
+      "soc": "17-2070",
+      "group": "17",
+      "title": "Electrical & Electronics Engineers",
+      "employment": 296,
+      "wage": 129,
+      "tasks": [
+        [
+          "Design circuits and electrical systems",
+          "design_tech",
+          35
+        ],
+        [
+          "Perform engineering analysis and sign-off",
+          "expert",
+          20
+        ],
+        [
+          "Test and debug hardware",
+          "debug",
+          15
+        ],
+        [
+          "Work in labs and on equipment",
+          "physical",
+          10
+        ],
+        [
+          "Coordinate with teams and vendors",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ],
+        [
+          "Write specifications and reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "other_eng",
+      "soc": "17-2199",
+      "group": "17",
+      "title": "Other Engineers (aerospace, chemical, environmental, etc.)",
+      "employment": 475,
+      "wage": 134,
+      "tasks": [
+        [
+          "Design systems and processes",
+          "design_tech",
+          30
+        ],
+        [
+          "Perform engineering analysis and sign-off",
+          "expert",
+          25
+        ],
+        [
+          "Analyze test and field data",
+          "analysis",
+          15
+        ],
+        [
+          "Work in labs, plants and field sites",
+          "physical",
+          10
+        ],
+        [
+          "Coordinate with teams",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ],
+        [
+          "Write reports and specifications",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "architect",
+      "soc": "17-1011",
+      "group": "17",
+      "title": "Architects",
+      "employment": 107,
+      "wage": 106,
+      "tasks": [
+        [
+          "Develop building design concepts",
+          "creative",
+          25
+        ],
+        [
+          "Produce construction drawings and models",
+          "design_tech",
+          25
+        ],
+        [
+          "Work with clients",
+          "relationship",
+          15
+        ],
+        [
+          "Check plans against codes",
+          "compliance",
+          15
+        ],
+        [
+          "Visit sites",
+          "physical",
+          10
+        ],
+        [
+          "Coordinate with engineers and contractors",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "drafters_techs",
+      "soc": "17-3000",
+      "group": "17",
+      "title": "Drafters & Engineering Technicians",
+      "employment": 625,
+      "wage": 73,
+      "tasks": [
+        [
+          "Prepare technical drawings and CAD models",
+          "design_tech",
+          30
+        ],
+        [
+          "Build, test and calibrate equipment",
+          "physical",
+          35
+        ],
+        [
+          "Record and analyze test results",
+          "analysis",
+          15
+        ],
+        [
+          "Maintain drawings and records",
+          "docproc",
+          10
+        ],
+        [
+          "Write test reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "scientists",
+      "soc": "19-1000",
+      "group": "19",
+      "title": "Life & Physical Scientists",
+      "employment": 652,
+      "wage": 108,
+      "tasks": [
+        [
+          "Run experiments and fieldwork",
+          "physical",
+          30
+        ],
+        [
+          "Analyze experimental data",
+          "analysis",
+          25
+        ],
+        [
+          "Review literature and plan studies",
+          "research",
+          20
+        ],
+        [
+          "Write papers, grants and reports",
+          "draft",
+          15
+        ],
+        [
+          "Meet with collaborators",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "social_sci",
+      "soc": "19-3000",
+      "group": "19",
+      "title": "Social Scientists, Economists & Psychologists",
+      "employment": 289,
+      "wage": 106,
+      "tasks": [
+        [
+          "Research literature and collect data",
+          "research",
+          25
+        ],
+        [
+          "Analyze data",
+          "analysis",
+          25
+        ],
+        [
+          "Assess and treat clients (psychologists)",
+          "care",
+          20
+        ],
+        [
+          "Write reports and papers",
+          "draft",
+          20
+        ],
+        [
+          "Present and collaborate",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "sci_tech",
+      "soc": "19-4000",
+      "group": "19",
+      "title": "Science Technicians",
+      "employment": 362,
+      "wage": 64,
+      "tasks": [
+        [
+          "Prepare samples and run lab equipment",
+          "physical",
+          55
+        ],
+        [
+          "Analyze test results",
+          "analysis",
+          20
+        ],
+        [
+          "Record data",
+          "entry",
+          15
+        ],
+        [
+          "Write lab reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "social_worker",
+      "soc": "21-1020",
+      "group": "21",
+      "title": "Social Workers",
+      "employment": 776,
+      "wage": 68,
+      "tasks": [
+        [
+          "Meet with clients and families",
+          "care",
+          45
+        ],
+        [
+          "Complete case files and eligibility paperwork",
+          "docproc",
+          25
+        ],
+        [
+          "Arrange services and referrals",
+          "scheduling",
+          10
+        ],
+        [
+          "Write case notes and court reports",
+          "draft",
+          10
+        ],
+        [
+          "Attend case conferences",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "counselor",
+      "soc": "21-1010",
+      "group": "21",
+      "title": "Counselors",
+      "employment": 1035,
+      "wage": 66,
+      "tasks": [
+        [
+          "Counsel clients in person",
+          "care",
+          60
+        ],
+        [
+          "Complete documentation and billing records",
+          "docproc",
+          20
+        ],
+        [
+          "Write treatment plans and notes",
+          "draft",
+          10
+        ],
+        [
+          "Consult with other providers",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "social_assist",
+      "soc": "21-1093",
+      "group": "21",
+      "title": "Social & Human Service Assistants",
+      "employment": 438,
+      "wage": 48,
+      "tasks": [
+        [
+          "Meet with clients and assess needs",
+          "care",
+          45
+        ],
+        [
+          "Complete intake forms and eligibility paperwork",
+          "docproc",
+          25
+        ],
+        [
+          "Arrange services and referrals",
+          "scheduling",
+          15
+        ],
+        [
+          "Update case records",
+          "entry",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "lawyer",
+      "soc": "23-1011",
+      "group": "23",
+      "title": "Lawyers",
+      "employment": 755,
+      "wage": 186,
+      "tasks": [
+        [
+          "Analyze legal issues and advise clients",
+          "expert",
+          25
+        ],
+        [
+          "Research case law and statutes",
+          "research",
+          15
+        ],
+        [
+          "Draft contracts, briefs and motions",
+          "draft",
+          25
+        ],
+        [
+          "Manage client relationships",
+          "relationship",
+          15
+        ],
+        [
+          "Negotiate settlements and terms",
+          "sales",
+          5
+        ],
+        [
+          "Argue in court, attend hearings and meet counsel",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "paralegal",
+      "soc": "23-2011",
+      "group": "23",
+      "title": "Paralegals & Legal Assistants",
+      "employment": 393,
+      "wage": 70,
+      "tasks": [
+        [
+          "Research facts, cases and records",
+          "research",
+          25
+        ],
+        [
+          "Draft legal documents and correspondence",
+          "draft",
+          30
+        ],
+        [
+          "Organize, file and review case documents",
+          "docproc",
+          25
+        ],
+        [
+          "Schedule deadlines and hearings",
+          "scheduling",
+          10
+        ],
+        [
+          "Communicate with clients",
+          "service",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "legal_other",
+      "soc": "23-1020/2090",
+      "group": "23",
+      "title": "Judges, Hearing Officers & Other Legal Workers",
+      "employment": 145,
+      "wage": 94,
+      "tasks": [
+        [
+          "Weigh evidence and decide cases",
+          "expert",
+          40
+        ],
+        [
+          "Apply procedure and rules",
+          "compliance",
+          20
+        ],
+        [
+          "Review filings and records",
+          "docproc",
+          20
+        ],
+        [
+          "Conduct hearings",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ],
+        [
+          "Write decisions and opinions",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "k12_teacher",
+      "soc": "25-2000",
+      "group": "25",
+      "title": "Preschool, K-12 & Special Education Teachers",
+      "employment": 4373,
+      "wage": 70,
+      "tasks": [
+        [
+          "Teach and manage the classroom",
+          "teaching",
+          55
+        ],
+        [
+          "Plan lessons and grade work",
+          "grading",
+          25
+        ],
+        [
+          "Support individual students and families",
+          "care",
+          10
+        ],
+        [
+          "Attend staff and parent meetings",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "postsec",
+      "soc": "25-1000",
+      "group": "25",
+      "title": "Postsecondary Teachers",
+      "employment": 1371,
+      "wage": 103,
+      "tasks": [
+        [
+          "Lecture and lead seminars",
+          "teaching",
+          30
+        ],
+        [
+          "Prepare courses and grade work",
+          "grading",
+          20
+        ],
+        [
+          "Conduct research",
+          "research",
+          20
+        ],
+        [
+          "Write papers and grant proposals",
+          "draft",
+          15
+        ],
+        [
+          "Advise students and serve on committees",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "teach_assist",
+      "soc": "25-9045",
+      "group": "25",
+      "title": "Teaching Assistants",
+      "employment": 1420,
+      "wage": 38,
+      "tasks": [
+        [
+          "Instruct small groups of students",
+          "teaching",
+          40
+        ],
+        [
+          "Supervise and support students",
+          "care",
+          30
+        ],
+        [
+          "Grade work and prepare materials",
+          "grading",
+          15
+        ],
+        [
+          "Set up classrooms and supervise activities",
+          "physical",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "librarian",
+      "soc": "25-4000",
+      "group": "25",
+      "title": "Librarians, Archivists & Curators",
+      "employment": 235,
+      "wage": 64,
+      "tasks": [
+        [
+          "Help patrons find information",
+          "research",
+          30
+        ],
+        [
+          "Answer patron questions",
+          "service",
+          25
+        ],
+        [
+          "Handle collections and exhibits",
+          "physical",
+          20
+        ],
+        [
+          "Catalog materials",
+          "entry",
+          15
+        ],
+        [
+          "Run classes and programs",
+          "teaching",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "instr_coord",
+      "soc": "25-9031",
+      "group": "25",
+      "title": "Instructional Coordinators",
+      "employment": 228,
+      "wage": 81,
+      "tasks": [
+        [
+          "Develop curricula and instructional materials",
+          "grading",
+          30
+        ],
+        [
+          "Train and coach teachers",
+          "teaching",
+          25
+        ],
+        [
+          "Analyze student achievement data",
+          "analysis",
+          15
+        ],
+        [
+          "Meet with administrators and teachers",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ],
+        [
+          "Write curriculum guides and reports",
+          "draft",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "writers",
+      "soc": "27-3040",
+      "group": "27",
+      "title": "Writers, Editors & Technical Writers",
+      "employment": 185,
+      "wage": 91,
+      "tasks": [
+        [
+          "Write articles, documentation and copy",
+          "draft",
+          50
+        ],
+        [
+          "Edit and proofread",
+          "edit",
+          25
+        ],
+        [
+          "Research topics",
+          "research",
+          15
+        ],
+        [
+          "Work with editors and subject experts",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "pr",
+      "soc": "27-3031",
+      "group": "27",
+      "title": "Public Relations & Communications Specialists",
+      "employment": 283,
+      "wage": 84,
+      "tasks": [
+        [
+          "Write releases, statements and content",
+          "draft",
+          35
+        ],
+        [
+          "Build relationships with media and partners",
+          "relationship",
+          25
+        ],
+        [
+          "Develop campaign ideas",
+          "creative",
+          15
+        ],
+        [
+          "Coordinate with executives and teams",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ],
+        [
+          "Monitor media and research issues",
+          "research",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "designers",
+      "soc": "27-1024/1014",
+      "group": "27",
+      "title": "Graphic Designers, Special Effects Artists & Animators",
+      "employment": 218,
+      "wage": 74,
+      "tasks": [
+        [
+          "Produce graphics, layouts and animation",
+          "media",
+          45
+        ],
+        [
+          "Develop visual concepts",
+          "creative",
+          35
+        ],
+        [
+          "Work with clients",
+          "relationship",
+          10
+        ],
+        [
+          "Review work with teams",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "translators",
+      "soc": "27-3091",
+      "group": "27",
+      "title": "Interpreters & Translators",
+      "employment": 52,
+      "wage": 66,
+      "tasks": [
+        [
+          "Translate documents and interpret speech",
+          "translate",
+          80
+        ],
+        [
+          "Research terminology",
+          "research",
+          10
+        ],
+        [
+          "Work with clients",
+          "relationship",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "producers",
+      "soc": "27-2012",
+      "group": "27",
+      "title": "Producers, Directors & Media Workers",
+      "employment": 143,
+      "wage": 113,
+      "tasks": [
+        [
+          "Develop creative direction",
+          "creative",
+          25
+        ],
+        [
+          "Direct cast and crew",
+          "people",
+          20
+        ],
+        [
+          "Edit footage and audio",
+          "media",
+          20
+        ],
+        [
+          "Work on set and on location",
+          "physical",
+          15
+        ],
+        [
+          "Coordinate with producers and clients",
+          "meetings",
+          15.0
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          5.0
+        ]
+      ]
+    },
+    {
+      "id": "reporters",
+      "soc": "27-3023",
+      "group": "27",
+      "title": "News Analysts, Reporters & Journalists",
+      "employment": 39,
+      "wage": 102,
+      "tasks": [
+        [
+          "Research and verify stories",
+          "research",
+          25
+        ],
+        [
+          "Write stories and scripts",
+          "draft",
+          35
+        ],
+        [
+          "Develop and interview sources",
+          "relationship",
+          20
+        ],
+        [
+          "Report on location",
+          "physical",
+          10
+        ],
+        [
+          "Edit copy",
+          "edit",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "physician",
+      "soc": "29-1210/1240",
+      "group": "29",
+      "title": "Physicians & Surgeons",
+      "employment": 804,
+      "wage": 283,
+      "tasks": [
+        [
+          "Diagnose conditions and plan treatment",
+          "diagnosis",
+          25
+        ],
+        [
+          "Examine and talk with patients",
+          "care",
+          35
+        ],
+        [
+          "Perform procedures and surgery",
+          "physical",
+          15
+        ],
+        [
+          "Document visits and orders",
+          "docproc",
+          15
+        ],
+        [
+          "Consult with colleagues",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "pharmacist",
+      "soc": "29-1051",
+      "group": "29",
+      "title": "Pharmacists",
+      "employment": 322,
+      "wage": 141,
+      "tasks": [
+        [
+          "Verify prescriptions and check interactions",
+          "compliance",
+          25
+        ],
+        [
+          "Counsel patients",
+          "care",
+          25
+        ],
+        [
+          "Make clinical medication recommendations",
+          "expert",
+          20
+        ],
+        [
+          "Dispense and compound medications",
+          "physical",
+          15
+        ],
+        [
+          "Process insurance and records",
+          "docproc",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "med_records",
+      "soc": "29-9021/2072",
+      "group": "29",
+      "title": "Medical Records & Health Information Specialists",
+      "employment": 233,
+      "wage": 60,
+      "tasks": [
+        [
+          "Code and abstract medical records",
+          "docproc",
+          50
+        ],
+        [
+          "Enter and maintain patient data",
+          "entry",
+          25
+        ],
+        [
+          "Audit records for coding and privacy rules",
+          "compliance",
+          20
+        ],
+        [
+          "Answer records requests",
+          "service",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "sales_rep",
+      "soc": "41-4011/4012",
+      "group": "41",
+      "title": "Wholesale & Manufacturing Sales Representatives",
+      "employment": 1523,
+      "wage": 89,
+      "tasks": [
+        [
+          "Pitch, negotiate and close sales",
+          "sales",
+          40
+        ],
+        [
+          "Maintain customer relationships",
+          "relationship",
+          25
+        ],
+        [
+          "Handle orders and customer issues",
+          "service",
+          15
+        ],
+        [
+          "Research prospects and products",
+          "research",
+          10
+        ],
+        [
+          "Plan visits and follow-ups",
+          "scheduling",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "fin_sales",
+      "soc": "41-3021/3031",
+      "group": "41",
+      "title": "Insurance & Securities Sales Agents",
+      "employment": 969,
+      "wage": 95,
+      "tasks": [
+        [
+          "Prospect and sell policies and products",
+          "sales",
+          40
+        ],
+        [
+          "Maintain client relationships",
+          "relationship",
+          25
+        ],
+        [
+          "Compare products and analyze client needs",
+          "analysis",
+          10
+        ],
+        [
+          "Process applications and paperwork",
+          "docproc",
+          15
+        ],
+        [
+          "Meet licensing and suitability rules",
+          "compliance",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "real_estate",
+      "soc": "41-9021/9022",
+      "group": "41",
+      "title": "Real Estate Brokers & Sales Agents",
+      "employment": 239,
+      "wage": 72,
+      "tasks": [
+        [
+          "Negotiate and close transactions",
+          "sales",
+          35
+        ],
+        [
+          "Build client and referral relationships",
+          "relationship",
+          25
+        ],
+        [
+          "Show properties",
+          "physical",
+          20
+        ],
+        [
+          "Prepare contracts and disclosures",
+          "docproc",
+          10
+        ],
+        [
+          "Research listings and comparables",
+          "research",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "ad_sales",
+      "soc": "41-3011",
+      "group": "41",
+      "title": "Advertising Sales Agents",
+      "employment": 92,
+      "wage": 81,
+      "tasks": [
+        [
+          "Pitch and close advertising deals",
+          "sales",
+          45
+        ],
+        [
+          "Maintain advertiser relationships",
+          "relationship",
+          25
+        ],
+        [
+          "Suggest campaign ideas",
+          "creative",
+          10
+        ],
+        [
+          "Write proposals",
+          "draft",
+          10
+        ],
+        [
+          "Analyze audience and campaign data",
+          "analysis",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "sales_services",
+      "soc": "41-3091",
+      "group": "41",
+      "title": "Sales Representatives of Services",
+      "employment": 1256,
+      "wage": 82,
+      "tasks": [
+        [
+          "Pitch, negotiate and close service contracts",
+          "sales",
+          40
+        ],
+        [
+          "Maintain client relationships",
+          "relationship",
+          25
+        ],
+        [
+          "Prepare proposals and quotes",
+          "draft",
+          10
+        ],
+        [
+          "Research prospects and needs",
+          "research",
+          10
+        ],
+        [
+          "Handle account questions and renewals",
+          "service",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "sales_super",
+      "soc": "41-1012",
+      "group": "41",
+      "title": "First-Line Supervisors of Non-Retail Sales Workers",
+      "employment": 214,
+      "wage": 99,
+      "tasks": [
+        [
+          "Coach and supervise sales staff",
+          "people",
+          35
+        ],
+        [
+          "Close and negotiate key accounts",
+          "sales",
+          25
+        ],
+        [
+          "Maintain major customer relationships",
+          "relationship",
+          15
+        ],
+        [
+          "Track sales performance",
+          "analysis",
+          15
+        ],
+        [
+          "Run team meetings",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "csr",
+      "soc": "43-4051",
+      "group": "43",
+      "title": "Customer Service Representatives",
+      "employment": 2596,
+      "wage": 47,
+      "tasks": [
+        [
+          "Answer customer calls, chats and emails",
+          "service",
+          70
+        ],
+        [
+          "Update customer accounts",
+          "entry",
+          15
+        ],
+        [
+          "Process orders, returns and claims",
+          "docproc",
+          10
+        ],
+        [
+          "Upsell products and retain customers",
+          "sales",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "office_clerk",
+      "soc": "43-9061",
+      "group": "43",
+      "title": "Office Clerks, General",
+      "employment": 2465,
+      "wage": 46,
+      "tasks": [
+        [
+          "Enter and update records",
+          "entry",
+          25
+        ],
+        [
+          "Process forms and correspondence",
+          "docproc",
+          25
+        ],
+        [
+          "Answer phones and visitors",
+          "service",
+          20
+        ],
+        [
+          "Schedule and coordinate office tasks",
+          "scheduling",
+          15
+        ],
+        [
+          "Handle mail, filing and supplies",
+          "physical",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "secretary",
+      "soc": "43-6014",
+      "group": "43",
+      "title": "Secretaries & Administrative Assistants",
+      "employment": 1707,
+      "wage": 49,
+      "tasks": [
+        [
+          "Manage calendars, travel and meetings",
+          "scheduling",
+          35
+        ],
+        [
+          "Draft letters, memos and documents",
+          "draft",
+          20
+        ],
+        [
+          "Answer phones and requests",
+          "service",
+          20
+        ],
+        [
+          "Maintain files and records",
+          "entry",
+          15
+        ],
+        [
+          "Handle mail, supplies and office upkeep",
+          "physical",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "exec_asst",
+      "soc": "43-6011",
+      "group": "43",
+      "title": "Executive Secretaries & Executive Administrative Assistants",
+      "employment": 460,
+      "wage": 79,
+      "tasks": [
+        [
+          "Manage executive calendars and travel",
+          "scheduling",
+          40
+        ],
+        [
+          "Draft correspondence and briefing materials",
+          "draft",
+          25
+        ],
+        [
+          "Research and compile information",
+          "research",
+          10
+        ],
+        [
+          "Act as liaison to internal and external contacts",
+          "relationship",
+          15
+        ],
+        [
+          "Prepare and attend meetings",
+          "meetings",
+          7.5
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          2.5
+        ]
+      ]
+    },
+    {
+      "id": "med_secretary",
+      "soc": "43-6013",
+      "group": "43",
+      "title": "Medical Secretaries & Administrative Assistants",
+      "employment": 962,
+      "wage": 47,
+      "tasks": [
+        [
+          "Schedule patient appointments",
+          "scheduling",
+          35
+        ],
+        [
+          "Process insurance and medical forms",
+          "docproc",
+          30
+        ],
+        [
+          "Answer patient calls and check patients in",
+          "service",
+          25
+        ],
+        [
+          "Update patient records",
+          "entry",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "bookkeeper",
+      "soc": "43-3031",
+      "group": "43",
+      "title": "Bookkeeping, Accounting & Auditing Clerks",
+      "employment": 1374,
+      "wage": 54,
+      "tasks": [
+        [
+          "Record transactions and reconcile accounts",
+          "accounting",
+          60
+        ],
+        [
+          "Enter invoices and payments",
+          "entry",
+          25
+        ],
+        [
+          "Answer vendor and customer questions",
+          "service",
+          10
+        ],
+        [
+          "Prepare routine filings",
+          "docproc",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "receptionist",
+      "soc": "43-4171",
+      "group": "43",
+      "title": "Receptionists & Information Clerks",
+      "employment": 910,
+      "wage": 39,
+      "tasks": [
+        [
+          "Answer calls and visitor questions",
+          "service",
+          45
+        ],
+        [
+          "Schedule appointments",
+          "scheduling",
+          25
+        ],
+        [
+          "Greet visitors and staff the front desk",
+          "physical",
+          25
+        ],
+        [
+          "Log visitors and messages",
+          "entry",
+          5
+        ]
+      ]
+    },
+    {
+      "id": "office_super",
+      "soc": "43-1011",
+      "group": "43",
+      "title": "First-Line Supervisors of Office & Administrative Support",
+      "employment": 1437,
+      "wage": 73,
+      "tasks": [
+        [
+          "Supervise and train office staff",
+          "people",
+          35
+        ],
+        [
+          "Schedule staff and workflow",
+          "scheduling",
+          20
+        ],
+        [
+          "Review and approve documents",
+          "docproc",
+          15
+        ],
+        [
+          "Resolve escalated customer issues",
+          "service",
+          15
+        ],
+        [
+          "Attend management meetings",
+          "meetings",
+          11.25
+        ],
+        [
+          "Prepare, take notes and follow up",
+          "followup",
+          3.75
+        ]
+      ]
+    },
+    {
+      "id": "billing",
+      "soc": "43-3021/3051",
+      "group": "43",
+      "title": "Billing, Posting & Payroll Clerks",
+      "employment": 557,
+      "wage": 53,
+      "tasks": [
+        [
+          "Calculate and post charges and payroll",
+          "accounting",
+          40
+        ],
+        [
+          "Prepare invoices, statements and forms",
+          "docproc",
+          35
+        ],
+        [
+          "Enter billing and timekeeping data",
+          "entry",
+          15
+        ],
+        [
+          "Answer billing questions",
+          "service",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "data_entry",
+      "soc": "43-9021",
+      "group": "43",
+      "title": "Data Entry Keyers",
+      "employment": 127,
+      "wage": 43,
+      "tasks": [
+        [
+          "Key and verify data",
+          "entry",
+          85
+        ],
+        [
+          "Check source documents",
+          "docproc",
+          15
+        ]
+      ]
+    },
+    {
+      "id": "ins_clerk",
+      "soc": "43-9041",
+      "group": "43",
+      "title": "Insurance Claims & Policy Processing Clerks",
+      "employment": 214,
+      "wage": 53,
+      "tasks": [
+        [
+          "Process claims and policy changes",
+          "docproc",
+          60
+        ],
+        [
+          "Answer policyholder questions",
+          "service",
+          20
+        ],
+        [
+          "Enter policy and claim data",
+          "entry",
+          20
+        ]
+      ]
+    },
+    {
+      "id": "collectors",
+      "soc": "43-3011",
+      "group": "43",
+      "title": "Bill & Account Collectors",
+      "employment": 159,
+      "wage": 49,
+      "tasks": [
+        [
+          "Contact debtors by phone and letter",
+          "service",
+          40
+        ],
+        [
+          "Negotiate payment arrangements",
+          "sales",
+          30
+        ],
+        [
+          "Process payments and account records",
+          "docproc",
+          20
+        ],
+        [
+          "Update account notes",
+          "entry",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "expediting",
+      "soc": "43-5061",
+      "group": "43",
+      "title": "Production, Planning & Expediting Clerks",
+      "employment": 390,
+      "wage": 62,
+      "tasks": [
+        [
+          "Schedule production and expedite orders",
+          "scheduling",
+          50
+        ],
+        [
+          "Enter orders and status data",
+          "entry",
+          20
+        ],
+        [
+          "Follow up with suppliers and departments",
+          "relationship",
+          10
+        ],
+        [
+          "Check materials and orders on the floor",
+          "physical",
+          20
+        ]
+      ]
+    },
+    {
+      "id": "tellers",
+      "soc": "43-3071",
+      "group": "43",
+      "title": "Tellers",
+      "employment": 329,
+      "wage": 42,
+      "tasks": [
+        [
+          "Serve customers at the window",
+          "service",
+          40
+        ],
+        [
+          "Handle and balance cash",
+          "physical",
+          30
+        ],
+        [
+          "Process deposits, withdrawals and transfers",
+          "accounting",
+          20
+        ],
+        [
+          "Refer customers to products",
+          "sales",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "dispatchers",
+      "soc": "43-5032",
+      "group": "43",
+      "title": "Dispatchers (except police, fire & ambulance)",
+      "employment": 203,
+      "wage": 55,
+      "tasks": [
+        [
+          "Assign and route drivers and crews",
+          "scheduling",
+          60
+        ],
+        [
+          "Communicate with customers and drivers",
+          "service",
+          30
+        ],
+        [
+          "Log calls and dispatch records",
+          "entry",
+          10
+        ]
+      ]
+    },
+    {
+      "id": "loan_clerks",
+      "soc": "43-4131/4141",
+      "group": "43",
+      "title": "Loan Interviewers, Clerks & New Accounts Clerks",
+      "employment": 202,
+      "wage": 52,
+      "tasks": [
+        [
+          "Collect and verify application documents",
+          "docproc",
+          45
+        ],
+        [
+          "Interview applicants and answer questions",
+          "service",
+          35
+        ],
+        [
+          "Check applications against lending rules",
+          "compliance",
+          20
+        ]
+      ]
+    },
+    {
+      "id": "legal_secretary",
+      "soc": "43-6012",
+      "group": "43",
+      "title": "Legal Secretaries & Administrative Assistants",
+      "employment": 156,
+      "wage": 61,
+      "tasks": [
+        [
+          "Prepare legal correspondence and filings",
+          "draft",
+          30
+        ],
+        [
+          "Organize and file case documents",
+          "docproc",
+          30
+        ],
+        [
+          "Manage attorney calendars and deadlines",
+          "scheduling",
+          25
+        ],
+        [
+          "Answer client calls",
+          "service",
+          15
+        ]
+      ]
+    }
+  ],
+  "reference": "May 2025",
+  "task_basis": "Each occupation's task list condenses the O*NET task statements for its SOC code(s) into 2 to 7 tasks. The share of working time per task is the author's estimate, informed by O*NET task importance and frequency ratings; no survey measures U.S. white-collar time by work activity. Treat the shares as roughly ±5 points. Every meetings task is split the same way: 75% live participation and 25% preparation, notes and follow-up."
+}
