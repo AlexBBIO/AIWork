@@ -1,4 +1,4 @@
-import { computeModel, TIERS, captureAt, interpolate, revenueAt } from "./model.js";
+import { computeModel, TIERS, adoptionAt, shareAt, adoptionNow, interpolate, revenueAt } from "./model.js";
 
 const $ = (id) => document.getElementById(id);
 const HORIZON = 8;
@@ -38,8 +38,7 @@ const state = {
   flat: false,
   archSort: "share",
   scenario: "base",
-  growth: null,   // capture growth and ceiling the viewer set on the Value page; null means the scenario's
-  ceiling: null,
+  custom: null,   // adoption growth, peak and labs' share the viewer set on the Value page; null means the scenario's
   openGroups: new Set(),
   closedInSearch: new Set(), // groups the viewer collapsed while a search is showing them all
   openOccs: new Set(),
@@ -186,8 +185,8 @@ function setupControls() {
     location.hash = "jobs";
   });
   setupTips();
-  $("growth-in").addEventListener("input", (e) => { state.growth = Number(e.target.value); state.ceiling ??= scenarioParams().ceiling; state.scenario = "custom"; renderValue(); });
-  $("ceiling-in").addEventListener("input", (e) => { state.ceiling = Number(e.target.value); state.growth ??= scenarioParams().growth; state.scenario = "custom"; renderValue(); });
+  for (const k of ["growth", "peak", "share"])
+    $(`${k}-in`).addEventListener("input", (e) => { state.custom = { ...scenarioParams(), [k]: Number(e.target.value) }; state.scenario = "custom"; renderValue(); });
   window.addEventListener("resize", () => { if (data && state.view === "overview") renderTimeline(); });
 }
 
@@ -680,8 +679,8 @@ function combinedAt(series, t) {
 
 const scenarioParams = () => {
   const sc = data.economics?.scenarios || {};
-  const base = sc[state.scenario] || sc.base || { growth: 2, ceiling: 0.2 };
-  return { growth: state.scenario === "custom" ? state.growth : base.growth, ceiling: state.scenario === "custom" ? state.ceiling : base.ceiling };
+  const { growth, peak, share } = (state.scenario === "custom" && state.custom) || sc[state.scenario] || sc.base || { growth: 1.8, peak: 0.75, share: 0.25 };
+  return { growth, peak, share };
 };
 
 function renderValue() {
@@ -696,22 +695,25 @@ function renderValue() {
   const rev0 = series.reduce((s, l) => s + l.reports[l.reports.length - 1].v, 0);
   const i0 = proj[0] / 100;
   const doable0 = W * i0;
-  const c0 = rev0 / doable0;
+  // Work AI actually does: hours saved by group (survey), weighted by this wage bill.
+  const ad = econ.adoption || {};
+  const s0 = adoptionNow(vm.groups, ad.by_group);
+  const done0 = W * s0, a0 = s0 / i0, p0 = rev0 / done0;
   const p = scenarioParams();
 
   // Capability path: today, then each generation at its date.
   const capPts = [{ t: today, v: proj[0] }, ...Array.from({ length: HORIZON }, (_, i) => ({ t: tierDate(i + 1).getTime(), v: proj[i + 1] }))];
   const end = capPts[capPts.length - 1].t;
-  const path = (params) => {
+  const path = ({ growth, peak, share }) => {
     const out = [];
     for (let t = today; t <= end + 1; t += YEAR / 12) {
-      const idx = interpolate(capPts, t) / 100, c = captureAt((t - today) / YEAR, { c0, ...params });
-      out.push({ t, idx, c, rev: W * idx * c, share: idx * c * 100 });
+      const idx = interpolate(capPts, t) / 100, a = adoptionAt((t - today) / YEAR, { a0, growth, peak }), take = shareAt(a, { a0, peak, p0, share });
+      out.push({ t, idx, does: idx * a, take, rev: W * idx * a * take, share: idx * a * take * 100 });
     }
     return out;
   };
   const main = path(p);
-  const flat = path({ growth: 1, ceiling: 1 });
+  const flat = path({ growth: 1, peak: 1, share: p0 });
   const sc = econ.scenarios || {};
   const slow = sc.slow ? path(sc.slow) : null, fast = sc.fast ? path(sc.fast) : null;
 
@@ -723,38 +725,43 @@ function renderValue() {
     if (r === null) continue;
     const snap = snaps.filter((x) => parseDate(x.a.date).getTime() <= t).pop() || snaps[0];
     const idx = snap.m.index.f0 / 100;
-    hist.push({ t, rev: r, idx, share: (r / W) * 100, c: r / (W * idx) });
+    hist.push({ t, rev: r, idx, share: (r / W) * 100 });
   }
   // Hold the latest reports flat to today so the record meets the projection.
-  if (hist.length && hist[hist.length - 1].t < today) hist.push({ t: today, rev: rev0, idx: i0, share: (rev0 / W) * 100, c: c0 });
+  if (hist.length && hist[hist.length - 1].t < today) hist.push({ t: today, rev: rev0, idx: i0, share: (rev0 / W) * 100 });
   const year = hist.find((h) => h.t >= today - YEAR);
-  const capGrowth = year ? Math.pow(c0 / year.c, YEAR / (today - year.t)) : null;
+  const revGrowth = year ? Math.pow(rev0 / year.rev, YEAR / (today - year.t)) : null;
+  const cents = (x) => `${r0(x * 100)}¢`;
 
-  $("value-lede").textContent = `The work AI can already do is paid ${usd(doable0)} a year in U.S. white-collar wages. The frontier labs' combined revenue run-rate is ${usd(rev0)}: ${pct1((rev0 / W) * 100)} of the wage bill, or ${pct1(c0 * 100)} of the pay for the work AI can do. Revenue grows two ways: models take on more of the work, and labs earn a larger share of what that work is worth.`;
+  $("value-lede").textContent = `The work AI can already do is paid ${usd(doable0)} a year in U.S. white-collar wages, but AI actually does only about ${usd(done0)} of it: workers say it saves ${pct1(s0 * 100)} of their hours. The frontier labs' combined revenue run-rate is ${usd(rev0)}. Revenue can grow three ways: models can do more of the work, more of that work is handed to them, and the labs' share of what each dollar of that work is worth changes as prices fall and competition grows.`;
 
   const card = (label, value, sub, tip) => `<div class="vstat"${tip ? ` tabindex="0" ${tipAttr(tip)}` : ""}><span class="stat-label">${label}</span><span class="vstat-value">${value}</span><span class="stat-sub">${sub}</span></div>`;
   $("value-stats").innerHTML =
     card("White-collar wage bill", usd(W), `${vm.occupations.length} occupations, ${jobs(vm.totals.employment)} jobs (BLS, May 2025)`) +
     card("Work AI can do now", usd(doable0), `${pct(proj[0])} of the wage bill, rising to ${usd(W * proj[2] / 100)} by ${monthYear(tierDate(2))}`) +
-    card("Frontier lab revenue", usd(rev0), `Annualized run-rate, ${series.map((l) => l.name).join(" + ")}, latest reports`) +
-    card("Capture", pct1(c0 * 100), `of the pay for work AI can do${capGrowth ? `, up ${capGrowth.toFixed(1)}x in the past year` : ""}`,
-      { title: "Capture", rows: [{ label: "Lab revenue", value: usd(rev0) }, { label: "Pay for work AI can do", value: usd(doable0) }, { label: "Capture", value: pct1(c0 * 100) }],
-        note: "The share of the wages for AI-doable work that labs earn as revenue. It rises as more of that work is actually handed to models and paid for." });
+    card("Work AI actually does", usd(done0), `${pct1(s0 * 100)} of white-collar hours, ${pct(a0 * 100)} of what it can do (St. Louis Fed, ${esc(ad.label || ad.as_of || "")})`,
+      { title: "Work AI actually does", rows: [{ label: "Hours AI saves", value: pct1(s0 * 100) }, ...(ad.year_ago ? [{ label: "A year earlier", value: pct1(ad.year_ago) }] : []), { label: "Of what AI can do", value: pct(a0 * 100) }],
+        note: "Hours workers say generative AI saved them, by occupation group, weighted by wages. It leaves out work agents take on with no worker in the loop, so it is a floor." }) +
+    card("Frontier lab revenue", usd(rev0), `Run-rate${revGrowth ? `, up ${revGrowth.toFixed(1)}x in a year` : ""}: about ${cents(p0)} per $1 of pay for the work AI does`,
+      { title: "Labs' share of the value", rows: [{ label: "Lab revenue", value: usd(rev0) }, { label: "Pay for work AI does", value: usd(done0) }, { label: "Per $1 of that pay", value: cents(p0) }],
+        note: "An upper bound: revenue is global and includes consumer subscriptions, and the survey misses work done with no worker in the loop." });
 
-  // Funnel: wage bill -> doable now (and by F+2) -> lab revenue
+  // Funnel: wage bill -> doable now (and by F+2) -> done -> lab revenue
   const bar = (label, v, sub, extra = 0) => `<div class="fn-row"><span class="fn-label">${label}<small>${sub}</small></span><span class="fn-track"><span class="fn-bar" style="width:max(3px, ${(v / W) * 100}%)"></span>${extra ? `<span class="fn-bar next" style="width:${(extra / W) * 100}%"></span>` : ""}</span><span class="fn-val">${usd(v)}</span></div>`;
   $("funnel").innerHTML = bar("U.S. white-collar wage bill", W, "100%") +
     bar("Work AI can do now", doable0, `${pct(proj[0])} of the wage bill · lighter: added by ${monthYear(tierDate(2))}`, W * (proj[2] - proj[0]) / 100) +
-    bar("Frontier lab revenue", rev0, `${pct1((rev0 / W) * 100)} of the wage bill · ${pct1(c0 * 100)} of the doable work's pay`);
-  $("funnel-note").textContent = "Bar lengths are to scale. Lab revenue is global and includes consumer subscriptions, so measuring it against U.S. white-collar pay is a yardstick for scale, not a claim that all of it replaces U.S. wages.";
+    bar("Work AI actually does", done0, `${pct1(s0 * 100)} of hours, by workers' own account · ${pct(a0 * 100)} of what it can do`) +
+    bar("Frontier lab revenue", rev0, `${pct1((rev0 / W) * 100)} of the wage bill · ${cents(p0)} per $1 of the work AI does`);
+  $("funnel-note").textContent = "Bar lengths are to scale. The gap between the second and third bars is work AI could do but isn't yet doing. Lab revenue is global and includes consumer subscriptions, so measuring it against U.S. white-collar pay is a yardstick for scale, not a claim that all of it replaces U.S. wages.";
 
   // Controls
   const scen = Object.entries(sc).map(([id, x]) => ({ id, label: x.label }));
   $("scen-seg").innerHTML = [...scen, ...(state.scenario === "custom" ? [{ id: "custom", label: "Custom" }] : [])]
-    .map((x) => `<button type="button" role="radio" data-value="${x.id}" ${tipAttr({ title: x.label, note: sc[x.id]?.note || "Your own capture growth and ceiling." })}>${esc(x.label)}</button>`).join("");
-  syncScen = radiogroup($("scen-seg"), () => state.scenario, (v) => { state.scenario = v; state.growth = state.ceiling = null; renderValue(); });
+    .map((x) => `<button type="button" role="radio" data-value="${x.id}" ${tipAttr({ title: x.label, note: sc[x.id]?.note || "Your own adoption and share settings." })}>${esc(x.label)}</button>`).join("");
+  syncScen = radiogroup($("scen-seg"), () => state.scenario, (v) => { state.scenario = v; state.custom = null; renderValue(); });
   $("growth-in").value = p.growth; $("growth-out").textContent = `${p.growth.toFixed(1)}x`;
-  $("ceiling-in").value = p.ceiling; $("ceiling-out").textContent = `${r0(p.ceiling * 100)}%`;
+  $("peak-in").value = p.peak; $("peak-out").textContent = pct(p.peak * 100);
+  $("share-in").value = p.share; $("share-out").textContent = cents(p.share);
 
   // Chart: revenue as a share of the wage bill
   const box = $("vchart");
@@ -783,27 +790,28 @@ function renderValue() {
   if (!narrow) svg += `<text x="${x(last.t) - 4}" y="${y(last.share) - 8}" text-anchor="end" class="lbl-strong">${pct1(last.share)} · ${usd(last.rev)}</text><text x="${x(end) - 4}" y="${y(flat[flat.length - 1].share) - 8}" text-anchor="end">capability only · ${pct1(flat[flat.length - 1].share)}</text>`;
   // Hover points: quarterly on the projection, monthly-ish on the history
   const tipFor = (q, kind) => ({ title: monthYear(new Date(q.t)), sub: kind,
-    rows: [{ label: "Lab revenue", value: usd(q.rev), swatch: kind === "Reported" ? "now" : "f1" }, { label: "Share of the wage bill", value: pct1(q.share) }, { label: "AI can do", value: pct(q.idx * 100) }, { label: "Capture", value: pct1(q.c * 100) }],
-    note: kind === "Reported" ? "Combined run-rate, interpolated between each lab's reports, against the frontier model of the day." : `If capture stayed at today's level: ${pct1(flat.find((f) => f.t === q.t)?.share ?? 0)} of the wage bill.` });
+    rows: [{ label: "Lab revenue", value: usd(q.rev), swatch: kind === "Reported" ? "now" : "f1" }, { label: "Share of the wage bill", value: pct1(q.share) }, { label: "AI can do", value: pct(q.idx * 100) },
+      ...(kind === "Reported" ? [] : [{ label: "AI does", value: pct1(q.does * 100) }, { label: "Labs' share", value: cents(q.take) }])],
+    note: kind === "Reported" ? "Combined run-rate, interpolated between each lab's reports, against the frontier model of the day." : `If adoption and the labs' share stayed at today's levels: ${pct1(flat.find((f) => f.t === q.t)?.share ?? 0)} of the wage bill.` });
   hist.forEach((q, i) => { if (i % 2 === 0 || i === hist.length - 1) svg += `<circle class="hit" cx="${x(q.t)}" cy="${y(q.share)}" r="9" fill="transparent" tabindex="0" ${tipAttr(tipFor(q, "Reported"))}/>`; });
   main.forEach((q, i) => { if (i && i % 3 === 0) svg += `<circle class="hit" cx="${x(q.t)}" cy="${y(q.share)}" r="9" fill="transparent" tabindex="0" ${tipAttr(tipFor(q, `${sc[state.scenario]?.label || "Custom"} scenario`))}/>`; });
   box.innerHTML = svg + "</svg>";
   const lg = (inner, title, note) => `<span class="lg" ${tipAttr({ title, note })}>${inner}${title}</span>`;
   $("vchart-legend").innerHTML = [
     lg('<span class="swatch" style="background:var(--t0)"></span>', "Reported revenue", "Combined annualized run-rate of the labs listed below."),
-    lg('<span class="swatch" style="background:var(--t1)"></span>', `${sc[state.scenario]?.label || "Custom"} scenario`, "Capability follows the model's forecast and trend; capture follows an S-curve from today's level to the ceiling."),
+    lg('<span class="swatch" style="background:var(--t1)"></span>', `${sc[state.scenario]?.label || "Custom"} scenario`, "Capability follows the model's forecast and trend; adoption follows an S-curve to its peak, and the labs' share moves to its long-run value as adoption matures."),
     lg('<span class="band"></span>', "Slow to fast range", "Between the slow and fast scenarios."),
-    lg('<span class="dot trend"></span>', "Capability only", "Capture held at today's level: revenue grows only as models can do more of the work."),
+    lg('<span class="dot trend"></span>', "Capability only", "Adoption and the labs' share held at today's levels: revenue grows only as models can do more of the work."),
   ].join("");
-  $("vpath-note").textContent = `Revenue = wage bill × share of work AI can do × capture. Capability follows this site's forecasts (${monthYear(tierDate(1))}, ${monthYear(tierDate(2))}) and trend. Capture starts at ${pct1(c0 * 100)}, grows ${p.growth.toFixed(1)}x in the first year and slows as it nears a ${r0(p.ceiling * 100)}% ceiling. Dollars are in today's terms with the wage bill held at May 2025 levels.`;
+  $("vpath-note").textContent = `Revenue = wage bill × share of work AI can do × share of that work it actually does × labs' share of its value. Capability follows this site's forecasts (${monthYear(tierDate(1))}, ${monthYear(tierDate(2))}) and trend. Adoption starts at ${pct(a0 * 100)} of the work AI can do, grows ${p.growth.toFixed(1)}x in the first year and slows as it nears ${pct(p.peak * 100)}. The labs' share starts at ${cents(p0)} per dollar of that work's pay and reaches ${cents(p.share)} at peak adoption. Dollars are in today's terms with the wage bill held at May 2025 levels.`;
 
   // Table at the forecast dates and two later years
   const at = (t) => main.reduce((b, q) => (Math.abs(q.t - t) < Math.abs(b.t - t) ? q : b));
   const atF = (t) => flat.reduce((b, q) => (Math.abs(q.t - t) < Math.abs(b.t - t) ? q : b));
   const rows = [["Today", today], [`Frontier+1 · ${monthYear(tierDate(1))}`, tierDate(1).getTime()], [`Frontier+2 · ${monthYear(tierDate(2))}`, tierDate(2).getTime()],
     [monthYear(tierDate(4)), tierDate(4).getTime()], [monthYear(new Date(end)), end]];
-  $("value-table").innerHTML = `<thead><tr><th></th><th class="num">AI can do</th><th class="num">Capture</th><th class="num">Lab revenue</th><th class="num">Share of pay</th><th class="num">Capability only</th></tr></thead>
-    <tbody>${rows.map(([label, t]) => { const q = at(t), f = atF(t); return `<tr><td>${label}</td><td class="num">${pct(q.idx * 100)}</td><td class="num">${pct1(q.c * 100)}</td><td class="num">${usd(q.rev)}</td><td class="num">${pct1(q.share)}</td><td class="num">${usd(f.rev)}</td></tr>`; }).join("")}</tbody>`;
+  $("value-table").innerHTML = `<thead><tr><th></th><th class="num">AI can do</th><th class="num">AI does</th><th class="num">Labs' share</th><th class="num">Lab revenue</th><th class="num">Share of pay</th><th class="num">Capability only</th></tr></thead>
+    <tbody>${rows.map(([label, t]) => { const q = at(t), f = atF(t); return `<tr><td>${label}</td><td class="num">${pct(q.idx * 100)}</td><td class="num">${pct1(q.does * 100)}</td><td class="num">${cents(q.take)}</td><td class="num">${usd(q.rev)}</td><td class="num">${pct1(q.share)}</td><td class="num">${usd(f.rev)}</td></tr>`; }).join("")}</tbody>`;
 
   // Where the value sits: pay for AI-doable work by group, now and by Frontier+2
   const gs = [...vm.groups].map((g) => ({ g, total: g.weight * W, now: g.weight * W * g.proj[0] / 100, f2: g.weight * W * g.proj[2] / 100 })).sort((p, q) => q.now - p.now);

@@ -239,17 +239,39 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
 
 /* ---------- Economic value ---------- */
 // Lab revenue against the wage bill of the work AI can do:
-//   revenue(t) = wage bill × index(t) × capture(t)
+//   revenue(t) = wage bill × index(t) × adoption(t) × share(t)
 // The index is the share of white-collar working time AI can do (the model above).
-// Capture is the share of the wages for that work which labs earn as revenue. It follows
-// a logistic curve from today's level toward a ceiling, starting at a stated annual
-// growth multiple, so it can grow fast early and must slow as it nears the ceiling.
+// Adoption is the share of that work AI actually does. It follows a logistic curve from
+// today's measured level toward a peak, starting at a stated annual growth multiple, so it
+// can grow fast early and must slow as it nears the peak.
+// Share is lab revenue per dollar of wages for the work AI does. It moves from today's
+// implied level to its long-run value in step with adoption, reaching it at the peak.
 
-// Capture t years from now.
-export function captureAt(t, { c0, growth, ceiling }) {
-  if (!(c0 > 0) || !(ceiling > c0) || !(growth > 1)) return c0;
-  const k = Math.log(growth) / (1 - c0 / ceiling);
-  return ceiling / (1 + ((ceiling - c0) / c0) * Math.exp(-k * t));
+// Adoption t years from now.
+export function adoptionAt(t, { a0, growth, peak }) {
+  if (!(a0 > 0) || !(peak > a0) || !(growth > 1)) return a0;
+  const k = Math.log(growth) / (1 - a0 / peak);
+  return peak / (1 + ((peak - a0) / a0) * Math.exp(-k * t));
+}
+
+// The labs' share at a given adoption level.
+export function shareAt(adoption, { a0, peak, p0, share }) {
+  if (!(peak > a0)) return p0;
+  const done = Math.min(1, Math.max(0, (adoption - a0) / (peak - a0)));
+  return p0 + (share - p0) * done;
+}
+
+// Share of white-collar working time AI already does: hours saved by group, weighted by
+// each group's weight in the model. Groups without a figure are left out of the average.
+export function adoptionNow(groups, byGroup) {
+  let sum = 0, w = 0;
+  for (const g of groups) {
+    const v = byGroup?.[g.id];
+    if (typeof v !== "number") continue;
+    sum += g.weight * v;
+    w += g.weight;
+  }
+  return w ? sum / w / 100 : NaN;
 }
 
 // Linear interpolation over sorted [{ t, v }] points, held flat beyond both ends.
@@ -295,10 +317,20 @@ export function validateEconomics(econ, sourceIds = new Set()) {
     const dates = (econ.revenue || []).filter((r) => r.lab === lab).map((r) => r.date);
     if (dates.some((d, i) => i && d < dates[i - 1])) errors.push(`economics: ${lab} reports must be in date order`);
   }
+  const ad = econ.adoption;
+  if (!ad) errors.push("economics: no adoption data");
+  else {
+    if (!isDate(ad.as_of)) errors.push("economics: adoption as_of must be YYYY-MM-DD");
+    const vals = Object.values(ad.by_group || {});
+    if (!vals.length) errors.push("economics: adoption has no group figures");
+    if (vals.some((v) => !(v >= 0 && v <= 100))) errors.push("economics: adoption figures must be percentages from 0 to 100");
+    for (const s of ad.sources || []) if (sourceIds.size && !sourceIds.has(s)) errors.push(`economics: adoption: unknown source id ${s}`);
+  }
   const s = econ.scenarios || {};
   for (const [id, sc] of Object.entries(s)) {
     if (!(sc.growth >= 1)) errors.push(`economics: scenario ${id} growth must be >= 1`);
-    if (!(sc.ceiling > 0 && sc.ceiling < 1)) errors.push(`economics: scenario ${id} ceiling must be between 0 and 1`);
+    if (!(sc.peak > 0 && sc.peak <= 1)) errors.push(`economics: scenario ${id} peak adoption must be above 0 and at most 1`);
+    if (!(sc.share > 0 && sc.share < 1)) errors.push(`economics: scenario ${id} share must be between 0 and 1`);
   }
   return errors;
 }
