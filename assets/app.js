@@ -2,8 +2,16 @@ import { computeModel, TIERS } from "./model.js";
 
 const $ = (id) => document.getElementById(id);
 const HORIZON = 8;
+const HOURS = 40;
+const VIEWS = ["overview", "jobs", "tasks", "method"];
 const fmt = (x, d = 1) => x.toFixed(d);
+const pct = (x) => `${Math.round(x)}%`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const jobs = (k) => (k >= 1000 ? `${fmt(k / 1000, k >= 10000 ? 0 : 1)}M` : `${Math.round(k)}k`);
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const parseDate = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d || 1)); };
+const monthYear = (d) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+const addMonths = (d, n) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + n, d.getUTCDate()));
 
 const store = {
   get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
@@ -11,348 +19,409 @@ const store = {
 };
 
 const state = {
+  view: "overview",
   weight: store.get("headroom.weight", "wage"),
-  assessmentId: null,
-  sort: { key: "weight", dir: -1 },
-  group: "",
-  search: "",
-  expanded: new Set(),
-  showAllRemaining: false,
   edits: {},
+  search: "",
+  sort: "now",
+  openGroups: new Set(),
+  openOccs: new Set(),
+  openArchs: new Set(),
 };
 
-let data; // { taxonomy, occupations, index, assessments: {id: assessment} }
-let model;
+let data;      // { taxonomy, occupations, index, assessments }
+let model;     // model for the live assessment, with the viewer's edits
+let snaps;     // every snapshot, oldest first, with its index
+
+const live = () => data.assessments[data.index.latest];
+const tierDate = (n) => addMonths(parseDate(live().date), n * live().cadence_months);
+const weightPhrase = () => (state.weight === "wage" ? "measured by share of pay" : "measured by share of working time");
 
 async function load() {
   const get = (p) => fetch(p).then((r) => { if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.json(); });
   const [taxonomy, occupations, index] = await Promise.all([get("data/taxonomy.json"), get("data/occupations.json"), get("data/assessments/index.json")]);
   const list = await Promise.all(index.assessments.map((id) => get(`data/assessments/${id}.json`)));
   data = { taxonomy, occupations, index, assessments: Object.fromEntries(list.map((a) => [a.id, a])) };
-  state.assessmentId = index.latest;
-  state.edits = store.get(`headroom.edits.${state.assessmentId}`, {});
+  state.edits = store.get(`headroom.edits.${index.latest}`, {});
   setupControls();
+  route();
+}
+
+/* ---------- Routing and controls ---------- */
+
+function route() {
+  const h = location.hash.slice(1);
+  state.view = VIEWS.includes(h) ? h : "overview";
   render();
 }
 
-const assessment = () => data.assessments[state.assessmentId];
-const tierLabel = (t) => assessment().tiers[t].label;
-const genLabel = (n) => (n === 0 ? "Frontier" : `Frontier+${n}`);
-const genYear = (n) => {
-  const d = new Date(assessment().date);
-  return Math.round((d.getFullYear() + d.getMonth() / 12 + (n * assessment().cadence_months) / 12) * 10) / 10;
-};
-const tierVar = (i) => `var(--t${i})`;
-
 function setupControls() {
-  const sel = $("assessment-select");
-  sel.innerHTML = [...data.index.assessments].reverse().map((id) => `<option value="${id}">${esc(data.assessments[id].date)} · ${esc(data.assessments[id].title)}</option>`).join("");
-  sel.value = state.assessmentId;
-  sel.addEventListener("change", () => {
-    state.assessmentId = sel.value;
-    state.edits = store.get(`headroom.edits.${state.assessmentId}`, {});
-    render();
-  });
+  window.addEventListener("hashchange", () => { route(); window.scrollTo(0, 0); });
   for (const b of document.querySelectorAll(".seg button")) {
     b.addEventListener("click", () => { state.weight = b.dataset.weight; store.set("headroom.weight", state.weight); render(); });
   }
-  const gf = $("group-filter");
-  gf.innerHTML += data.occupations.groups.map((g) => `<option value="${g.id}">${g.id} · ${esc(g.name)}</option>`).join("");
-  gf.addEventListener("change", () => { state.group = gf.value; renderOccupations(); });
-  $("occ-search").addEventListener("input", (e) => { state.search = e.target.value.trim().toLowerCase(); renderOccupations(); });
-  $("remaining-toggle").addEventListener("click", () => { state.showAllRemaining = !state.showAllRemaining; renderRemaining(); });
-  const reset = () => { state.edits = {}; store.set(`headroom.edits.${state.assessmentId}`, {}); render(); };
+  $("occ-search").addEventListener("input", (e) => { state.search = e.target.value.trim().toLowerCase(); renderJobs(); });
+  $("occ-sort").addEventListener("change", (e) => { state.sort = e.target.value; renderJobs(); });
+  const reset = () => { state.edits = {}; store.set(`headroom.edits.${data.index.latest}`, {}); render(); };
   $("reset-edits").addEventListener("click", reset);
   $("reset-edits-top").addEventListener("click", reset);
+  window.addEventListener("scroll", hideTip, { passive: true });
 }
 
 function render() {
-  model = computeModel({ ...data, assessment: assessment(), weight: state.weight, edits: state.edits, horizon: HORIZON });
+  model = computeModel({ ...data, assessment: live(), weight: state.weight, edits: state.edits, horizon: HORIZON });
+  snaps = data.index.assessments
+    .map((id) => data.assessments[id])
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((a) => ({ a, m: a.id === data.index.latest ? model : computeModel({ ...data, assessment: a, weight: state.weight, horizon: HORIZON }) }));
+
   for (const b of document.querySelectorAll(".seg button")) b.setAttribute("aria-checked", String(b.dataset.weight === state.weight));
+  for (const a of document.querySelectorAll(".tabs a")) {
+    if (a.dataset.view === state.view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  }
+  for (const v of VIEWS) $(`view-${v}`).hidden = v !== state.view;
   const hasEdits = Object.keys(state.edits).length > 0;
   $("edits-banner").hidden = !hasEdits;
   $("reset-edits").disabled = !hasEdits;
-  renderHero();
-  renderCurve();
-  renderRemaining();
-  renderOccupations();
-  renderGroups();
-  renderArchetypes();
-  renderHistory();
-  renderMethod();
+  ({ overview: renderOverview, jobs: renderJobs, tasks: renderTasks, method: renderMethod })[state.view]();
 }
 
-/* ---------- Hero ---------- */
+/* ---------- Shared pieces ---------- */
 
-function renderHero() {
-  const a = assessment();
-  const { f0, f1, f2, limit, flatAt } = model.index;
-  const t = model.totals;
-  const w = state.weight === "wage" ? "of the white-collar wage bill" : "of white-collar working time";
-  $("hero-eyebrow").textContent = `Assessment ${a.id} · scored ${a.date} · ${a.status}`;
-  $("hero-lede").textContent =
-    `Covers ${model.occupations.length} occupations, ${fmt(t.employment / 1000)} million jobs and $${fmt(t.wageBill / 1e6, 2)} trillion in annual wages. ` +
-    `Today's frontier models could do about ${Math.round(f0)}% ${w}. The trend points to a limit near ${Math.round(limit)}%, ` +
-    `with gains falling under a point per generation after ${genLabel(flatAt - 1)} (around ${Math.floor(genYear(flatAt - 1))}).`;
-
-  const stat = (label, sw, value, sub) => `
-    <div class="stat">
-      <span class="stat-label">${sw ? `<span class="swatch ${sw.startsWith("var") ? "" : sw}" style="${sw.startsWith("var") ? `background:${sw}` : ""}"></span>` : ""}${label}</span>
-      <span class="stat-value">${value}<small>%</small></span>
-      <span class="stat-sub">${sub}</span>
-    </div>`;
-  $("readout").innerHTML =
-    stat(tierLabel("f0"), tierVar(0), fmt(f0), `of work saturated now`) +
-    stat(tierLabel("f1"), tierVar(1), fmt(f1), `+${fmt(f1 - f0)} pts, est. ${Math.floor(genYear(1))}`) +
-    stat(tierLabel("f2"), tierVar(2), fmt(f2), `+${fmt(f2 - f1)} pts, est. ${Math.floor(genYear(2))}`) +
-    stat("Implied limit", "open", fmt(limit), `${fmt(limit - f0)} pts above today`) +
-    stat("Structural floor", "var(--struct)", fmt(100 - limit), `stays human at any capability`);
-
-  const segs = [
-    { v: f0, c: "var(--t0)", label: tierLabel("f0") },
-    { v: f1 - f0, c: "var(--t1)", label: `Added by ${tierLabel("f1")}` },
-    { v: f2 - f1, c: "var(--t2)", label: `Added by ${tierLabel("f2")}` },
-    { v: limit - f2, cls: "seg-open", label: "Open to later generations" },
-    { v: 100 - limit, c: "var(--struct)", label: "Structural floor" },
+// The five bands every bar on the site uses, in order.
+function bands(proj, limit) {
+  return [
+    { k: "now", v: proj[0], color: "var(--t0)", label: "AI can do now" },
+    { k: "f1", v: proj[1] - proj[0], color: "var(--t1)", label: "Added next generation" },
+    { k: "f2", v: proj[2] - proj[1], color: "var(--t2)", label: "Added the generation after" },
+    { k: "open", v: limit - proj[2], cls: "fill-open", label: "Open to later generations" },
+    { k: "human", v: 100 - limit, cls: "fill-struct", label: "Needs a person" },
   ];
-  $("gauge").innerHTML = segs.map((s) =>
-    `<div class="${s.cls || ""}" style="flex:0 0 max(0px, calc(${s.v}% - 2px));${s.c ? `background:${s.c}` : ""}" data-tip="${esc(s.label)}|${fmt(s.v)} pts"></div>`).join("");
-  $("gauge").setAttribute("role", "img");
-  $("gauge").setAttribute("aria-label", segs.map((s) => `${s.label} ${fmt(s.v)} points`).join("; "));
-  $("gauge-legend").innerHTML = segs.map((s) =>
-    `<span><span class="swatch ${s.cls ? "open" : ""}" style="${s.c ? `background:${s.c}` : ""}"></span>${esc(s.label)} <span class="mono">${fmt(s.v)}</span></span>`).join("");
-  bindTips($("gauge"));
 }
 
-/* ---------- Curve ---------- */
+function stackBar(proj, limit, { tall = false, scale = 100 } = {}) {
+  const b = bands(proj, limit);
+  const tip = b.map((x) => `${x.label} ${fmt(x.v)}%`).join("|");
+  return `<div class="stack${tall ? " tall" : ""}" style="width:${scale}%" data-tip="Breakdown|${esc(tip)}" aria-hidden="true">${b
+    .map((x) => `<div class="${x.cls || ""}" style="flex:0 0 max(0px, calc(${x.v}% - 2px));${x.color ? `background:${x.color}` : ""}"></div>`)
+    .join("")}</div>`;
+}
 
-function renderCurve() {
-  const box = $("curve");
+function legendHTML(withValues) {
+  const b = bands(model.index.proj, model.index.limit);
+  return b.map((x) => `<span><span class="swatch ${x.cls === "fill-open" ? "open" : x.cls || ""}" style="${x.color ? `background:${x.color}` : ""}"></span>${x.label}${withValues ? ` <b>${withValues(x)}</b>` : ""}</span>`).join("");
+}
+
+const shortModel = (s) => s.replace(/^Claude /, "");
+
+/* ---------- Overview ---------- */
+
+function renderOverview() {
+  const a = live();
   const { proj, limit, flatAt } = model.index;
-  const W = Math.max(440, Math.min(760, box.clientWidth || 760)), H = W < 600 ? 260 : 300, m = { l: 38, r: 16, t: 16, b: 44 };
-  const x = (n) => m.l + (n / HORIZON) * (W - m.l - m.r);
+  const first = snaps[0];
+  const y1 = monthYear(tierDate(1)), y2 = monthYear(tierDate(2));
+
+  $("lead-eyebrow").textContent = `Updated ${monthYear(parseDate(a.date))} · Frontier model: ${a.anchor}`;
+  $("lead-h1").innerHTML = `AI can now do about <em>${pct(proj[0])}</em> of U.S. white-collar work.`;
+  $("lead-lede").textContent =
+    (snaps.length > 1 ? `That's up from ${pct(first.m.index.f0)} when ${first.a.anchor} was the frontier in ${monthYear(parseDate(first.a.date))}. ` : "") +
+    `The next two model generations, expected around ${y1} and ${y2}, take it to about ${pct(proj[1])} and ${pct(proj[2])}. ` +
+    `Progress flattens near ${pct(limit)}; the remaining ${pct(100 - limit)} needs a person in the room, a signature, or a relationship. All figures are ${weightPhrase()}.`;
+
+  const stat = (label, color, value, sub) => `<div class="stat">
+    <span class="stat-label"><span class="swatch ${color === "open" ? "open" : ""}" style="${color !== "open" ? `background:${color}` : ""}"></span>${label}</span>
+    <span class="stat-value">${fmt(value)}<small>%</small></span><span class="stat-sub">${sub}</span></div>`;
+  $("readout").innerHTML =
+    stat("Now", "var(--t0)", proj[0], `${esc(shortModel(a.anchor))}, ${monthYear(parseDate(a.date))}`) +
+    stat("Next generation", "var(--t1)", proj[1], `+${fmt(proj[1] - proj[0])} pts, around ${y1}`) +
+    stat("Generation after", "var(--t2)", proj[2], `+${fmt(proj[2] - proj[1])} pts, around ${y2}`) +
+    stat("Ceiling", "open", limit, `Gains under 1 pt a generation after ~${tierDate(flatAt - 1).getUTCFullYear()}`);
+
+  renderTimeline();
+  renderWeek();
+
+  const ranked = [...model.occupations].sort((p, q) => q.proj[0] - p.proj[0]);
+  const item = (o) => `<li><span>${esc(o.title)}<br><span class="sub">${jobs(o.employment)} jobs</span></span><span class="val">${pct(o.proj[0])}</span>${stackBar(o.proj, o.limit)}</li>`;
+  $("most").innerHTML = ranked.slice(0, 6).map(item).join("");
+  $("least").innerHTML = ranked.slice(-6).reverse().map(item).join("");
+
+  const g = [
+    ["var(--t0)", "Frontier", `The best model available on the snapshot date. Today that's ${a.anchor}. Earlier snapshots track each Opus release back to ${first.a.anchor}.`],
+    ["var(--t1)", "Next generation and the one after", `Frontier+1 and Frontier+2: the next two major capability steps, about ${a.cadence_months} months apart, roughly two Opus point releases each. These are forecasts.`],
+    [null, "Can do", "AI can do the task at the quality of a competent professional, with no more than light review. This measures capability, not whether employers have adopted it."],
+    ["open", "Ceiling", "The most of a task AI could ever take, even with unlimited intelligence. Above it sits work that needs physical presence, legal accountability, or a human relationship."],
+    [null, "Pay or jobs", "Pay weights each job by its total wages, so the index reads as a share of what employers spend. Jobs weights by headcount, so it reads as a share of people's working time."],
+    [null, "Jobs and tasks", `${model.occupations.length} occupations covering ${fmt(model.totals.employment / 1000)}M U.S. jobs (BLS, May 2025), each split into 2 to 6 tasks.`],
+  ];
+  $("glossary").innerHTML = g.map(([c, t, d]) => `<div><dt>${c ? `<span class="swatch ${c === "open" ? "open" : ""}" style="${c !== "open" ? `background:${c}` : ""}"></span>` : ""}${t}</dt><dd>${esc(d)}</dd></div>`).join("");
+  bindTips($("view-overview"));
+}
+
+function renderTimeline() {
+  const box = $("timeline");
+  const { proj, limit, flatAt } = model.index;
+  const W = Math.max(440, Math.min(980, box.clientWidth || 980));
+  const narrow = W < 640;
+  const H = narrow ? 300 : 340;
+  const m = { l: 34, r: 14, t: 18, b: 40 };
+  const lastGen = Math.min(HORIZON, Math.max(flatAt, 4));
+  const past = snaps.map(({ a, m: mm }) => ({ d: parseDate(a.date), v: mm.index.f0, label: shortModel(a.anchor), a }));
+  const future = Array.from({ length: lastGen }, (_, i) => ({ n: i + 1, d: tierDate(i + 1), v: proj[i + 1] }));
+  const t0 = addMonths(past[0].d, -1).getTime(), t1 = future[future.length - 1].d.getTime();
+  const x = (d) => m.l + ((d.getTime() - t0) / (t1 - t0)) * (W - m.l - m.r);
   const y = (v) => m.t + (1 - v / 100) * (H - m.t - m.b);
-  const pts = proj.map((v, n) => [x(n), y(v)]);
-  const path = (arr) => arr.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
-  const yTicks = [0, 20, 40, 60, 80, 100];
+  const path = (pts) => pts.map((p, i) => `${i ? "L" : "M"}${x(p.d).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+  const now = past[past.length - 1];
 
-  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Saturation index by model generation">
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Share of white-collar work AI can do, by date">
     <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--surface)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--struct)" stroke-width="2"/></pattern></defs>
-    <rect x="${m.l}" y="${y(100)}" width="${W - m.l - m.r}" height="${y(limit) - y(100)}" fill="url(#hatch)" opacity="0.35"/>
-    <g class="grid">${yTicks.map((v) => `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`).join("")}</g>
-    ${yTicks.map((v) => `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join("")}
+    <rect x="${m.l}" y="${y(100)}" width="${W - m.l - m.r}" height="${y(limit) - y(100)}" fill="url(#hatch)" opacity="0.4"/>
+    <g class="grid">${[0, 25, 50, 75, 100].map((v) => `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`).join("")}</g>
+    ${[0, 25, 50, 75, 100].map((v) => `<text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join("")}
     <line class="axis-base" x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}"/>
-    <line x1="${m.l}" x2="${W - m.r}" y1="${y(limit)}" y2="${y(limit)}" stroke="var(--ink-2)" stroke-width="1" stroke-dasharray="4 4"/>
-    <text x="${W - m.r}" y="${y(limit) - 6}" text-anchor="end" class="lbl-strong">Limit ${fmt(limit)}</text>
-    <text x="${W - m.r}" y="${y(100) + 14}" text-anchor="end">Structural floor</text>`;
-  if (flatAt > 0) {
-    svg += `<line x1="${x(flatAt - 1)}" x2="${x(flatAt - 1)}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)" stroke-width="1"/>
-      <text x="${x(flatAt - 1) + 6}" y="${y(4)}">gains &lt; 1 pt/gen after here</text>`;
+    <text x="${W - m.r - 4}" y="${y(100) + 14}" text-anchor="end">Needs a person</text>
+    <line x1="${m.l}" x2="${W - m.r}" y1="${y(limit)}" y2="${y(limit)}" stroke="var(--ink-2)" stroke-dasharray="4 4"/>
+    <text x="${W - m.r - 4}" y="${y(limit) - 6}" text-anchor="end" class="lbl-strong">Ceiling ${fmt(limit)}%</text>
+    <line x1="${x(now.d)}" x2="${x(now.d)}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)"/>
+    <text x="${x(now.d) + 5}" y="${y(4)}">Today</text>`;
+
+  // x-axis: one tick per half year
+  for (let d = new Date(Date.UTC(parseDate(past[0].a.date).getUTCFullYear(), 0, 1)); d.getTime() <= t1; d = addMonths(d, 6)) {
+    if (d.getTime() < t0) continue;
+    const yr = d.getUTCMonth() === 0;
+    s += `<line x1="${x(d)}" x2="${x(d)}" y1="${y(0)}" y2="${y(0) + 4}" stroke="var(--rule-strong)"/>
+      <text x="${x(d)}" y="${H - m.b + 18}" text-anchor="middle" class="${yr ? "lbl-strong" : ""}">${yr ? d.getUTCFullYear() : narrow ? "" : "Jul"}</text>`;
   }
-  for (let n = 0; n <= HORIZON; n++) {
-    svg += `<text x="${x(n)}" y="${H - m.b + 18}" text-anchor="middle" class="${n <= 2 ? "lbl-strong" : ""}">${n === 0 ? "F" : `F+${n}`}</text>
-      <text x="${x(n)}" y="${H - m.b + 32}" text-anchor="middle">${Math.floor(genYear(n))}</text>`;
-  }
-  svg += `<path d="${path(pts.slice(2))}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5"/>
-    <path d="${path(pts.slice(0, 3))}" fill="none" stroke="var(--t1)" stroke-width="2"/>`;
-  pts.forEach(([px, py], n) => {
-    const fill = n <= 2 ? tierVar(n) : "var(--surface)";
-    const stroke = n <= 2 ? "var(--surface)" : "var(--muted)";
-    svg += `<circle cx="${px}" cy="${py}" r="${n <= 2 ? 6 : 4}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
+
+  s += `<path d="${path(future.slice(1))}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5"/>
+    <path d="${path([now, future[0], future[1]])}" fill="none" stroke="var(--t1)" stroke-width="2"/>
+    <path d="${path(past)}" fill="none" stroke="var(--t0)" stroke-width="2.5"/>`;
+
+  // Past snapshots: dots plus model labels, alternating above and below to avoid collisions.
+  past.forEach((p, i) => {
+    const above = i % 2 === 1;
+    const ly = above ? y(p.v) - 12 : y(p.v) + 20;
+    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="5" fill="var(--t0)" stroke="var(--surface)" stroke-width="2"/>`;
+    if (i === past.length - 1) return;
+    if (!narrow || i === 0) s += `<text x="${x(p.d)}" y="${ly}" text-anchor="middle" class="lbl-model">${esc(p.label)}</text>`;
   });
-  [0, 1, 2].forEach((n) => { svg += `<text x="${pts[n][0]}" y="${pts[n][1] - 12}" text-anchor="middle" class="lbl-strong">${fmt(proj[n])}</text>`; });
-  svg += `<line id="curve-cross" x1="0" x2="0" y1="${m.t}" y2="${y(0)}" stroke="var(--ink-2)" stroke-width="1" opacity="0"/>`;
-  for (let n = 0; n <= HORIZON; n++) {
-    const half = (W - m.l - m.r) / HORIZON / 2;
-    const gain = n ? proj[n] - proj[n - 1] : null;
-    const tip = `${genLabel(n)} · ~${Math.floor(genYear(n))}|Index ${fmt(proj[n])}${gain !== null ? `|Gain +${fmt(gain)} pts` : ""}|${n <= 2 ? "Scored" : "Projected"}`;
-    svg += `<rect class="hit" data-x="${x(n)}" x="${x(n) - half}" y="${m.t}" width="${half * 2}" height="${y(0) - m.t}" fill="transparent" data-tip="${esc(tip)}"/>`;
-  }
-  box.innerHTML = svg + "</svg>";
-  const cross = box.querySelector("#curve-cross");
-  bindTips(box, (el) => { if (el) { cross.setAttribute("x1", el.dataset.x); cross.setAttribute("x2", el.dataset.x); } cross.setAttribute("opacity", el ? "0.4" : "0"); });
-}
-
-/* ---------- Remaining work by task type ---------- */
-
-function renderRemaining() {
-  const rows = model.archetypes
-    .map((a) => ({ a, open: a.share * (a.limit - a.f2), struct: a.share * (100 - a.limit) }))
-    .map((r) => ({ ...r, total: r.open + r.struct }))
-    .sort((p, q) => q.total - p.total);
-  const shown = state.showAllRemaining ? rows : rows.slice(0, 12);
-  const max = rows[0].total;
-  $("remaining").innerHTML = shown.map(({ a, open, struct, total }) => `
-    <span class="name">${esc(a.name)}</span>
-    <div class="track" data-tip="${esc(a.name)}|Open to later generations ${fmt(open, 2)} pts|Structural ${fmt(struct, 2)} pts|Share of all work ${fmt(a.share * 100)}%">
-      <div class="seg-open" style="width:${(open / max) * 100}%"></div>
-      <div class="seg-struct" style="width:${(struct / max) * 100}%"></div>
-    </div>
-    <span class="val">${fmt(total, 2)}</span>`).join("");
-  $("remaining-toggle").textContent = state.showAllRemaining ? "Show top 12" : `Show all ${rows.length} task types`;
-  bindTips($("remaining"));
-}
-
-/* ---------- Occupations ---------- */
-
-const OCC_COLS = [
-  { key: "title", label: "Occupation" },
-  { key: "employment", label: "Jobs", num: true },
-  { key: "wage", label: "Mean wage", num: true },
-  { key: "weight", label: "Weight", num: true },
-  { key: "f0", label: "Frontier", num: true },
-  { key: "f1", label: "F+1", num: true },
-  { key: "f2", label: "F+2", num: true },
-  { key: "bar", label: "Saturation" },
-  { key: "limit", label: "Limit", num: true },
-];
-
-function minibar(proj, limit) {
-  return `<div class="minibar" aria-hidden="true">
-    <div style="width:${proj[2]}%;background:var(--t2)"></div>
-    <div style="width:${proj[1]}%;background:var(--t1)"></div>
-    <div style="width:${proj[0]}%;background:var(--t0)"></div>
-    <div class="limit" style="left:calc(${limit}% - 1px)"></div></div>`;
-}
-
-function renderOccupations() {
-  const archName = Object.fromEntries(model.archetypes.map((a) => [a.id, a.name]));
-  const val = (o, k) => ({ f0: o.proj[0], f1: o.proj[1], f2: o.proj[2], bar: o.proj[0] })[k] ?? o[k];
-  let rows = model.occupations.filter((o) =>
-    (!state.group || o.group === state.group) &&
-    (!state.search || o.title.toLowerCase().includes(state.search) || o.soc.includes(state.search)));
-  const { key, dir } = state.sort;
-  rows = rows.sort((p, q) => (key === "title" ? p.title.localeCompare(q.title) : val(p, key) - val(q, key)) * dir);
-
-  const head = `<thead><tr>${OCC_COLS.map((c) => `<th scope="col" class="${c.num ? "num " : ""}sortable" data-key="${c.key}" ${key === c.key ? `aria-sort="${dir > 0 ? "ascending" : "descending"}"` : ""} tabindex="0">${c.label}</th>`).join("")}</tr></thead>`;
-  const body = rows.map((o) => {
-    const open = state.expanded.has(o.id);
-    let html = `<tr class="occ-row" data-id="${o.id}" aria-expanded="${open}" tabindex="0">
-      <td class="occ-title"><span class="mono">${o.soc}</span>${esc(o.title)}</td>
-      <td class="num">${o.employment >= 1000 ? `${fmt(o.employment / 1000, 2)}M` : `${o.employment}k`}</td>
-      <td class="num">$${o.wage}k</td>
-      <td class="num">${fmt(o.weight * 100, 2)}%</td>
-      <td class="num">${fmt(o.proj[0])}</td><td class="num">${fmt(o.proj[1])}</td><td class="num">${fmt(o.proj[2])}</td>
-      <td>${minibar(o.proj, o.limit)}</td>
-      <td class="num">${fmt(o.limit)}</td></tr>`;
-    if (open) {
-      html += `<tr><td class="detail" colspan="${OCC_COLS.length}"><div class="tasks">
-        <span class="h">Task</span><span class="h">Task type</span><span class="h num">Time</span><span class="h">Saturation</span><span class="h">F / F+1 / F+2</span>
-        ${o.tasks.map((t) => `<span>${esc(t.name)}</span><span class="arch">${esc(archName[t.arch])}</span><span class="num">${t.share}%</span>
-          <span>${minibar(t.proj, t.limit)}</span><span class="tiers">${t.proj.slice(0, 3).map((v) => Math.round(v)).join(" / ")} · lim ${Math.round(t.limit)}</span>`).join("")}
-      </div></td></tr>`;
-    }
-    return html;
-  }).join("");
-  const table = $("occ-table");
-  table.innerHTML = head + `<tbody>${body || `<tr><td colspan="${OCC_COLS.length}">No occupations match. Clear the search or pick another group.</td></tr>`}</tbody>`;
-
-  table.querySelectorAll("th.sortable").forEach((th) => {
-    const go = () => {
-      const k = th.dataset.key;
-      state.sort = { key: k, dir: state.sort.key === k ? -state.sort.dir : k === "title" ? 1 : -1 };
-      renderOccupations();
-    };
-    th.addEventListener("click", go);
-    th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  s += `<text x="${x(now.d) - 8}" y="${y(now.v) - 10}" text-anchor="end" class="lbl-strong">${esc(now.label)} ${fmt(now.v)}%</text>`;
+  future.forEach((p) => {
+    const scored = p.n <= 2;
+    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
+    if (scored) s += `<text x="${x(p.d)}" y="${y(p.v) + 20}" text-anchor="middle" class="lbl-strong">F+${p.n} ${fmt(p.v)}%</text>`;
   });
-  table.querySelectorAll("tr.occ-row").forEach((tr) => {
-    const go = () => { const id = tr.dataset.id; state.expanded.has(id) ? state.expanded.delete(id) : state.expanded.add(id); renderOccupations(); };
-    tr.addEventListener("click", go);
-    tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
-  });
+
+  // Hover targets
+  const pts = [...past.map((p) => ({ ...p, tip: `${p.a.anchor}|${monthYear(p.d)}|AI can do ${fmt(p.v)}%${p.a.kind === "backfill" ? "|Backfilled snapshot" : ""}` })),
+    ...future.map((p) => ({ ...p, tip: `Frontier+${p.n}|Around ${monthYear(p.d)}|${fmt(p.v)}%${p.n > 2 ? " (trend projection)" : " (scored forecast)"}` }))];
+  pts.forEach((p) => { s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent" data-tip="${esc(p.tip)}"/>`; });
+  box.innerHTML = s + "</svg>";
+
+  $("timeline-note").textContent = `Each dark point is one Opus release, scored for what the frontier could do at the time. Blue points are the next two generations; the dashed line extends each task's trend until gains fall under a point per generation.`;
+  $("timeline-legend").innerHTML = `<span><span class="dot" style="background:var(--t0)"></span>Measured snapshots</span>
+    <span><span class="dot" style="background:var(--t1)"></span>Forecast, next two generations</span>
+    <span><span class="dot" style="border:2px solid var(--muted)"></span>Trend projection</span>
+    <span><span class="swatch open"></span>Needs a person</span>`;
 }
 
-function renderGroups() {
-  const rows = [...model.groups].sort((a, b) => b.weight - a.weight);
-  $("group-table").innerHTML = `<thead><tr><th>Group</th><th class="num">Jobs</th><th class="num">Weight</th><th class="num">Frontier</th><th class="num">F+1</th><th class="num">F+2</th><th>Saturation</th></tr></thead>
-    <tbody>${rows.map((g) => `<tr><td><span class="mono">${g.id}</span> ${esc(g.name)}</td>
-      <td class="num">${fmt(g.employment / 1000, 1)}M</td><td class="num">${fmt(g.weight * 100)}%</td>
-      <td class="num">${fmt(g.proj[0])}</td><td class="num">${fmt(g.proj[1])}</td><td class="num">${fmt(g.proj[2])}</td>
-      <td>${minibar(g.proj, g.proj[HORIZON])}</td></tr>`).join("")}</tbody>`;
+// Largest-remainder rounding so whole hours sum to the week.
+function toHours(values) {
+  const raw = values.map((v) => (v / 100) * HOURS);
+  const out = raw.map(Math.floor);
+  let left = HOURS - out.reduce((s, v) => s + v, 0);
+  raw.map((v, i) => [v - Math.floor(v), i]).sort((p, q) => q[0] - p[0]).forEach(([, i]) => { if (left-- > 0) out[i]++; });
+  return out;
 }
 
-/* ---------- Task scores (scenario editor) ---------- */
+function renderWeek() {
+  const b = bands(model.index.proj, model.index.limit);
+  const hrs = toHours(b.map((x) => x.v));
+  $("week").innerHTML = b.map((x, i) => Array.from({ length: hrs[i] }, () =>
+    `<div class="${x.cls || ""}" style="${x.color ? `background:${x.color}` : ""}" data-tip="${esc(x.label)}|${hrs[i]} of ${HOURS} hours"></div>`).join("")).join("");
+  $("week").setAttribute("aria-label", b.map((x, i) => `${x.label}: ${hrs[i]} hours`).join(", "));
+  $("week-note").textContent = `Each square is one hour of a 40-hour week, averaged across all covered jobs and ${weightPhrase()}. Today's frontier model could handle about ${hrs[0]} of them.`;
+  $("week-legend").innerHTML = legendHTML((x) => `${hrs[b.findIndex((y) => y.k === x.k)]}h`);
+}
 
-function renderArchetypes() {
-  const published = assessment().scores;
-  const rows = [...model.archetypes].sort((a, b) => b.share - a.share);
-  const input = (a, k) => {
-    const edited = state.edits[a.id]?.[k] !== undefined && state.edits[a.id][k] !== published[a.id][k];
-    return `<input type="number" id="edit-${a.id}-${k}" min="0" max="100" step="1" value="${a[k]}" data-arch="${a.id}" data-k="${k}" class="${edited ? "edited" : ""}" aria-label="${esc(a.name)} ${k === "ceiling" ? "ceiling" : tierLabel(k)}" title="Published: ${published[a.id][k]}">`;
+/* ---------- Jobs ---------- */
+
+function renderJobs() {
+  const q = state.search;
+  const match = (o) => !q || o.title.toLowerCase().includes(q) || o.soc.includes(q);
+  const sorters = {
+    now: (p, r) => r.proj[0] - p.proj[0],
+    jump: (p, r) => (r.proj[2] - r.proj[0]) - (p.proj[2] - p.proj[0]),
+    size: (p, r) => r.employment - p.employment,
+    title: (p, r) => p.title.localeCompare(r.title),
   };
-  $("arch-table").innerHTML = `<thead><tr><th>Task type</th><th class="num">Share of work</th>
-      ${TIERS.map((t) => `<th class="num">${tierLabel(t)}</th>`).join("")}<th class="num">Ceiling</th><th class="num">Limit</th><th>Limited by</th></tr></thead>
-    <tbody>${rows.map((a) => `<tr><td>${esc(a.name)}<br><span class="fam">${esc(a.family)}</span></td>
-      <td class="num">${fmt(a.share * 100)}%</td>
-      ${TIERS.map((t) => `<td class="num">${input(a, t)}</td>`).join("")}
-      <td class="num">${input(a, "ceiling")}</td>
-      <td class="num">${fmt(a.limit)}</td>
-      <td><span class="chip ${a.bound}">${a.bound === "intelligence" ? "Trend flattens" : "Ceiling"}</span></td></tr>`).join("")}</tbody>`;
+  const archName = Object.fromEntries(model.archetypes.map((a) => [a.id, a.name]));
+  const groups = [...model.groups].sort((a, b) => b.weight - a.weight);
+
+  const html = groups.map((g) => {
+    const members = model.occupations.filter((o) => o.group === g.id && match(o)).sort(sorters[state.sort]);
+    if (!members.length) return "";
+    const open = q ? true : state.openGroups.has(g.id);
+    const all = model.occupations.filter((o) => o.group === g.id);
+    const glimit = all.reduce((s, o) => s + o.weight * o.limit, 0) / all.reduce((s, o) => s + o.weight, 0);
+    return `<div class="group">
+      <button type="button" class="row-btn" data-group="${g.id}" aria-expanded="${open}">
+        <span class="chev">▶</span>
+        <span class="title">${esc(g.name)}<span class="meta">${jobs(g.employment)} jobs · ${fmt(g.weight * 100)}% of ${state.weight === "wage" ? "pay" : "jobs"} · ${all.length} occupations</span></span>
+        ${stackBar(g.proj, glimit, { tall: true })}
+        <span class="nums"><b>${pct(g.proj[0])}</b> now → ${pct(g.proj[2])}</span>
+      </button>
+      ${open ? `<div class="occ-list">${members.map((o) => occRow(o, archName)).join("")}</div>` : ""}
+    </div>`;
+  }).join("");
+  $("groups").innerHTML = html || `<p class="note">No jobs match "${esc(q)}". Try a shorter word or a SOC code like 13-2011.</p>`;
+
+  $("groups").querySelectorAll("[data-group]").forEach((b) => b.addEventListener("click", () => {
+    const id = b.dataset.group;
+    if (state.search) return;
+    state.openGroups.has(id) ? state.openGroups.delete(id) : state.openGroups.add(id);
+    renderJobs();
+    document.querySelector(`[data-group="${id}"]`)?.focus();
+  }));
+  $("groups").querySelectorAll("[data-occ]").forEach((b) => b.addEventListener("click", () => {
+    const id = b.dataset.occ;
+    state.openOccs.has(id) ? state.openOccs.delete(id) : state.openOccs.add(id);
+    renderJobs();
+    document.querySelector(`[data-occ="${id}"]`)?.focus();
+  }));
+  bindTips($("groups"));
+}
+
+function occRow(o, archName) {
+  const open = state.openOccs.has(o.id);
+  const maxShare = Math.max(...o.tasks.map((t) => t.share));
+  return `<div class="occ">
+    <button type="button" class="row-btn" data-occ="${o.id}" aria-expanded="${open}">
+      <span class="chev">▶</span>
+      <span class="title">${esc(o.title)}<span class="meta"><span class="mono">${o.soc}</span> · ${jobs(o.employment)} jobs · $${o.wage}k mean pay</span></span>
+      ${stackBar(o.proj, o.limit)}
+      <span class="nums"><b>${pct(o.proj[0])}</b> now → ${pct(o.proj[2])}</span>
+    </button>
+    ${open ? `<div class="occ-detail">
+      <p class="note">In a 40-hour week, AI could handle about <b>${fmt((o.proj[0] / 100) * HOURS)} hours</b> of this job today and ${fmt((o.proj[2] / 100) * HOURS)} hours two generations from now. About ${fmt(((100 - o.limit) / 100) * HOURS)} hours need a person regardless.</p>
+      ${o.tasks.map((t) => `<div class="task-row">
+        <span class="tname">${esc(t.name)}<span class="ttype">${esc(archName[t.arch])}</span></span>
+        ${stackBar(t.proj, t.limit, { scale: (t.share / maxShare) * 100 })}
+        <span class="hrs">${fmt((t.share / 100) * HOURS)}h · ${pct(t.proj[0])}</span>
+      </div>`).join("")}
+    </div>` : ""}
+  </div>`;
+}
+
+/* ---------- Tasks ---------- */
+
+function renderTasks() {
+  const a = live();
+  const pastSnaps = snaps.filter((s) => s.a.id !== a.id);
+  const rows = [...model.archetypes].sort((p, q) => q.f0 - p.f0);
+  $("dots-legend").innerHTML = `<span><span class="dot" style="background:var(--past)"></span>Earlier Opus snapshots</span>
+    <span><span class="dot" style="background:var(--t0)"></span>Now</span>
+    <span><span class="dot" style="background:var(--t1)"></span>Next generation</span>
+    <span><span class="dot" style="background:var(--t2)"></span>Generation after</span>
+    <span><span class="tick"></span>Ceiling</span>`;
+
+  const scale = `<div class="dot-scale" aria-hidden="true"><span class="spacer"></span><span class="spacer">Task type</span><span class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></span><span>Now</span></div>`;
+  $("dots").innerHTML = scale + rows.map((r) => {
+    const open = state.openArchs.has(r.id);
+    const hist = pastSnaps.map((s) => ({ v: s.a.scores[r.id]?.f0, label: shortModel(s.a.anchor) })).filter((h) => typeof h.v === "number");
+    const evidence = a.evidence?.[r.id];
+    return `<div class="dot-row">
+      <button type="button" class="row-btn" data-arch="${r.id}" aria-expanded="${open}">
+        <span class="chev">▶</span>
+        <span class="title">${esc(r.name)}<span class="meta">${r.share < 0.001 ? "under 0.1" : fmt(r.share * 100)}% of all work</span></span>
+        <span class="dot-track" data-tip="${esc(`${r.name}|${hist.map((h) => `${h.label} ${h.v}`).join("|")}${hist.length ? "|" : ""}Now ${r.f0} · F+1 ${r.f1} · F+2 ${r.f2}|Ceiling ${r.ceiling}`)}">
+          <span class="line"></span>
+          <span class="reach" style="left:${r.f0}%;width:${r.f2 - r.f0}%"></span>
+          <span class="ceil" style="left:calc(${r.ceiling}% - 1px)"></span>
+          ${hist.map((h) => `<i class="past" style="left:${h.v}%"></i>`).join("")}
+          <i style="left:${r.f2}%;background:var(--t2)"></i><i style="left:${r.f1}%;background:var(--t1)"></i><i style="left:${r.f0}%;background:var(--t0)"></i>
+        </span>
+        <span class="nums"><b>${r.f0}</b></span>
+      </button>
+      ${open ? `<div class="dot-detail">
+        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1}</span><span>F+2 ${r.f2}</span><span>Ceiling ${r.ceiling}</span><span>Limit ${fmt(r.limit)} (${r.bound === "intelligence" ? "trend flattens first" : "set by ceiling"})</span></div>
+        ${evidence ? `<p>${esc(evidence)}</p>` : `<p class="note">No evidence note for this task type yet.</p>`}
+      </div>` : ""}
+    </div>`;
+  }).join("");
+  $("dots").querySelectorAll("[data-arch]").forEach((b) => b.addEventListener("click", () => {
+    const id = b.dataset.arch;
+    state.openArchs.has(id) ? state.openArchs.delete(id) : state.openArchs.add(id);
+    renderTasks();
+    document.querySelector(`[data-arch="${id}"]`)?.focus();
+  }));
+  bindTips($("dots"));
+  renderEditor();
+}
+
+function renderEditor() {
+  const published = live().scores;
+  const rows = [...model.archetypes].sort((p, q) => q.share - p.share);
+  const label = { f0: "Now", f1: "F+1", f2: "F+2", ceiling: "Ceiling" };
+  const input = (a, k) => {
+    const edited = state.edits[a.id]?.[k] !== undefined;
+    return `<input type="number" id="edit-${a.id}-${k}" min="0" max="100" step="1" value="${a[k]}" data-arch="${a.id}" data-k="${k}" class="${edited ? "edited" : ""}" aria-label="${esc(a.name)} ${label[k]}" title="Published: ${published[a.id][k]}">`;
+  };
+  $("arch-table").innerHTML = `<thead><tr><th>Task type</th><th class="num">Share of work</th>${[...TIERS, "ceiling"].map((k) => `<th class="num">${label[k]}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map((a) => `<tr><td>${esc(a.name)}</td><td class="num">${fmt(a.share * 100)}%</td>${[...TIERS, "ceiling"].map((k) => `<td class="num">${input(a, k)}</td>`).join("")}</tr>`).join("")}</tbody>`;
   $("arch-table").querySelectorAll("input").forEach((el) => el.addEventListener("change", () => {
     const { arch, k } = el.dataset;
     const v = Math.max(0, Math.min(100, Number(el.value)));
     if (!Number.isFinite(v)) return;
     const next = { ...state.edits[arch], [k]: v };
     if (v === published[arch][k]) delete next[k];
-    // Keep the tiers ordered so the projection stays meaningful.
     const s = { ...published[arch], ...next };
-    if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) { el.setCustomValidity("Keep Frontier ≤ F+1 ≤ F+2 ≤ Ceiling"); el.reportValidity(); return; }
+    if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) { el.setCustomValidity("Keep Now ≤ F+1 ≤ F+2 ≤ Ceiling"); el.reportValidity(); return; }
     el.setCustomValidity("");
     if (Object.keys(next).length) state.edits[arch] = next; else delete state.edits[arch];
-    store.set(`headroom.edits.${state.assessmentId}`, state.edits);
+    store.set(`headroom.edits.${data.index.latest}`, state.edits);
     const focusId = el.id;
     render();
+    $("editor").open = true;
     $(focusId)?.focus();
   }));
 }
 
-/* ---------- History ---------- */
-
-function renderHistory() {
-  const ids = data.index.assessments;
-  const runs = ids.map((id) => {
-    const a = data.assessments[id];
-    return { a, m: computeModel({ ...data, assessment: a, weight: state.weight, horizon: HORIZON }).index };
-  });
-  $("history-table").innerHTML = `<thead><tr><th>Assessment</th><th>Date</th><th class="num">Frontier</th><th class="num">F+1</th><th class="num">F+2</th><th class="num">Limit</th><th>Flattens after</th></tr></thead>
-    <tbody>${runs.map(({ a, m }) => `<tr><td><span class="mono">${a.id}</span> ${esc(a.title)}</td><td class="mono">${a.date}</td>
-      <td class="num">${fmt(m.f0)}</td><td class="num">${fmt(m.f1)}</td><td class="num">${fmt(m.f2)}</td><td class="num">${fmt(m.limit)}</td>
-      <td>${genLabel(m.flatAt - 1)}</td></tr>`).join("")}</tbody>`;
-
-  const box = $("history-chart");
-  if (runs.length < 2) {
-    box.innerHTML = `<p class="note">One assessment so far. The trend chart appears once a second dated assessment is added.</p>`;
-    return;
-  }
-  const W = Math.max(440, Math.min(760, box.clientWidth || 760)), H = 220, m = { l: 38, r: 16, t: 16, b: 30 };
-  const t = runs.map(({ a }) => new Date(a.date).getTime());
-  const t0 = Math.min(...t), t1 = Math.max(...t);
-  const x = (v) => m.l + ((v - t0) / (t1 - t0 || 1)) * (W - m.l - m.r);
-  const y = (v) => m.t + (1 - v / 100) * (H - m.t - m.b);
-  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Index by assessment date"><g class="grid">${[0, 25, 50, 75, 100].map((v) => `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/>`).join("")}</g>
-    ${[0, 25, 50, 75, 100].map((v) => `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join("")}`;
-  ["f0", "f1", "f2", "limit"].forEach((k, i) => {
-    const pts = runs.map(({ m: r }, j) => [x(t[j]), y(r[k])]);
-    const color = k === "limit" ? "var(--struct)" : tierVar(i);
-    svg += `<path d="${pts.map((p, j) => `${j ? "L" : "M"}${p[0]},${p[1]}`).join("")}" fill="none" stroke="${color}" stroke-width="2" ${k === "limit" ? 'stroke-dasharray="4 4"' : ""}/>`;
-    svg += pts.map((p, j) => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${color}" stroke="var(--surface)" stroke-width="2" data-tip="${esc(`${runs[j].a.date}|${k === "limit" ? "Limit" : tierLabel(k)} ${fmt(runs[j].m[k])}`)}"/>`).join("");
-    const last = pts[pts.length - 1];
-    svg += `<text x="${last[0] - 8}" y="${last[1] - 8}" text-anchor="end" class="lbl-strong">${k === "limit" ? "Limit" : tierLabel(k)}</text>`;
-  });
-  runs.forEach(({ a }, j) => { svg += `<text x="${x(t[j])}" y="${H - 8}" text-anchor="middle">${a.date}</text>`; });
-  box.innerHTML = svg + "</svg>";
-  bindTips(box);
-}
+/* ---------- Method ---------- */
 
 function renderMethod() {
-  $("method-definition").textContent = assessment().definition;
-  $("method-source").textContent = data.occupations.source;
+  const a = live();
+  $("snapshots").innerHTML = [...snaps].reverse().map(({ a: s, m }) => `<div class="snap">
+    <div class="when">${monthYear(parseDate(s.date))}<span>${esc(s.label || s.id)}</span></div>
+    <div class="what">
+      <div><b>${esc(s.anchor)}</b><span class="pill">${s.kind === "backfill" ? "Backfilled" : "Live, with forecasts"}</span></div>
+      ${s.peers ? `<span class="note">Peers: ${esc(s.peers)}</span>` : ""}
+      ${s.highlights?.length ? `<ul>${s.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
+    </div>
+    <div class="score">${fmt(m.index.f0)}%<small>AI can do</small></div>
+  </div>`).join("");
+
+  const blocks = [
+    ["What's measured", [a.definition]],
+    ["Structure", [`${model.occupations.length} occupations from BLS OEWS (${data.occupations.reference || "May 2025"}) are split into tasks with a share of working time. Each task maps to one of ${model.archetypes.length} task types, and each task type is scored 0 to 100 at every snapshot.`]],
+    ["Snapshots and forecasts", [`Each Opus release since ${snaps[0].a.anchor} is a snapshot that scores only what that frontier could do. The live snapshot also forecasts the next two generations, about ${a.cadence_months} months apart.`, "When a forecast date arrives, the new snapshot shows whether the forecast was right."]],
+    ["Ceiling and saturation", ["Each task type has a ceiling: the most AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference.", "Past Frontier+2, each task type's gap to the lower of its ceiling and its own flattening trend shrinks by the ratio implied by its last step. The saturation point is the first generation that adds under one point overall."]],
+    ["Weights", ["Pay weights each occupation by employment times mean wage. Jobs weights by headcount."]],
+    ["Limits", a.caveats || []],
+  ];
+  $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("");
+  const sources = a.sources || [];
+  $("sources").innerHTML = sources.length
+    ? sources.map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>${s.note ? ` · ${esc(s.note)}` : ""}</li>`).join("")
+    : `<li>${esc(data.occupations.source)}</li>`;
 }
 
 /* ---------- Tooltip ---------- */
 
-function bindTips(root, onChange) {
+function hideTip() { $("tooltip").hidden = true; }
+
+function bindTips(root) {
   const tip = $("tooltip");
   const show = (el, e) => {
     const [title, ...rows] = el.dataset.tip.split("|");
@@ -363,14 +432,15 @@ function bindTips(root, onChange) {
     const py = e.clientY + 16 + r.height > window.innerHeight ? e.clientY - r.height - 12 : e.clientY + 16;
     tip.style.left = `${Math.max(8, px)}px`;
     tip.style.top = `${py}px`;
-    onChange?.(el);
   };
-  const hide = () => { tip.hidden = true; onChange?.(null); };
   root.querySelectorAll("[data-tip]").forEach((el) => {
-    el.addEventListener("pointermove", (e) => show(el, e));
-    el.addEventListener("pointerleave", hide);
+    el.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") show(el, e); });
+    el.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") show(el, e); });
+    el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hideTip(); });
   });
 }
+
+window.addEventListener("resize", () => { if (data && state.view === "overview") renderTimeline(); });
 
 load().catch((err) => {
   document.querySelector("main").insertAdjacentHTML("afterbegin",

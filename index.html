@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Headroom Index</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="How much U.S. white-collar work current and next-generation AI models can do, task by task, and how far that is from saturation.">
+<meta name="description" content="How much U.S. white-collar work AI models can do, task by task, how fast that has changed since the first agentic models, and how far it is from saturation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
@@ -14,118 +14,131 @@
 <body>
 <header class="mast">
   <div class="wrap mast-row">
-    <div class="brand">
+    <a class="brand" href="#overview">
       <span class="brand-name">Headroom</span>
-      <span class="brand-sub">U.S. white-collar work vs. AI capability</span>
-    </div>
-    <div class="controls">
-      <label class="ctl">
-        <span>Assessment</span>
-        <select id="assessment-select"></select>
-      </label>
-      <div class="seg" role="radiogroup" aria-label="Weight occupations by">
-        <button type="button" id="weight-wage" role="radio" data-weight="wage">Wage bill</button>
-        <button type="button" id="weight-employment" role="radio" data-weight="employment">Jobs</button>
+      <span class="brand-sub">AI vs. U.S. white-collar work</span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#overview" data-view="overview">Overview</a>
+      <a href="#jobs" data-view="jobs">Jobs</a>
+      <a href="#tasks" data-view="tasks">Tasks</a>
+      <a href="#method" data-view="method">Method</a>
+    </nav>
+    <div class="measure">
+      <span class="measure-label" id="measure-label">Measure by</span>
+      <div class="seg" role="radiogroup" aria-labelledby="measure-label">
+        <button type="button" id="weight-wage" role="radio" data-weight="wage" title="Weight jobs by total pay (employment × mean wage)">Pay</button>
+        <button type="button" id="weight-employment" role="radio" data-weight="employment" title="Weight jobs by headcount">Jobs</button>
       </div>
     </div>
   </div>
 </header>
 
 <main class="wrap">
-  <section class="hero">
-    <p class="eyebrow" id="hero-eyebrow">Assessment</p>
-    <h1>How much U.S. white-collar work can AI models do?</h1>
-    <p class="lede" id="hero-lede"></p>
-    <div id="edits-banner" class="banner" hidden>
-      <span>Showing your edited scores, not the published assessment.</span>
-      <button type="button" id="reset-edits-top" class="link-btn">Reset to published</button>
+  <div id="edits-banner" class="banner" hidden>
+    <span>You're viewing your own edited task scores, not the published assessment.</span>
+    <button type="button" id="reset-edits-top" class="link-btn">Reset to published</button>
+  </div>
+
+  <!-- Overview -->
+  <section id="view-overview" class="view" aria-label="Overview">
+    <div class="lead">
+      <p class="eyebrow" id="lead-eyebrow"></p>
+      <h1 id="lead-h1">Loading…</h1>
+      <p class="lede" id="lead-lede"></p>
     </div>
     <div class="readout" id="readout"></div>
-    <figure class="gauge-fig">
-      <div id="gauge" class="gauge"></div>
-      <figcaption id="gauge-legend" class="legend"></figcaption>
-    </figure>
-  </section>
 
-  <section class="panel" aria-labelledby="curve-h">
-    <div class="panel-head">
-      <h2 id="curve-h">Saturation curve</h2>
-      <p class="note">Index by model generation. Frontier through Frontier+2 are scored; later generations extend each task's trend toward its limit.</p>
+    <section class="panel" aria-labelledby="timeline-h">
+      <div class="panel-head">
+        <h2 id="timeline-h">From the first agentic models to saturation</h2>
+        <p class="note" id="timeline-note"></p>
+      </div>
+      <div class="chart-box" id="timeline"></div>
+      <div class="legend" id="timeline-legend"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="week-h">
+      <div class="panel-head">
+        <h2 id="week-h">An average white-collar workweek</h2>
+        <p class="note" id="week-note"></p>
+      </div>
+      <div class="week" id="week" role="img"></div>
+      <div class="legend legend-hours" id="week-legend"></div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel" aria-labelledby="most-h">
+        <div class="panel-head"><h2 id="most-h">Most exposed today</h2><p class="note">Share of the job's working time AI can do now.</p></div>
+        <ol class="rank" id="most"></ol>
+      </section>
+      <section class="panel" aria-labelledby="least-h">
+        <div class="panel-head"><h2 id="least-h">Least exposed today</h2><p class="note">Jobs held back by in-person work, people and relationships.</p></div>
+        <ol class="rank" id="least"></ol>
+      </section>
     </div>
-    <div class="chart-box" id="curve"></div>
+
+    <section class="panel" aria-labelledby="glossary-h">
+      <h2 id="glossary-h">How to read this</h2>
+      <dl class="glossary" id="glossary"></dl>
+    </section>
   </section>
 
-  <section class="panel" aria-labelledby="remain-h">
-    <div class="panel-head">
-      <h2 id="remain-h">What's left after Frontier+2</h2>
-      <p class="note">Points of total white-collar work each task type still holds after Frontier+2, split into work a smarter model could still take and work held back by presence, sign-off or human preference.</p>
-    </div>
-    <div id="remaining" class="hbars"></div>
-    <button type="button" id="remaining-toggle" class="link-btn">Show all task types</button>
-  </section>
-
-  <section class="panel" aria-labelledby="occ-h">
-    <div class="panel-head">
-      <h2 id="occ-h">Occupations</h2>
-      <p class="note">Select a row to see its task breakdown. Weight is the occupation's share of the covered white-collar total.</p>
+  <!-- Jobs -->
+  <section id="view-jobs" class="view" aria-labelledby="jobs-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="jobs-h">Jobs</h1>
+      <p class="lede">Each occupation is split into the tasks that fill its week. Open a group, then a job, to see which hours AI can take now and in the next two generations.</p>
     </div>
     <div class="filters">
-      <label class="ctl"><span>Group</span><select id="group-filter"><option value="">All groups</option></select></label>
-      <label class="ctl grow"><span>Search</span><input id="occ-search" type="search" placeholder="Title or SOC code"></label>
+      <label class="ctl grow"><span>Find a job</span><input id="occ-search" type="search" placeholder="e.g. paralegal, 15-1252"></label>
+      <label class="ctl"><span>Sort jobs by</span>
+        <select id="occ-sort">
+          <option value="now">Most exposed now</option>
+          <option value="jump">Biggest gain next two generations</option>
+          <option value="size">Most people employed</option>
+          <option value="title">A to Z</option>
+        </select>
+      </label>
     </div>
-    <div class="table-scroll"><table class="data" id="occ-table"></table></div>
+    <div class="groups" id="groups"></div>
   </section>
 
-  <section class="panel" aria-labelledby="group-h">
-    <div class="panel-head">
-      <h2 id="group-h">By occupation group</h2>
+  <!-- Tasks -->
+  <section id="view-tasks" class="view" aria-labelledby="tasks-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="tasks-h">Task types</h1>
+      <p class="lede">Every task in every job maps to one of these 29 types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence behind it.</p>
     </div>
-    <div class="table-scroll"><table class="data" id="group-table"></table></div>
+    <div class="legend" id="dots-legend"></div>
+    <div class="dots" id="dots"></div>
+    <details class="panel editor" id="editor">
+      <summary><span>Adjust the scores</span><span class="note">Test your own assumptions. Changes stay in this browser.</span></summary>
+      <div class="filters"><button type="button" id="reset-edits" class="btn" disabled>Reset to published</button></div>
+      <div class="table-scroll"><table class="data" id="arch-table"></table></div>
+    </details>
   </section>
 
-  <section class="panel" aria-labelledby="arch-h">
-    <div class="panel-head">
-      <h2 id="arch-h">Task scores</h2>
-      <p class="note">Every task maps to one of these types. Edit a score to test a scenario; edits stay in this browser only.</p>
+  <!-- Method -->
+  <section id="view-method" class="view" aria-labelledby="method-h" hidden>
+    <div class="lead lead-sm">
+      <h1 id="method-h">Method and sources</h1>
     </div>
-    <div class="filters">
-      <button type="button" id="reset-edits" class="btn" disabled>Reset to published</button>
-    </div>
-    <div class="table-scroll"><table class="data" id="arch-table"></table></div>
-  </section>
-
-  <section class="panel" aria-labelledby="hist-h">
-    <div class="panel-head">
-      <h2 id="hist-h">Assessment history</h2>
-      <p class="note">Each assessment is a dated set of task scores. Re-scoring regularly shows whether new models land where the last projection said they would.</p>
-    </div>
-    <div class="chart-box" id="history-chart"></div>
-    <div class="table-scroll"><table class="data" id="history-table"></table></div>
-  </section>
-
-  <section class="panel method" aria-labelledby="method-h">
-    <h2 id="method-h">Method</h2>
-    <div class="method-grid">
-      <div>
-        <h3>Structure</h3>
-        <p>Each occupation is split into tasks with a share of working time. Each task maps to one of 29 task types, and each task type gets a saturation score for three model tiers plus a ceiling.</p>
-        <p id="method-definition"></p>
+    <section class="panel" aria-labelledby="hist-h">
+      <div class="panel-head">
+        <h2 id="hist-h">Snapshots</h2>
+        <p class="note">Each snapshot scores what the best model of the time could do. Earlier snapshots were scored afterwards from benchmark results and are marked as backfilled.</p>
       </div>
-      <div>
-        <h3>Weights</h3>
-        <p><b>Wage bill</b> weights each occupation by employment times mean wage, so the index reads as a share of what employers pay for white-collar work. <b>Jobs</b> weights by headcount, so it reads as a share of people's working time.</p>
-        <p id="method-source"></p>
-      </div>
-      <div>
-        <h3>Projection and limit</h3>
-        <p>For each task type, the limit is the lower of its ceiling and the point where the Frontier to Frontier+2 trend flattens on its own. Past Frontier+2, the gap to that limit shrinks each generation by the ratio the last step implied.</p>
-        <p>The saturation point is the first generation that adds less than one point to the index.</p>
-      </div>
-      <div>
-        <h3>Updating</h3>
-        <p>Add a dated file to <code>data/assessments/</code>, list it in <code>index.json</code>, and run <code>node scripts/validate.mjs</code>. Occupation data lives in <code>data/occupations.json</code>.</p>
-      </div>
-    </div>
+      <div class="snapshots" id="snapshots"></div>
+    </section>
+    <section class="panel method" aria-labelledby="how-h">
+      <h2 id="how-h">How the numbers are built</h2>
+      <div class="method-grid" id="method-grid"></div>
+    </section>
+    <section class="panel" aria-labelledby="src-h">
+      <h2 id="src-h">Sources</h2>
+      <ul class="sources" id="sources"></ul>
+    </section>
   </section>
 </main>
 

@@ -36,9 +36,14 @@ export function validate({ taxonomy, occupations, assessment }) {
     if (Math.abs(sum - 100) > 0.01) errors.push(`${o.id}: task shares sum to ${sum}, expected 100`);
     for (const [name, arch] of o.tasks) if (!archIds.has(arch)) errors.push(`${o.id}: task "${name}" uses unknown archetype ${arch}`);
   }
+  const backfill = assessment.kind === "backfill";
   for (const id of archIds) {
     const s = assessment.scores[id];
     if (!s) { errors.push(`assessment ${assessment.id}: no score for ${id}`); continue; }
+    if (backfill) {
+      if (typeof s.f0 !== "number" || s.f0 < 0 || s.f0 > 100) errors.push(`${assessment.id} ${id}: f0 must be a number 0-100`);
+      continue;
+    }
     const v = [s.f0, s.f1, s.f2, s.ceiling];
     if (v.some((x) => typeof x !== "number" || x < 0 || x > 100)) errors.push(`${id}: scores must be numbers 0-100`);
     if (!(s.f0 <= s.f1 && s.f1 <= s.f2 && s.f2 <= s.ceiling)) errors.push(`${id}: expected f0 <= f1 <= f2 <= ceiling`);
@@ -54,7 +59,11 @@ export function validate({ taxonomy, occupations, assessment }) {
 // edits: { archetypeId: { f0?, f1?, f2?, ceiling? } } applied on top of the assessment.
 export function computeModel({ taxonomy, occupations, assessment, weight = "wage", edits = {}, horizon = 8 }) {
   const archetypes = taxonomy.archetypes.map((a) => {
+    // Backfilled snapshots score only today's frontier (f0); later tiers collapse onto it.
     const s = { ...assessment.scores[a.id], ...(edits[a.id] || {}) };
+    s.f1 ??= s.f0;
+    s.f2 ??= s.f1;
+    s.ceiling ??= 100;
     return { ...a, f0: s.f0, f1: s.f1, f2: s.f2, ceiling: s.ceiling, ...projectArchetype(s, horizon), share: 0 };
   });
   const byId = Object.fromEntries(archetypes.map((a) => [a.id, a]));
