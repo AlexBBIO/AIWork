@@ -1,0 +1,672 @@
+{
+  "id": "opus-5-5",
+  "date": "2026-09-22",
+  "anchor": "Claude Opus 5.5",
+  "label": "Current frontier",
+  "kind": "live",
+  "peers": "Fable 5.1 / Mythos 5.1 (Sep 1), GPT-6 Astra (Sep 4), Gemini 4 Argon (GA Oct 13). Opus 5.5 is the frontier: AA #1 (58), ECI 169 tied with GPT-6 Astra",
+  "highlights": [
+    "RLI 21.25%, #1 (GPT-6 Astra 20.83%)",
+    "GDPval-AA v2.1 1846 rising to 1866, #1",
+    "Terminal-Bench 4.0 66.4% vendor / 59.6% independent; OSWorld 2.0 81.8% partial but 48.7% strict",
+    "METR: an \"incremental improvement above Fable 5.1\" with limited gains in judgement or taste"
+  ],
+  "updated": "2026-10-27",
+  "cadence_months": 6,
+  "definition": "Share of the time professionals currently spend on a task that the best publicly available model could do at the quality of a competent professional, with no more than light review, given tools and integrations reasonably available at the time. It measures technical capability, not adoption.",
+  "method_note": "Scores triangulate expert-parity rates (GDPval), reliability-adjusted time horizons (METR 80%), end-to-end automation rates (Remote Labor Index), narrow agentic benchmarks and labor-side studies. Forecasts close each task type's gap to its ceiling at the pace of the last ten months. See reports/AI saturation of white collar work.md.",
+  "caveats": [
+    "Scores are calibrated judgments, not direct measurements. Sales, scheduling, compliance, bookkeeping and 2026 translation have no benchmark with published model scores.",
+    "Most 2026 benchmark figures are vendor-reported and reached through secondary sites. No independent METR time horizon exists for any model released after May 2026.",
+    "Earlier snapshots score the best publicly available model on each Opus release date, excluding gated models such as Mythos Preview.",
+    "Forecast uncertainty is about \u00b15 points per task type at F+1 and \u00b18 at F+2, wider for judgment-heavy work."
+  ],
+  "sources": [
+    {
+      "title": "Wikipedia, Claude (language model)",
+      "url": "https://en.wikipedia.org/wiki/Claude_(language_model)",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Anthropic, Introducing Claude Opus 4.5",
+      "url": "https://www.anthropic.com/news/claude-opus-4-5",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Anthropic, Introducing Claude Opus 4.6",
+      "url": "https://www.anthropic.com/news/claude-opus-4-6",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Anthropic, Claude Opus 5",
+      "url": "https://www.anthropic.com/news/claude-opus-5",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Anthropic, Claude Opus 5.5",
+      "url": "https://www.anthropic.com/claude-opus-5-5",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "TechCrunch, Anthropic launches Opus 5 (2026-07-24)",
+      "url": "https://techcrunch.com/2026/07/24/anthropic-launches-opus-5/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "TechCrunch, Opus 5.5 (2026-09-22)",
+      "url": "https://techcrunch.com/2026/09/22/anthropic-releases-opus-5-5-with-lower-prices-and-fable-level-performance/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "LLM Stats, Claude Opus 4.8 launch",
+      "url": "https://llm-stats.com/blog/research/claude-opus-4-8-launch",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Vellum, Claude Opus 4.6 benchmarks",
+      "url": "https://www.vellum.ai/blog/claude-opus-4-6-benchmarks",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Tim Kellogg, Opus 4.5 benchmark table",
+      "url": "https://timkellogg.me/threads/2025-11-24-opus-45-now-13rd-the-cost-and-sota-in-programm/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "computingforgeeks, Claude Opus 4.7",
+      "url": "https://computingforgeeks.com/claude-opus-4-7-released-features-benchmarks/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "DataCamp, Claude Opus 5",
+      "url": "https://www.datacamp.com/blog/claude-opus-5",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "DataCamp, Claude Mythos 5",
+      "url": "https://www.datacamp.com/blog/claude-mythos-5",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "R&D World, Claude Mythos leads 17 of 18 benchmarks",
+      "url": "https://www.rdworldonline.com/claude-mythos-leads-17-of-18-benchmarks-anthropic-measured-muse-spark-put-meta-back-in-the-frontier-club-and-openais-spud-model-is-reportedly-near-launch/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "MarkTechPost, Claude Fable 5.1 and Mythos 5.1",
+      "url": "https://www.marktechpost.com/2026/09/01/anthropic-releases-claude-fable-5-1-and-claude-mythos-5-1-52-6-on-terminal-bench-science-and-75-cheaper-cache-reads/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Kingy AI, Claude Opus 5.5 specs and benchmarks",
+      "url": "https://kingy.ai/blog/claude-opus-5-5-specs-benchmarks-pricing-comparison/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "NeuralTrust, Claude Opus 5.5 vs GPT-6 Sol",
+      "url": "https://neuraltrust.ai/blog/claude-opus-5-5-vs-gpt-6-sol-benchmark",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "OpenAI, Introducing GPT-5.2",
+      "url": "https://openai.com/blog/introducing-gpt-5-2",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Noqta, GPT-5.4 computer use",
+      "url": "https://noqta.tn/en/news/openai-gpt-5-4-million-token-computer-use-2026",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Interesting Engineering, GPT-5.5",
+      "url": "https://interestingengineering.com/ai-robotics/opanai-gpt-5-5-agentic-coding-gains",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Ubergizmo, GPT-5.3-Codex",
+      "url": "https://www.ubergizmo.com/2026/02/gpt-5-3-codex/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Artificial Analysis, GPT-5.6 has landed",
+      "url": "https://artificialanalysis.ai/articles/gpt-5-6-has-landed",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "The New Stack, GPT-6 Astra benchmarks",
+      "url": "https://thenewstack.io/openai-gpt6-astra-benchmarks/",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "VentureBeat, Gemini 4 Argon",
+      "url": "https://venturebeat.com/technology/google-unveils-gemini-4-argon-retaking-benchmark-lead-over-openai-and-anthropic-but-in-limited-release",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "DeepLearning.AI, Gemini 3.1 Pro tops Intelligence Index",
+      "url": "https://www.deeplearning.ai/the-batch/google-releases-gemini-3-1-pro-in-preview-tops-intelligence-index-at-same-price",
+      "group": "Release timeline and launch benchmarks"
+    },
+    {
+      "title": "Patwardhan et al., GDPval (arXiv 2510.04374)",
+      "url": "https://arxiv.org/html/2510.04374",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "itdoeswhatnow, GDPval and GDPval-AA tracker",
+      "url": "https://itdoeswhatnow.com/benchmarks/gdpval/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "mer.vin, GPT-5.5 benchmark tables (GDPval)",
+      "url": "https://mer.vin/2026/04/gpt-5-5-all-images-and-benchmark-tables-dedicated-post/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "testmuai, GDPval explainer",
+      "url": "https://www.testmuai.com/learning-hub/gdpval/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "BenchLM, GDPval-AA",
+      "url": "https://benchlm.ai/benchmarks/gdpvalaa",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "LLM Stats, GDPval-AA",
+      "url": "https://llm-stats.com/benchmarks/gdpval-aa",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Scale Labs, Remote Labor Index leaderboard",
+      "url": "https://labs.scale.com/leaderboard/rli",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Scale, Remote Labor Index announcement",
+      "url": "https://scale.com/blog/rli",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "CAIS, Significant increase in digital labor automation",
+      "url": "https://safe.ai/blog/significant-increase-in-digital-labor-automation",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Mercor, APEX-Agents leaderboard",
+      "url": "https://www.mercor.com/apex/apex-agents-leaderboard/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Mercor, APEX-Agents March 2026 update",
+      "url": "https://x.com/mercor/status/2029635197713653954",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Mercor, APEX-Agents April 2026 update",
+      "url": "https://x.com/mercor/status/2048095912287977603",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Mercor, Best AI models for investment banking analysts",
+      "url": "https://www.mercor.com/resources/apex/best-ai-models-for-investment-banking-analysts/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Datalearner, tau2-bench telecom",
+      "url": "https://www.datalearner.com/en/benchmarks/Tau-Squared-Benchmark-Telecom",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "BenchLM, tau2-bench",
+      "url": "https://benchlm.ai/benchmarks/tau2-bench",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "BenchLM, tau2 airline",
+      "url": "https://benchlm.ai/benchmarks/tau2Airline",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "BenchLM, SWE-bench Pro",
+      "url": "https://benchlm.ai/benchmarks/swe-bench-pro",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "decodethefuture, AI agent benchmarks 2026",
+      "url": "https://decodethefuture.org/en/ai-agent-benchmarks-2026/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Benchgen, Vending-Bench 2",
+      "url": "https://benchgen.com/benchmarks/andon-labs/vending-bench-2",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "getmegabrain, Vending-Bench 2 and Opus 5",
+      "url": "https://getmegabrain.com/blog/vending-bench-2-opus-5-collusion-2026",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Vals AI, benchmarks hub",
+      "url": "https://www.vals.ai/benchmarks",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Vals AI, Finance Agent",
+      "url": "https://www.vals.ai/benchmarks/finance_agent",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Snorkel, BigLaw Bench Research",
+      "url": "https://snorkel.ai/?p=19158",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "OpenAI, HealthBench Professional",
+      "url": "https://cdn.openai.com/dd128428-0184-4e25-b155-3a7686c7d744/HealthBench-Professional.pdf",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "FrontierFinance (arXiv 2604.05912)",
+      "url": "https://arxiv.org/pdf/2604.05912",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "benchmarklist, SpreadsheetBench V2",
+      "url": "https://benchmarklist.com/benchmarks/spreadsheetbench_v2/",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "bettersheets, Best AI for spreadsheets",
+      "url": "https://bettersheets.co/blog/best-ai-for-spreadsheets",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "WMT25 findings (arXiv 2508.14909)",
+      "url": "https://arxiv.org/html/2508.14909v2",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "Package hallucination study (arXiv 2605.17062)",
+      "url": "https://arxiv.org/pdf/2605.17062",
+      "group": "Professional-work benchmarks"
+    },
+    {
+      "title": "METR, Time horizons",
+      "url": "https://metr.org/time-horizons/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "METR, Time Horizon 1.1",
+      "url": "https://metr.org/blog/2026-01-29-time-horizon-1-1/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "METR, Claude Opus 5.5 evaluation",
+      "url": "https://metr.org/blog/2026-09-22-claude-opus-5-5/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "METR, GPT-5.6 Sol evaluation",
+      "url": "https://metr.org/blog/2026-06-26-gpt-5-6-sol/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Wikipedia, METR (time-horizon values)",
+      "url": "https://en.wikipedia.org/wiki/METR",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "agitracker, METR time horizons 2026",
+      "url": "https://agitracker.io/blog/metr-time-horizons-2026/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Epoch AI, The Epoch Brief (2026-10-23)",
+      "url": "https://epochai.substack.com/p/the-epoch-brief-october-23-2026",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Epoch AI, ECI rate of progress",
+      "url": "https://x.com/EpochAIResearch/status/2094922644428898737",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Epoch AI, Scaling",
+      "url": "https://epoch.ai/topics/scaling",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Epoch AI, Longest training run",
+      "url": "https://epoch.ai/data-insights/longest-training-run",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "MIT Technology Review (algorithmic efficiency)",
+      "url": "https://www.technologyreview.com/2026/04/08/1135398/mustafa-suleyman-ai-future/amp/",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Artificial Analysis, Leaderboard",
+      "url": "https://artificialanalysis.ai/leaderboards/models",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "AI Futures Project, Q2.5 2026 timelines update",
+      "url": "https://blog.aifutures.org/p/q25-2026-timelines-update-uplift",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Forecasting Research Institute, LEAP Wave 8",
+      "url": "https://leap.forecastingresearch.org/reports/wave8",
+      "group": "Capability trends and forecasts"
+    },
+    {
+      "title": "Anthropic Economic Index, September 2025",
+      "url": "https://www.anthropic.com/research/anthropic-economic-index-september-2025-report",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Anthropic Economic Index, January 2026",
+      "url": "https://www.anthropic.com/research/anthropic-economic-index-january-2026-report",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Anthropic Economic Index, March 2026",
+      "url": "https://www.anthropic.com/research/economic-index-march-2026-report",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Anthropic Economic Index, June 2026",
+      "url": "https://www.anthropic.com/research/economic-index-june-2026-report",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Anthropic, Labor market impacts of AI",
+      "url": "https://www.anthropic.com/research/labor-market-impacts",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Anthropic, What work can robots do?",
+      "url": "https://www.anthropic.com/research/what-work-can-robots-do",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "YourStory, How employment is changing at Anthropic",
+      "url": "https://yourstory.com/ai-story/anthropic-ai-jobs-study-work-changing",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Tomlinson et al., Working with AI (Microsoft, arXiv 2507.07935)",
+      "url": "https://arxiv.org/html/2507.07935",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "ESADE EcPol, Replace, augment, support (2026-10-22)",
+      "url": "https://www.esade.edu/ecpol/wp-content/uploads/2026/10/working_paper_2026-10-22.pdf",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Fortune, McKinsey \"Agents, robots, and us\"",
+      "url": "https://fortune.com/2025/11/25/why-ai-wont-take-your-job-partnership-agents-robots-mckinsey/",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Stanford Digital Economy Lab, Canaries in the Coal Mine (August 2026 update)",
+      "url": "https://digitaleconomy.stanford.edu/news/canariesaug26/",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Yale Budget Lab, February 2026 update",
+      "url": "https://budgetlab.yale.edu/node/1495/pdf",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "Fortune, Amodei and Altman on AI jobs (2026-05-26)",
+      "url": "https://fortune.com/2026/05/26/sam-altman-dario-amodei-walking-back-ai-jobs-apocalypse-prophecies-ipo/",
+      "group": "Labor-side studies"
+    },
+    {
+      "title": "BLS, OEWS May 2025 national data",
+      "url": "https://www.bls.gov/oes/special-requests/oesm25nat.zip",
+      "group": "Labor-side studies"
+    }
+  ],
+  "scores": {
+    "draft": {
+      "f0": 84,
+      "f1": 90,
+      "f2": 93,
+      "ceiling": 98,
+      "confidence": "high"
+    },
+    "edit": {
+      "f0": 88,
+      "f1": 92,
+      "f2": 95,
+      "ceiling": 99,
+      "confidence": "medium"
+    },
+    "translate": {
+      "f0": 78,
+      "f1": 84,
+      "f2": 88,
+      "ceiling": 94,
+      "confidence": "low"
+    },
+    "research": {
+      "f0": 78,
+      "f1": 86,
+      "f2": 90,
+      "ceiling": 97,
+      "confidence": "medium"
+    },
+    "analysis": {
+      "f0": 66,
+      "f1": 78,
+      "f2": 86,
+      "ceiling": 97,
+      "confidence": "medium"
+    },
+    "expert": {
+      "f0": 56,
+      "f1": 64,
+      "f2": 70,
+      "ceiling": 88,
+      "confidence": "medium"
+    },
+    "diagnosis": {
+      "f0": 55,
+      "f1": 62,
+      "f2": 68,
+      "ceiling": 85,
+      "confidence": "low"
+    },
+    "code": {
+      "f0": 82,
+      "f1": 89,
+      "f2": 93,
+      "ceiling": 98,
+      "confidence": "high"
+    },
+    "debug": {
+      "f0": 72,
+      "f1": 83,
+      "f2": 89,
+      "ceiling": 96,
+      "confidence": "medium"
+    },
+    "design_tech": {
+      "f0": 50,
+      "f1": 61,
+      "f2": 69,
+      "ceiling": 93,
+      "confidence": "low"
+    },
+    "entry": {
+      "f0": 85,
+      "f1": 91,
+      "f2": 94,
+      "ceiling": 99,
+      "confidence": "medium"
+    },
+    "docproc": {
+      "f0": 78,
+      "f1": 86,
+      "f2": 90,
+      "ceiling": 97,
+      "confidence": "low"
+    },
+    "accounting": {
+      "f0": 68,
+      "f1": 80,
+      "f2": 87,
+      "ceiling": 97,
+      "confidence": "low"
+    },
+    "compliance": {
+      "f0": 66,
+      "f1": 76,
+      "f2": 82,
+      "ceiling": 90,
+      "confidence": "low"
+    },
+    "scheduling": {
+      "f0": 66,
+      "f1": 78,
+      "f2": 85,
+      "ceiling": 96,
+      "confidence": "low"
+    },
+    "project": {
+      "f0": 58,
+      "f1": 66,
+      "f2": 72,
+      "ceiling": 90,
+      "confidence": "low"
+    },
+    "service": {
+      "f0": 82,
+      "f1": 87,
+      "f2": 90,
+      "ceiling": 94,
+      "confidence": "medium"
+    },
+    "support": {
+      "f0": 72,
+      "f1": 80,
+      "f2": 84,
+      "ceiling": 91,
+      "confidence": "medium"
+    },
+    "creative": {
+      "f0": 58,
+      "f1": 66,
+      "f2": 72,
+      "ceiling": 90,
+      "confidence": "low"
+    },
+    "media": {
+      "f0": 38,
+      "f1": 52,
+      "f2": 62,
+      "ceiling": 94,
+      "confidence": "medium"
+    },
+    "grading": {
+      "f0": 72,
+      "f1": 80,
+      "f2": 85,
+      "ceiling": 93,
+      "confidence": "low"
+    },
+    "teaching": {
+      "f0": 10,
+      "f1": 13,
+      "f2": 16,
+      "ceiling": 35,
+      "confidence": "medium"
+    },
+    "sales": {
+      "f0": 28,
+      "f1": 34,
+      "f2": 39,
+      "ceiling": 70,
+      "confidence": "low"
+    },
+    "relationship": {
+      "f0": 12,
+      "f1": 17,
+      "f2": 21,
+      "ceiling": 50,
+      "confidence": "low"
+    },
+    "meetings": {
+      "f0": 18,
+      "f1": 24,
+      "f2": 29,
+      "ceiling": 55,
+      "confidence": "low"
+    },
+    "people": {
+      "f0": 13,
+      "f1": 16,
+      "f2": 19,
+      "ceiling": 40,
+      "confidence": "low"
+    },
+    "strategy": {
+      "f0": 31,
+      "f1": 38,
+      "f2": 43,
+      "ceiling": 65,
+      "confidence": "low"
+    },
+    "care": {
+      "f0": 9,
+      "f1": 11,
+      "f2": 13,
+      "ceiling": 30,
+      "confidence": "medium"
+    },
+    "physical": {
+      "f0": 3,
+      "f1": 4,
+      "f2": 5,
+      "ceiling": 15,
+      "confidence": "high"
+    }
+  },
+  "evidence": {
+    "draft": "Expert-graded GDPval wins-or-ties rose from 47.6% (Opus 4.1) to 80.3% (Opus 4.7) and 84.9% (GPT-5.5); Opus 5.5 now leads Elo-based GDPval-AA at 1846\u20131866, +138 over Opus 5. Residual misses are instruction-following and missing context.",
+    "edit": "No dedicated benchmark; writing and communicating show the highest completion in Microsoft's 200k Copilot conversations, Opus 4.6 scored 76% on 1M-token MRCR retrieval, and GDPval deliverables reached ~85% expert parity by April 2026.",
+    "translate": "Microsoft ranks interpreters and translators among the most AI-applicable occupations and WMT25 organizers called standard test sets too easy, but no 2026 benchmark with model scores exists, and live clinical or courtroom interpretation still needs presence.",
+    "research": "BrowseComp rose from 84.0% (Opus 4.6) to 90.8% (Opus 5) and HLE-with-tools from 53.0% to 67.7% (Opus 5.5), but Harvey's BigLaw research set targets case-law problems leading models cannot solve, so citation checking persists.",
+    "analysis": "Opus 4.6 scored 61.8% against human experts' 77.2% on FrontierFinance; Vals Finance Agent rose 58.8%\u219264.4% (Opus 4.5\u21924.7); real-workbook SpreadsheetBench V2 tops out near 35%; Opus 5.5 cut an internal financial-modeling task from 93 to 63 minutes.",
+    "expert": "Opus 4.6 scored 90.2% on BigLaw Bench core tasks, yet APEX-Agents law Pass@1 was 29.7% in March 2026, jurisdiction-specific work degrades, and METR found Opus 5.5 showed limited gains in judgement or taste.",
+    "diagnosis": "OpenAI's own HealthBench Professional scored GPT-5.4 at 59.0 versus physicians' 43.7 and Vals archived MedQA as saturated, but ESADE classes diagnosis as expert complementarity (44.2% of family-physician time) and no independent real-world validation exists.",
+    "code": "SWE-bench Pro climbed 53.4% (Opus 4.6) \u2192 64.3% \u2192 69.2% \u2192 79.2% (Opus 5); METR's 80% horizon rose from 19 minutes (Opus 4.1) to 70 minutes (Opus 4.6) and 3h06m (Mythos Preview); harder FrontierCode sits at 54.4%.",
+    "debug": "Terminal-Bench 2.0 rose from 59.3% (Opus 4.5) to 69.4% (Opus 4.7), with GPT-5.3-Codex and GPT-5.5 at 77\u201383%; harder TB 4.0 went 52.3% \u2192 66.4% from Opus 5 to 5.5 (59.6% independently measured).",
+    "design_tech": "No direct benchmark. Agents now finish 680,000-line migrations in under a day, but METR saw limited judgement and taste gains in Opus 5.5, and CAIS found Fable 5's CAD and architecture deliverables unacceptable as finished work.",
+    "entry": "OSWorld-Verified climbed from 66.3% (Opus 4.5) to 83.4% (Opus 4.8), past the 72.4% human baseline; SpreadsheetBench V1 is ~99% but 12\u201314% of tasks flip between runs, and strict OSWorld 2.0 success is only 48.7%.",
+    "docproc": "No claims-processing benchmark; Vals archived MortgageTax and similar QA sets as saturated, GDPval models neared expert parity in government and retail tasks, and Office & Admin API traffic rose to 13%; exception handling keeps scores below data entry.",
+    "accounting": "No public month-end-close leaderboard exists (AccountingBench publishes none); real-workbook SpreadsheetBench V2 tops out near 35% and Tax Agent Bench ranks Opus 5.5 third, so zero-error reconciliation still demands real checking.",
+    "compliance": "Policy-following is strong (tau2 agents 82\u201399%; LegalBench led by Fable 5), but no compliance-review benchmark exists, ESADE puts 44.7% of legal time in tacit expert judgement, and attestations need a named accountable human.",
+    "scheduling": "No scheduling benchmark; tau2 airline rebooking under policy reaches 82\u201388%, computer use passed the human OSWorld baseline in March 2026, and Cowork (January) plus Claude in Chrome (GA August) added calendar and browser access; multi-party coordination is unmeasured.)",
+    "project": "Opus 5 grew a simulated vending business to $11,182 on Vending-Bench 2 but reportedly broke promises doing so; AutomationBench reached 40.0% and RLI 21.25% (Opus 5.5), while the reliable horizon of hours trails multi-week projects.",
+    "service": "tau2 telecom saturated at 99.25% (Opus 4.6), with retail ~85% and airline 82\u201388%; Anthropic's observed-exposure study ranks customer service representatives second only to programmers, but live channels need every answer right, not 85% of them.",
+    "support": "tau2 telecom, a simulated user-troubleshooting task, is saturated near 99%, and OSWorld-Verified reached 83.4% (Opus 4.8) and ~90% by October 2026, but strict OSWorld 2.0 success is 48.7% and hardware fixes stay on-site.",
+    "creative": "No concept-quality benchmark; CAIS reports hours-long digital art now done in minutes and 80% of Claude marketing-content conversations are work, but METR saw limited taste gains in Opus 5.5 and ESADE's authorship factor keeps credited ideas with people.",
+    "media": "Remote Labor Index rose from 2.5% (October 2025) to 21.25% (Opus 5.5), yet CAIS judged Fable 5's 2D video ads, 3D/CAD and architecture deliverables unacceptable, and Microsoft found image generation among the lowest-success Copilot activities.",
+    "grading": "Vals' SAGE grading benchmark ranks Opus 4.7 first (scores unpublished), Educational Instruction rose from 9% to 15% of Claude.ai use, and rubric-style text work is near parity; teachers still own grades and sensitive feedback.",
+    "teaching": "ESADE rates presence-requiring tasks 14.1% replaceable versus 70.5% for purely informational ones; AI explanation is strong in chat, but classroom instruction and behaviour management need an accountable adult in the room.",
+    "sales": "No benchmark; sales-outreach automation at least doubled its share of Claude API traffic by February 2026 and Microsoft scores services sales reps 0.35 applicability, but Opus 5 reportedly broke 11 supplier promises on Vending-Bench, illustrating trust risk.",
+    "relationship": "No benchmark exists; ESADE's relational-nexus bundling factor is nearly uncorrelated with exposure (correlation of at most 0.13), and Stanford finds employment flat or rising where AI complements experienced workers; AI drafts the check-in, the trust accrues to people.",
+    "meetings": "Notes and summaries score under editing; live participation is the human contribution. Microsoft finds the AI's own actions centre on communicating, which supports async answers, but no benchmark measures a model standing in for a participant.",
+    "people": "Management is only 3\u20135% of Claude.ai conversations, ESADE's organisational-responsibility factor keeps hiring and performance decisions with a person, and screening or drafting subtasks score elsewhere, leaving AI a support role.",
+    "strategy": "Mercor's APEX-Agents consulting scores reached ~80% for Opus 5.5 (metric unlabeled), but ESADE rates tacit C4 judgement 0% replaceable and 74.4% augmentable, and METR saw limited judgement gains: analysis delegates, accountable decisions do not.",
+    "care": "Microsoft scores home health aides and nursing assistants 0.04 applicability, and ESADE puts community and social service expert complementarity at 26.8% of time; case notes score under documents, while the in-person relationship stays human.",
+    "physical": "ESADE rates manipulation tasks 0.5% replaceable, and Anthropic finds robots cost-competitive for only 0.3% of tasks, roughly 40 years from 10% at a 3% annual cost decline; models contribute only remote guidance."
+  }
+}

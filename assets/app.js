@@ -34,7 +34,8 @@ let model;     // model for the live assessment, with the viewer's edits
 let snaps;     // every snapshot, oldest first, with its index
 
 const live = () => data.assessments[data.index.latest];
-const tierDate = (n) => addMonths(parseDate(live().date), n * live().cadence_months);
+const asOf = () => parseDate(live().updated || live().date);
+const tierDate = (n) => addMonths(asOf(), n * live().cadence_months);
 const weightPhrase = () => (state.weight === "wage" ? "measured by share of pay" : "measured by share of working time");
 
 async function load() {
@@ -122,7 +123,7 @@ function renderOverview() {
   const first = snaps[0];
   const y1 = monthYear(tierDate(1)), y2 = monthYear(tierDate(2));
 
-  $("lead-eyebrow").textContent = `Updated ${monthYear(parseDate(a.date))} · Frontier model: ${a.anchor}`;
+  $("lead-eyebrow").textContent = `Updated ${monthYear(asOf())} · Frontier model: ${a.anchor}`;
   $("lead-h1").innerHTML = `AI can now do about <em>${pct(proj[0])}</em> of U.S. white-collar work.`;
   $("lead-lede").textContent =
     (snaps.length > 1 ? `That's up from ${pct(first.m.index.f0)} when ${first.a.anchor} was the frontier in ${monthYear(parseDate(first.a.date))}. ` : "") +
@@ -161,9 +162,9 @@ function renderOverview() {
 function renderTimeline() {
   const box = $("timeline");
   const { proj, limit, flatAt } = model.index;
-  const W = Math.max(440, Math.min(980, box.clientWidth || 980));
+  const W = Math.max(320, Math.min(980, box.clientWidth || 980));
   const narrow = W < 640;
-  const H = narrow ? 300 : 340;
+  const H = narrow ? 260 : 340;
   const m = { l: 34, r: 14, t: 18, b: 40 };
   const lastGen = Math.min(HORIZON, Math.max(flatAt, 4));
   const past = snaps.map(({ a, m: mm }) => ({ d: parseDate(a.date), v: mm.index.f0, label: shortModel(a.anchor), a }));
@@ -183,34 +184,33 @@ function renderTimeline() {
     <text x="${W - m.r - 4}" y="${y(100) + 14}" text-anchor="end">Needs a person</text>
     <line x1="${m.l}" x2="${W - m.r}" y1="${y(limit)}" y2="${y(limit)}" stroke="var(--ink-2)" stroke-dasharray="4 4"/>
     <text x="${W - m.r - 4}" y="${y(limit) - 6}" text-anchor="end" class="lbl-strong">Ceiling ${fmt(limit)}%</text>
-    <line x1="${x(now.d)}" x2="${x(now.d)}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)"/>
-    <text x="${x(now.d) + 5}" y="${y(4)}">Today</text>`;
+    <line x1="${x(asOf())}" x2="${x(asOf())}" y1="${m.t}" y2="${y(0)}" stroke="var(--rule-strong)"/>
+    <text x="${x(asOf()) + 5}" y="${y(4)}">Today</text>`;
 
   // x-axis: one tick per half year
   for (let d = new Date(Date.UTC(parseDate(past[0].a.date).getUTCFullYear(), 0, 1)); d.getTime() <= t1; d = addMonths(d, 6)) {
     if (d.getTime() < t0) continue;
     const yr = d.getUTCMonth() === 0;
     s += `<line x1="${x(d)}" x2="${x(d)}" y1="${y(0)}" y2="${y(0) + 4}" stroke="var(--rule-strong)"/>
-      <text x="${x(d)}" y="${H - m.b + 18}" text-anchor="middle" class="${yr ? "lbl-strong" : ""}">${yr ? d.getUTCFullYear() : narrow ? "" : "Jul"}</text>`;
+      <text x="${x(d)}" y="${H - m.b + 18}" text-anchor="middle" class="${yr ? "lbl-strong" : ""}">${yr ? (narrow ? `'${String(d.getUTCFullYear()).slice(2)}` : d.getUTCFullYear()) : narrow ? "" : "Jul"}</text>`;
   }
 
   s += `<path d="${path(future.slice(1))}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5"/>
     <path d="${path([now, future[0], future[1]])}" fill="none" stroke="var(--t1)" stroke-width="2"/>
     <path d="${path(past)}" fill="none" stroke="var(--t0)" stroke-width="2.5"/>`;
 
-  // Past snapshots: dots plus model labels, alternating above and below to avoid collisions.
+  // Past snapshots: label the first, the first agentic release and the latest; the rest show on hover.
+  const keyIdx = new Set([0, past.length - 1, past.findIndex((p) => p.a.label === "First agentic frontier")]);
   past.forEach((p, i) => {
-    const above = i % 2 === 1;
-    const ly = above ? y(p.v) - 12 : y(p.v) + 20;
-    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="5" fill="var(--t0)" stroke="var(--surface)" stroke-width="2"/>`;
-    if (i === past.length - 1) return;
-    if (!narrow || i === 0) s += `<text x="${x(p.d)}" y="${ly}" text-anchor="middle" class="lbl-model">${esc(p.label)}</text>`;
+    s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${i === past.length - 1 ? 6 : 4.5}" fill="var(--t0)" stroke="var(--surface)" stroke-width="2"/>`;
+    if (!keyIdx.has(i) || i === past.length - 1 || (narrow && i !== 0)) return;
+    s += `<text x="${x(p.d) + (i === 0 ? 0 : -6)}" y="${i === 0 ? y(p.v) + 20 : y(p.v) - 12}" text-anchor="${i === 0 ? "start" : "end"}" class="lbl-model">${esc(p.label)}</text>`;
   });
-  s += `<text x="${x(now.d) - 8}" y="${y(now.v) - 10}" text-anchor="end" class="lbl-strong">${esc(now.label)} ${fmt(now.v)}%</text>`;
+  s += `<text x="${x(now.d) - 10}" y="${y(now.v) - 12}" text-anchor="end" class="lbl-strong">${narrow ? "" : `${esc(now.label)} · `}${fmt(now.v)}%</text>`;
   future.forEach((p) => {
     const scored = p.n <= 2;
     s += `<circle cx="${x(p.d)}" cy="${y(p.v)}" r="${scored ? 5 : 3.5}" fill="${scored ? `var(--t${p.n})` : "var(--surface)"}" stroke="${scored ? "var(--surface)" : "var(--muted)"}" stroke-width="2"/>`;
-    if (scored) s += `<text x="${x(p.d)}" y="${y(p.v) + 20}" text-anchor="middle" class="lbl-strong">F+${p.n} ${fmt(p.v)}%</text>`;
+    if (scored) s += `<text x="${x(p.d)}" y="${y(p.v) + 20}" text-anchor="middle" class="lbl-strong">${narrow ? `F+${p.n}` : `F+${p.n} · ${fmt(p.v)}%`}</text>`;
   });
 
   // Hover targets
@@ -345,7 +345,7 @@ function renderTasks() {
         <span class="nums"><b>${r.f0}</b></span>
       </button>
       ${open ? `<div class="dot-detail">
-        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1}</span><span>F+2 ${r.f2}</span><span>Ceiling ${r.ceiling}</span><span>Limit ${fmt(r.limit)} (${r.bound === "intelligence" ? "trend flattens first" : "set by ceiling"})</span></div>
+        <div class="kv">${hist.map((h) => `<span>${esc(h.label)} ${h.v}</span>`).join("")}<span>Now ${r.f0}</span><span>F+1 ${r.f1}</span><span>F+2 ${r.f2}</span><span>Ceiling ${r.ceiling}</span>${a.scores[r.id]?.confidence ? `<span>Confidence: ${esc(a.scores[r.id].confidence)}</span>` : ""}</div>
         ${evidence ? `<p>${esc(evidence)}</p>` : `<p class="note">No evidence note for this task type yet.</p>`}
       </div>` : ""}
     </div>`;
@@ -403,7 +403,7 @@ function renderMethod() {
   </div>`).join("");
 
   const blocks = [
-    ["What's measured", [a.definition]],
+    ["What's measured", [a.definition, a.method_note].filter(Boolean)],
     ["Structure", [`${model.occupations.length} occupations from BLS OEWS (${data.occupations.reference || "May 2025"}) are split into tasks with a share of working time. Each task maps to one of ${model.archetypes.length} task types, and each task type is scored 0 to 100 at every snapshot.`]],
     ["Snapshots and forecasts", [`Each Opus release since ${snaps[0].a.anchor} is a snapshot that scores only what that frontier could do. The live snapshot also forecasts the next two generations, about ${a.cadence_months} months apart.`, "When a forecast date arrives, the new snapshot shows whether the forecast was right."]],
     ["Ceiling and saturation", ["Each task type has a ceiling: the most AI could take even with unlimited intelligence, given physical presence, legal sign-off and human preference.", "Past Frontier+2, each task type's gap to the lower of its ceiling and its own flattening trend shrinks by the ratio implied by its last step. The saturation point is the first generation that adds under one point overall."]],
@@ -411,10 +411,11 @@ function renderMethod() {
     ["Limits", a.caveats || []],
   ];
   $("method-grid").innerHTML = blocks.filter(([, ps]) => ps.length).map(([h, ps]) => `<div><h3>${h}</h3>${ps.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`).join("");
-  const sources = a.sources || [];
-  $("sources").innerHTML = sources.length
-    ? sources.map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>${s.note ? ` · ${esc(s.note)}` : ""}</li>`).join("")
-    : `<li>${esc(data.occupations.source)}</li>`;
+  const groups = {};
+  for (const s of a.sources || []) (groups[s.group || "Sources"] ||= []).push(s);
+  $("sources").innerHTML = Object.entries(groups).map(([g, list]) => `<div class="src-group"><h3>${esc(g)}</h3><ul>${list
+    .map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a></li>`).join("")}</ul></div>`).join("")
+    + `<div class="src-group"><h3>Employment and wages</h3><ul><li>${esc(data.occupations.source)}</li></ul></div>`;
 }
 
 /* ---------- Tooltip ---------- */

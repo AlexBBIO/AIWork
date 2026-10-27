@@ -1,0 +1,102 @@
+{
+  "id": "opus-4-7",
+  "date": "2026-04-16",
+  "anchor": "Claude Opus 4.7",
+  "label": "Opus release",
+  "kind": "backfill",
+  "peers": "Non-Opus frontier: gated Claude Mythos Preview (Apr 7; SWE-bench Pro 77.8%, METR \u226516h / 3h06m). Public peers GPT-5.4 and GPT-5.5 (Apr 23; GDPval 84.9%, TB 2.0 82.7%)",
+  "highlights": [
+    "GDPval 80.3% wins-or-ties",
+    "SWE-bench Verified 87.6%, Pro 64.3%, OSWorld-Verified 78.0%",
+    "Vals Finance Agent v1.1 64.37%, ranked #1"
+  ],
+  "scores": {
+    "draft": {
+      "f0": 77
+    },
+    "edit": {
+      "f0": 83
+    },
+    "translate": {
+      "f0": 72
+    },
+    "research": {
+      "f0": 68
+    },
+    "analysis": {
+      "f0": 55
+    },
+    "expert": {
+      "f0": 48
+    },
+    "diagnosis": {
+      "f0": 49
+    },
+    "code": {
+      "f0": 70
+    },
+    "debug": {
+      "f0": 56
+    },
+    "design_tech": {
+      "f0": 40
+    },
+    "entry": {
+      "f0": 73
+    },
+    "docproc": {
+      "f0": 67
+    },
+    "accounting": {
+      "f0": 56
+    },
+    "compliance": {
+      "f0": 55
+    },
+    "scheduling": {
+      "f0": 53
+    },
+    "project": {
+      "f0": 45
+    },
+    "service": {
+      "f0": 76
+    },
+    "support": {
+      "f0": 62
+    },
+    "creative": {
+      "f0": 50
+    },
+    "media": {
+      "f0": 24
+    },
+    "grading": {
+      "f0": 64
+    },
+    "teaching": {
+      "f0": 7
+    },
+    "sales": {
+      "f0": 20
+    },
+    "relationship": {
+      "f0": 9
+    },
+    "meetings": {
+      "f0": 14
+    },
+    "people": {
+      "f0": 10
+    },
+    "strategy": {
+      "f0": 22
+    },
+    "care": {
+      "f0": 6
+    },
+    "physical": {
+      "f0": 2
+    }
+  }
+}

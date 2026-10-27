@@ -1,0 +1,103 @@
+{
+  "id": "opus-4-5",
+  "date": "2025-11-24",
+  "anchor": "Claude Opus 4.5",
+  "label": "First agentic frontier",
+  "kind": "backfill",
+  "peers": "Gemini 3 Pro (Nov 18), GPT-5.1-Codex-Max (Nov 19), GPT-5.2 (Dec). Three-way frontier: GPT-5.2 led GDPval (70.9%) and SWE-bench Pro (55.6%)",
+  "highlights": [
+    "SWE-bench Verified 80.9%, OSWorld 66.3%",
+    "METR 5h20m / 42m; a secondary read of METR's file gives 4h53m at 50%",
+    "RLI 3.75%",
+    "Beat every human candidate on Anthropic's 2-hour engineering take-home"
+  ],
+  "scores": {
+    "draft": {
+      "f0": 64
+    },
+    "edit": {
+      "f0": 74
+    },
+    "translate": {
+      "f0": 67
+    },
+    "research": {
+      "f0": 58
+    },
+    "analysis": {
+      "f0": 42
+    },
+    "expert": {
+      "f0": 36
+    },
+    "diagnosis": {
+      "f0": 40
+    },
+    "code": {
+      "f0": 55
+    },
+    "debug": {
+      "f0": 42
+    },
+    "design_tech": {
+      "f0": 29
+    },
+    "entry": {
+      "f0": 60
+    },
+    "docproc": {
+      "f0": 55
+    },
+    "accounting": {
+      "f0": 44
+    },
+    "compliance": {
+      "f0": 44
+    },
+    "scheduling": {
+      "f0": 40
+    },
+    "project": {
+      "f0": 34
+    },
+    "service": {
+      "f0": 67
+    },
+    "support": {
+      "f0": 50
+    },
+    "creative": {
+      "f0": 41
+    },
+    "media": {
+      "f0": 18
+    },
+    "grading": {
+      "f0": 53
+    },
+    "teaching": {
+      "f0": 5
+    },
+    "sales": {
+      "f0": 14
+    },
+    "relationship": {
+      "f0": 7
+    },
+    "meetings": {
+      "f0": 10
+    },
+    "people": {
+      "f0": 7
+    },
+    "strategy": {
+      "f0": 16
+    },
+    "care": {
+      "f0": 5
+    },
+    "physical": {
+      "f0": 1
+    }
+  }
+}

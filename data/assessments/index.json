@@ -1,4 +1,12 @@
 {
-  "latest": "2026-10",
-  "assessments": ["2026-10"]
+  "latest": "opus-5-5",
+  "assessments": [
+    "opus-4-1",
+    "opus-4-5",
+    "opus-4-6",
+    "opus-4-7",
+    "opus-4-8",
+    "opus-5",
+    "opus-5-5"
+  ]
 }

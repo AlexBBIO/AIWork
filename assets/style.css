@@ -249,8 +249,9 @@ table.data td.num, table.data th.num { text-align: right; font-family: var(--f-m
 .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--s-5); }
 .method-grid > div { display: flex; flex-direction: column; gap: var(--s-2); color: var(--ink-2); font-size: 0.92rem; max-width: 65ch; }
 .method-grid h3 { color: var(--ink); }
-.sources { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: var(--s-2); font-size: 0.86rem; color: var(--ink-2); columns: 2; }
-@media (max-width: 760px) { .sources { columns: 1; } }
+.sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--s-5); }
+.src-group { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+.src-group ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: var(--s-1); font-size: 0.84rem; color: var(--ink-2); overflow-wrap: anywhere; }
 
 /* Tooltip */
 .tooltip { position: fixed; z-index: 20; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--rule-strong); border-radius: var(--radius); padding: var(--s-2) var(--s-3); font-size: 0.8rem; box-shadow: 0 4px 16px rgb(0 0 0 / 0.12); max-width: 18rem; }

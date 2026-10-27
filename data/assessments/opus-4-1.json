@@ -1,0 +1,103 @@
+{
+  "id": "opus-4-1",
+  "date": "2025-08-05",
+  "anchor": "Claude Opus 4.1",
+  "label": "Before agentic models",
+  "kind": "backfill",
+  "peers": "GPT-5 (Aug 2025), Gemini 2.5 Pro. Contested: Opus 4.1 led GDPval, GPT-5 led METR horizon",
+  "highlights": [
+    "GDPval 47.6% wins-or-ties, best of all models tested",
+    "METR 1h41m at 50% / 19m at 80%, vs GPT-5 3h34m / 32m",
+    "RLI at launch (Oct 2025): best agent 2.5%, GPT-5 1.67%",
+    "After human review and fixes, GPT-5's GDPval speedup shrank to 1.12\u20131.39x"
+  ],
+  "scores": {
+    "draft": {
+      "f0": 50
+    },
+    "edit": {
+      "f0": 66
+    },
+    "translate": {
+      "f0": 64
+    },
+    "research": {
+      "f0": 48
+    },
+    "analysis": {
+      "f0": 32
+    },
+    "expert": {
+      "f0": 28
+    },
+    "diagnosis": {
+      "f0": 34
+    },
+    "code": {
+      "f0": 42
+    },
+    "debug": {
+      "f0": 30
+    },
+    "design_tech": {
+      "f0": 22
+    },
+    "entry": {
+      "f0": 48
+    },
+    "docproc": {
+      "f0": 44
+    },
+    "accounting": {
+      "f0": 34
+    },
+    "compliance": {
+      "f0": 34
+    },
+    "scheduling": {
+      "f0": 30
+    },
+    "project": {
+      "f0": 26
+    },
+    "service": {
+      "f0": 56
+    },
+    "support": {
+      "f0": 38
+    },
+    "creative": {
+      "f0": 34
+    },
+    "media": {
+      "f0": 14
+    },
+    "grading": {
+      "f0": 44
+    },
+    "teaching": {
+      "f0": 4
+    },
+    "sales": {
+      "f0": 10
+    },
+    "relationship": {
+      "f0": 6
+    },
+    "meetings": {
+      "f0": 8
+    },
+    "people": {
+      "f0": 6
+    },
+    "strategy": {
+      "f0": 12
+    },
+    "care": {
+      "f0": 4
+    },
+    "physical": {
+      "f0": 1
+    }
+  }
+}
