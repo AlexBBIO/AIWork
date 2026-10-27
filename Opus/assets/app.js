@@ -725,6 +725,8 @@ function renderValue() {
     const idx = snap.m.index.f0 / 100;
     hist.push({ t, rev: r, idx, share: (r / W) * 100, c: r / (W * idx) });
   }
+  // Hold the latest reports flat to today so the record meets the projection.
+  if (hist.length && hist[hist.length - 1].t < today) hist.push({ t: today, rev: rev0, idx: i0, share: (rev0 / W) * 100, c: c0 });
   const year = hist.find((h) => h.t >= today - YEAR);
   const capGrowth = year ? Math.pow(c0 / year.c, YEAR / (today - year.t)) : null;
 
@@ -816,6 +818,11 @@ function renderValue() {
   const src = Object.fromEntries((econ.sources || []).map((x) => [x.id, x]));
   $("vdata-note").textContent = `Annualized revenue run-rates as reported, ${series.map((l) => l.name).join(" and ")}${econ.excluded ? `. Not included: ${econ.excluded}` : ""}. Each lab is interpolated between its reports on a log scale.`;
   $("revenue-table").innerHTML = `<thead><tr><th>Lab</th><th>Date</th><th class="num">Run-rate</th><th>Source</th></tr></thead><tbody>${econ.revenue.map((r) => `<tr><td>${esc(series.find((l) => l.id === r.lab)?.name || r.lab)}</td><td>${monthYear(parseDate(r.date))}</td><td class="num">${usd(r.run_rate)}</td><td>${(r.sources || []).map((id) => src[id] ? `<a href="${esc(src[id].url)}" target="_blank" rel="noopener">${esc(src[id].title)}</a> <span class="chip ${esc(src[id].tier || "secondary")}">${esc(src[id].tier || "secondary")}</span>` : "").join(" ")}${r.note ? `<span class="src-note">${esc(r.note)}</span>` : ""}</td></tr>`).join("")}</tbody>`;
+  // Calibration: the base scenario against the labs' own projections
+  const base = sc.base ? path(sc.base) : main;
+  const baseAt = (iso) => { const t = parseDate(iso).getTime(); return base.reduce((b, q) => (Math.abs(q.t - t) < Math.abs(b.t - t) ? q : b)); };
+  $("vproj-note").textContent = `For comparison, the base scenario puts the two labs together at ${usd(baseAt("2026-12-31").rev)} at the end of 2026, ${usd(baseAt("2028-12-31").rev)} at the end of 2028 and ${usd(main.length ? baseAt(new Date(end).toISOString().slice(0, 10)).rev : 0)} by ${monthYear(new Date(end))}. Its near-term figure sits below the labs' own end-2026 expectations because Anthropic's latest point here is its third-quarter average.`;
+  $("projection-table").innerHTML = `<thead><tr><th>Lab</th><th>Projection</th><th>Source</th></tr></thead><tbody>${(econ.projections || []).map((x) => `<tr><td>${esc(x.lab)}</td><td>${esc(x.what)}</td><td>${(x.sources || []).map((id) => src[id] ? `<a href="${esc(src[id].url)}" target="_blank" rel="noopener">${esc(src[id].title)}</a>` : "").join("; ")}</td></tr>`).join("")}</tbody>`;
   $("value-method").innerHTML = (econ.method || []).map(([h, ps]) => `<div><h3>${esc(h)}</h3>${ps.map((x) => `<p>${esc(x)}</p>`).join("")}</div>`).join("");
 }
 let syncScen;

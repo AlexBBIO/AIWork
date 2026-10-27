@@ -203,6 +203,10 @@ main { padding-block: var(--s-6) var(--s-7); }
 .value-controls .slider b { font-family: var(--f-mono); color: var(--ink); text-transform: none; letter-spacing: 0; }
 input[type="range"] { accent-color: var(--accent); width: 100%; }
 .value-table td:first-child { white-space: nowrap; }
+.sub-h { margin-top: var(--s-3); }
+#revenue-table td:nth-child(2) { white-space: nowrap; }
+.data .src-note { display: block; color: var(--muted); font-size: 0.8rem; }
+.data .chip { margin-left: 4px; }
 .vgroups { display: flex; flex-direction: column; gap: var(--s-2); }
 .vg-row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 4.5rem; gap: var(--s-3); align-items: center; font-size: 0.88rem; }
 .vg-bar { height: 14px; }

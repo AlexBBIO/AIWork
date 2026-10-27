@@ -149,3 +149,21 @@ test("lab revenue interpolates log-linearly and only inside its reports", async 
   close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 1), 2, 1e-12);
   close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 5), 3, 1e-12);
 });
+
+test("the shipped revenue data validates and sets a sensible starting capture", async () => {
+  const { validateEconomics, revenueAt } = await import("../assets/model.js");
+  const econ = read("economics.json");
+  assert.deepEqual(validateEconomics(econ, new Set(econ.sources.map((s) => s.id))), []);
+  const bad = { ...econ, revenue: [...econ.revenue, { lab: "nope", date: "2026-01-01", run_rate: -1, sources: ["missing"] }] };
+  const errs = validateEconomics(bad, new Set(econ.sources.map((s) => s.id)));
+  assert.ok(errs.some((e) => e.includes("unknown lab")) && errs.some((e) => e.includes("positive")) && errs.some((e) => e.includes("unknown source")));
+  const m = computeModel({ taxonomy, occupations, assessment: live, weight: "wage" });
+  const latest = econ.labs.reduce((s, l) => { const r = econ.revenue.filter((x) => x.lab === l.id); return s + r[r.length - 1].run_rate; }, 0);
+  const capture = latest / ((m.totals.wageBill / 1000) * (m.index.f0 / 100));
+  assert.ok(capture > 0 && capture < 0.2, `capture ${capture}`);
+  for (const l of econ.labs) {
+    const r = econ.revenue.filter((x) => x.lab === l.id).map((x) => ({ t: Date.parse(x.date), v: x.run_rate }));
+    for (let i = 1; i < r.length; i++) assert.ok(r[i].v >= r[i - 1].v, `${l.id} run-rate falls`);
+    assert.ok(revenueAt(r, (r[0].t + r[r.length - 1].t) / 2) > 0);
+  }
+});
