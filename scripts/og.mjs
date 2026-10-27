@@ -21,7 +21,7 @@ const bands = [
   { v: proj[0], label: "Now", fill: color("t0") },
   { v: proj[1] - proj[0], label: "Next generation", fill: color("t1") },
   { v: proj[2] - proj[1], label: "Generation after", fill: color("t2") },
-  { v: limit - proj[2], label: "Open to later generations", fill: `repeating-linear-gradient(135deg, ${color("open")} 0 6px, #e9edf2 6px 12px)` },
+  { v: limit - proj[2], label: "Open to later generations", fill: `repeating-linear-gradient(135deg, ${color("open")} 0 6px, ${color("rule")} 6px 12px)` },
   { v: 100 - limit, label: "Needs a person", fill: color("struct") },
 ];
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -29,14 +29,14 @@ const asOf = new Date(`${assessment.updated || assessment.date}T00:00:00Z`);
 const eyebrow = ["Headroom", site ? `${site.replace("/", "")} revision` : null, `${MONTHS[asOf.getUTCMonth()]} ${asOf.getUTCFullYear()}`].filter(Boolean).join(" · ");
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
-  body { margin: 0; width: 1200px; height: 630px; background: #f4f6f9; color: #12161c; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { margin: 0; width: 1200px; height: 630px; background: ${color("bg")}; color: ${color("ink")}; font-family: "Helvetica Neue", Arial, sans-serif; }
   .wrap { padding: 150px 72px 0; }
-  .eyebrow { font: 500 22px/1 "DejaVu Sans Mono", Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: #677082; }
+  .eyebrow { font: 500 22px/1 "DejaVu Sans Mono", Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; color: ${color("muted")}; }
   h1 { margin: 26px 0 0; font-size: 84px; line-height: 1.02; font-weight: 800; letter-spacing: -0.02em; }
-  h1 em { font-style: normal; color: #1c5cab; }
+  h1 em { font-style: normal; color: ${color("accent")}; }
   .bar { display: flex; gap: 4px; height: 34px; margin-top: 40px; }
   .bar div { height: 100%; border-radius: 2px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 18px; font-size: 20px; color: #3c4452; }
+  .legend { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 18px; font-size: 20px; color: ${color("ink-2")}; }
   .legend span { display: inline-flex; align-items: center; gap: 10px; }
   .legend i { width: 18px; height: 18px; border-radius: 3px; display: inline-block; }
   .mark { position: absolute; right: 72px; bottom: 56px; font-size: 30px; font-weight: 800; }

@@ -20,7 +20,7 @@ Occupations are weighted by **wages** (employment × mean wage) or by **people**
 
 ## Two versions
 
-The root site (`/`) is the original. `Opus/` is a revised version served at `/Opus/`, built from the audits in `reports/`: meetings split into live meetings and prep and follow-up, forecast ranges cut off at today's score and the ceiling, sourced snapshot highlights, higher-contrast colours and the corrections from both source checks. Each version has its own `index.html`, `assets/` and `data/`, so they can differ without affecting each other; `Opus/tests/` holds the revision's tests. To make the revision the main site, copy `Opus/index.html`, `Opus/assets` and `Opus/data` over the root ones.
+The root site (`/`) is the original. `Opus/` is a revised version served at `/Opus/`, built from the audits in `reports/`: meetings split into live meetings and prep and follow-up, forecast ranges cut off at today's score and the ceiling, sourced snapshot highlights, a validated colour scheme and the corrections from both source checks. Each version has its own `index.html`, `assets/` and `data/`, so they can differ without affecting each other; `Opus/tests/` holds the revision's tests. To make the revision the main site, copy `Opus/index.html`, `Opus/assets` and `Opus/data` over the root ones.
 
 ## Files
 
