@@ -3731,5 +3731,5 @@
     }
   ],
   "reference": "May 2025",
-  "task_basis": "Each occupation's task list condenses the O*NET task statements for its SOC code(s) into 2 to 7 tasks. The share of working time per task is the author's estimate, informed by O*NET task importance and frequency ratings; no survey measures U.S. white-collar time by work activity. Treat the shares as roughly ±5 points. Every meetings task is split the same way: 75% live participation and 25% preparation, notes and follow-up."
+  "task_basis": "Each occupation's task list condenses the O*NET task statements for its SOC code(s) into 2 to 7 tasks. The share of working time per task is the author's estimate, informed by O*NET task importance and frequency ratings; no survey measures U.S. white-collar time by work activity. Treat the shares as roughly ±5 points. Every meetings task is split the same way: 75% live participation and 25% preparation, notes and follow-up. That is conservative: Microsoft's 2023 telemetry puts chat and email at about 60% of communication time, and a 50% split would add about 2 points to today's figure."
 }

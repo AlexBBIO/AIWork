@@ -13,10 +13,10 @@
       ]
     },
     {
-      "text": "GDPval-AA v2.1 1846 on Anthropic's table, tracked to 1866 by mid-October",
+      "text": "GDPval-AA v2.1 1846 on Anthropic's table; 1866 on Artificial Analysis's own board in late October",
       "sources": [
         "anthropic-opus-5-5",
-        "idwn-gdpval"
+        "aa-gdpval-aa"
       ]
     },
     {
@@ -71,6 +71,15 @@
       "tier": "primary",
       "accessed": "2026-10-27",
       "note": "Benchmark table is an image; BigLaw Bench 90.2% is a Harvey customer quote"
+    },
+    {
+      "id": "anthropic-opus-4-6-card",
+      "title": "Anthropic, Claude Opus 4.6 system card",
+      "url": "https://www-cdn.anthropic.com/0dd865075ad3132672ee0ab40b05a53f14cf5288.pdf",
+      "group": "Release timeline and launch benchmarks",
+      "tier": "primary",
+      "accessed": "2026-10-27",
+      "note": "τ²-bench telecom 99.25%, averaged over five trials; airline left out pending task fixes"
     },
     {
       "id": "anthropic-opus-5",
@@ -280,6 +289,15 @@
       "note": "Anonymous aggregator; mixes GDPval-AA versions"
     },
     {
+      "id": "aa-gdpval-aa",
+      "title": "Artificial Analysis, GDPval-AA leaderboard",
+      "url": "https://artificialanalysis.ai/evaluations/gdpval-aa",
+      "group": "Professional-work benchmarks",
+      "tier": "independent",
+      "accessed": "2026-10-27",
+      "note": "v2.1; Opus 5.5 (max) at 1866; the page shows no update date"
+    },
+    {
       "id": "testmu-gdpval",
       "title": "TestMu AI, GDPval explainer",
       "url": "https://www.testmuai.com/learning-hub/gdpval/",
@@ -365,12 +383,13 @@
       "note": "Updated September 2026 (mean score) with different figures from the July snapshot used here"
     },
     {
-      "id": "llmlearner-tau2-telecom",
-      "title": "LLMLearner (formerly DataLearner), tau2-bench telecom",
-      "url": "https://llmlearner.com/rankings/tau-squared-benchmark-telecom",
+      "id": "sierra-tau2",
+      "title": "Sierra, τ²-bench leaderboard",
+      "url": "https://taubench.com/leaderboard",
       "group": "Professional-work benchmarks",
-      "tier": "secondary",
-      "accessed": "2026-10-27"
+      "tier": "independent",
+      "accessed": "2026-10-27",
+      "note": "Airline pass^1 after the February 2026 task fixes: top 84.0% (Claude Opus 4.5)"
     },
     {
       "id": "benchlm-tau2",
@@ -380,15 +399,6 @@
       "tier": "secondary",
       "accessed": "2026-10-27",
       "note": "No per-domain breakdown"
-    },
-    {
-      "id": "benchlm-tau2-airline",
-      "title": "BenchLM, tau2 airline",
-      "url": "https://benchlm.ai/benchmarks/tau2airline",
-      "group": "Professional-work benchmarks",
-      "tier": "secondary",
-      "accessed": "2026-10-27",
-      "note": "Lists no Claude model"
     },
     {
       "id": "benchlm-swe-pro",
@@ -667,6 +677,15 @@
       "accessed": "2026-10-27"
     },
     {
+      "id": "microsoft-wti-2023",
+      "title": "Microsoft, Work Trend Index 2023: Will AI Fix Work?",
+      "url": "https://www.microsoft.com/en-us/worklab/work-trend-index/will-ai-fix-work",
+      "group": "Labor-side studies",
+      "tier": "primary",
+      "accessed": "2026-10-27",
+      "note": "Microsoft 365 time: Teams meetings 23%, chat 19%, email 15%. Blocks automated fetching"
+    },
+    {
       "id": "esade",
       "title": "ESADE EcPol, Replace, augment, support (2026-10-22)",
       "url": "https://www.esade.edu/ecpol/wp-content/uploads/2026/10/working_paper_2026-10-22.pdf",
@@ -744,7 +763,7 @@
         "gdpval-paper",
         "openai-gpt-5-5",
         "anthropic-opus-5-5",
-        "idwn-gdpval"
+        "aa-gdpval-aa"
       ]
     },
     "edit": {
@@ -902,7 +921,7 @@
       "ceiling": 90,
       "confidence": "low",
       "sources": [
-        "llmlearner-tau2-telecom",
+        "anthropic-opus-4-6-card",
         "vals-hub",
         "esade"
       ]
@@ -915,7 +934,7 @@
       "confidence": "low",
       "sources": [
         "openai-gpt-5-4",
-        "benchlm-tau2-airline",
+        "sierra-tau2",
         "wiki-claude"
       ]
     },
@@ -942,7 +961,8 @@
         "gdpval-paper",
         "openai-gpt-5-5",
         "microsoft-wwai",
-        "wiki-claude"
+        "wiki-claude",
+        "microsoft-wti-2023"
       ]
     },
     "service": {
@@ -952,8 +972,8 @@
       "ceiling": 94,
       "confidence": "medium",
       "sources": [
-        "llmlearner-tau2-telecom",
-        "benchlm-tau2-airline",
+        "anthropic-opus-4-6-card",
+        "sierra-tau2",
         "anthropic-labor"
       ]
     },
@@ -964,7 +984,7 @@
       "ceiling": 91,
       "confidence": "medium",
       "sources": [
-        "llmlearner-tau2-telecom",
+        "anthropic-opus-4-6-card",
         "llmstats-opus-4-8",
         "benchmarklist-osworld2"
       ]
@@ -1096,7 +1116,7 @@
     }
   },
   "evidence": {
-    "draft": "Expert-graded GDPval wins-or-ties rose from 47.6% (Opus 4.1) to 80.3% (Opus 4.7) and 84.9% (GPT-5.5, April 2026); on Anthropic's Opus 5.5 table the model leads Elo-based GDPval-AA v2.1 at 1846, 138 points above Opus 5, and an aggregator tracked it to 1866 by mid-October. Residual misses are instruction-following and missing context.",
+    "draft": "Expert-graded GDPval wins-or-ties rose from 47.6% (Opus 4.1) to 80.3% (Opus 4.7) and 84.9% (GPT-5.5, April 2026); on Anthropic's Opus 5.5 table the model leads Elo-based GDPval-AA v2.1 at 1846, 138 points above Opus 5, and Artificial Analysis's own board showed 1866 in late October. Residual misses are instruction-following and missing context.",
     "edit": "No dedicated benchmark; writing and communicating show the highest completion in Microsoft's 200k Copilot conversations, Opus 4.6 scored 76% on 1M-token MRCR retrieval, and GDPval deliverables reached ~85% expert parity by April 2026.",
     "translate": "Microsoft ranks interpreters and translators among the most AI-applicable occupations and the WMT25 organisers titled their findings \"Time to Stop Evaluating on Easy Test Sets\", but no 2026 benchmark with model scores exists, and live clinical or courtroom interpretation still needs presence.",
     "research": "BrowseComp rose from 84.0% (Opus 4.6) to 90.8% (Opus 5) and HLE-with-tools from 53.0% to 67.7% (Opus 5.5), but Harvey's BigLaw research set targets case-law problems leading models cannot solve, so citation checking persists.",
@@ -1110,10 +1130,10 @@
     "docproc": "No claims-processing benchmark; Vals archived MortgageTax and similar QA sets as saturated, GDPval models neared expert parity in government and retail tasks, and Office & Admin API traffic rose to 13%; exception handling keeps scores below data entry.",
     "accounting": "No public month-end-close leaderboard exists (AccountingBench publishes none); general models score about 35% on real-workbook SpreadsheetBench V2 and Tax Agent Bench ranks Opus 5.5 third, so zero-error reconciliation still demands real checking.",
     "compliance": "Policy-following is strong (tau2 telecom 99%; LegalBench led by Fable 5), but no compliance-review benchmark exists, ESADE puts 44.7% of legal time in tacit expert judgement, and attestations need a named accountable human.",
-    "scheduling": "No scheduling benchmark; computer use passed the human OSWorld-Verified baseline in March 2026 (GPT-5.4 75.0% vs 72.4%), the harder tau2 airline domain tops out near 88%, and Cowork (January) plus Claude in Chrome (GA August) added calendar and browser access; multi-party coordination is unmeasured.",
+    "scheduling": "No scheduling benchmark; computer use passed the human OSWorld-Verified baseline in March 2026 (GPT-5.4 75.0% vs 72.4%), the harder tau2 airline domain tops out at 84% on Sierra's official board, and Cowork (January) plus Claude in Chrome (GA August) added calendar and browser access; multi-party coordination is unmeasured.",
     "project": "Opus 5 grew a simulated vending business to $11,182 on Vending-Bench 2; AutomationBench reached 40.0% on Anthropic's run (Gemini 4 Argon reports 51.3%) and RLI 21.25% (Opus 5.5), while the reliable horizon of hours trails multi-week projects.",
-    "followup": "No benchmark measures meeting follow-up, but its parts are well covered: drafting and summarizing sit near expert parity (GDPval about 85% by April 2026), and Microsoft finds writing and communicating are what Copilot completes best. The limit is context: the model has to know what was said and decided, which depends on transcripts and workplace integrations such as Cowork (January 2026) and Claude in Chrome (August 2026).",
-    "service": "tau2 telecom saturated at 99% (Opus 4.6) while the harder airline domain tops out near 88%; Anthropic's observed-exposure study ranks customer service representatives second only to programmers, but live channels need every answer right, not most of them.",
+    "followup": "No benchmark measures meeting follow-up, but its parts are well covered: drafting and summarizing sit near expert parity (GDPval about 85% by April 2026), and Microsoft finds writing and communicating are what Copilot completes best. Microsoft's telemetry puts chat and email at about 60% of communication time and live meetings at 40%, so counting a quarter of meetings time as follow-up is conservative. The limit is context: the model has to know what was said and decided, which depends on transcripts and workplace integrations such as Cowork (January 2026) and Claude in Chrome (August 2026).",
+    "service": "tau2 telecom saturated at 99% (Opus 4.6) while the harder airline domain tops out at 84% on Sierra's official board; Anthropic's observed-exposure study ranks customer service representatives second only to programmers, but live channels need every answer right, not most of them.",
     "support": "tau2 telecom, a simulated user-troubleshooting task, is saturated near 99%, and OSWorld-Verified reached 83.4% (Opus 4.8), past the 72.4% human baseline, but strict full-completion rates on OSWorld 2.0 run about 36 points below partial credit and hardware fixes stay on-site.",
     "creative": "No concept-quality benchmark; CAIS reports hours-long digital art now done in minutes and 80% of Claude marketing-content conversations are work, but METR saw limited taste gains in Opus 5.5, and ESADE finds authorship co-occurs with exposure rather than shielding against it, so what keeps credited ideas with people is preference and accountability.",
     "media": "Remote Labor Index rose from 2.5% (October 2025) to 21.25% (Opus 5.5), yet CAIS judged Fable 5's 2D video ads, 3D/CAD and architecture deliverables unacceptable, and Microsoft found image generation among the lowest-success Copilot activities.",

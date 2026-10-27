@@ -23,7 +23,7 @@
       "text": "BigLaw Bench 90.2% (Harvey), tau2 telecom 99%",
       "sources": [
         "anthropic-opus-4-6",
-        "llmlearner-tau2-telecom"
+        "anthropic-opus-4-6-card"
       ]
     },
     {
