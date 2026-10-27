@@ -130,24 +130,25 @@ test("snapshot highlights cite sources the live snapshot lists", () => {
 
 test("adoption starts at today's level, grows at the stated rate and stays under its peak", async () => {
   const { adoptionAt } = await import("../assets/model.js");
-  const p = { a0: 0.06, growth: 2.5, peak: 0.75 };
-  close(adoptionAt(0, p), 0.06, 1e-12);
+  const p = { a0: 0.15, growth: 2.5, peak: 0.8 };
+  close(adoptionAt(0, p), 0.15, 1e-12);
   const early = adoptionAt(0.01, p) / adoptionAt(0, p);
   close(Math.log(early) / 0.01, Math.log(2.5), 0.01);
   let prev = 0;
-  for (let t = 0; t <= 30; t += 0.5) { const a = adoptionAt(t, p); assert.ok(a >= prev && a < 0.75); prev = a; }
-  assert.ok(adoptionAt(30, p) > 0.749);
-  close(adoptionAt(5, { ...p, growth: 1 }), 0.06, 1e-12);
+  for (let t = 0; t <= 30; t += 0.5) { const a = adoptionAt(t, p); assert.ok(a >= prev && a < 0.8); prev = a; }
+  assert.ok(adoptionAt(30, p) > 0.799);
+  close(adoptionAt(5, { ...p, growth: 1 }), 0.15, 1e-12);
 });
 
-test("the labs' share moves from today's level to its long-run value in step with adoption", async () => {
-  const { shareAt, adoptionNow } = await import("../assets/model.js");
-  const p = { a0: 0.06, peak: 0.76, p0: 0.66, share: 0.25 };
-  close(shareAt(0.06, p), 0.66, 1e-12);
-  close(shareAt(0.41, p), 0.455, 1e-12);
-  close(shareAt(0.76, p), 0.25, 1e-12);
-  close(shareAt(0.9, p), 0.25, 1e-12);
-  close(adoptionNow([{ id: "a", weight: 0.75 }, { id: "b", weight: 0.25 }, { id: "c", weight: 0.5 }], { a: 4, b: 2 }), 0.035, 1e-12);
+test("price and cut move from today's level to their long-run values in step with adoption", async () => {
+  const { driftAt, groupAverage, scopedRevenue } = await import("../assets/model.js");
+  const p = { a0: 0.15, peak: 0.75, from: 0.25, to: 0.15 };
+  close(driftAt(0.15, p), 0.25, 1e-12);
+  close(driftAt(0.45, p), 0.2, 1e-12);
+  close(driftAt(0.75, p), 0.15, 1e-12);
+  close(driftAt(0.9, p), 0.15, 1e-12);
+  close(groupAverage([{ id: "a", weight: 0.75 }, { id: "b", weight: 0.25 }, { id: "c", weight: 0.5 }], { a: 4, b: 2 }), 0.035, 1e-12);
+  close(scopedRevenue(100, { us: 0.5, work: 0.8 }), 40, 1e-12);
 });
 
 test("lab revenue interpolates log-linearly and only inside its reports", async () => {
@@ -160,24 +161,23 @@ test("lab revenue interpolates log-linearly and only inside its reports", async 
   close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 5), 3, 1e-12);
 });
 
-test("the shipped revenue data validates and sets a sensible starting point", async () => {
-  const { validateEconomics, revenueAt, adoptionNow } = await import("../assets/model.js");
+test("the shipped revenue data validates and implies a work share inside the survey's range", async () => {
+  const { validateEconomics, revenueAt, groupAverage, scopedRevenue } = await import("../assets/model.js");
   const econ = read("economics.json");
-  assert.deepEqual(validateEconomics(econ, new Set(econ.sources.map((s) => s.id))), []);
-  const bad = { ...econ, revenue: [...econ.revenue, { lab: "nope", date: "2026-01-01", run_rate: -1, sources: ["missing"] }] };
-  const errs = validateEconomics(bad, new Set(econ.sources.map((s) => s.id)));
-  assert.ok(errs.some((e) => e.includes("unknown lab")) && errs.some((e) => e.includes("positive")) && errs.some((e) => e.includes("unknown source")));
+  const ids = new Set(econ.sources.map((s) => s.id));
+  assert.deepEqual(validateEconomics(econ, ids), []);
+  const bad = { ...econ, revenue: [...econ.revenue, { lab: "nope", date: "2026-01-01", run_rate: -1, sources: ["missing"] }], price: { now: 2 } };
+  const errs = validateEconomics(bad, ids);
+  assert.ok(["unknown lab", "positive", "unknown source", "price.now"].every((k) => errs.some((e) => e.includes(k))), errs.join("; "));
   const m = computeModel({ taxonomy, occupations, assessment: live, weight: "wage" });
-  const latest = econ.labs.reduce((s, l) => { const r = econ.revenue.filter((x) => x.lab === l.id); return s + r[r.length - 1].run_rate; }, 0);
-  const capture = latest / ((m.totals.wageBill / 1000) * (m.index.f0 / 100));
-  assert.ok(capture > 0 && capture < 0.2, `capture ${capture}`);
-  // Every covered group has a survey figure, and AI does far less than it can.
-  for (const g of occupations.groups) assert.equal(typeof econ.adoption.by_group[g.id], "number", `no adoption figure for ${g.id}`);
-  const s0 = adoptionNow(m.groups, econ.adoption.by_group);
-  assert.ok(s0 > econ.adoption.all_workers / 100 && s0 < m.index.f0 / 100, `adoption ${s0}`);
-  const p0 = latest / ((m.totals.wageBill / 1000) * s0);
-  assert.ok(p0 > 0 && p0 < 1, `labs' share ${p0}`);
-  for (const sc of Object.values(econ.scenarios)) assert.ok(sc.peak > s0 / (m.index.f0 / 100), "peak adoption is below today's");
+  const W = m.totals.wageBill / 1000;
+  const us = econ.labs.reduce((s, l) => { const r = econ.revenue.filter((x) => x.lab === l.id); return s + scopedRevenue(r[r.length - 1].run_rate, econ.scope[l.id]); }, 0);
+  const done = us / econ.cut.now / econ.price.now / W;
+  for (const g of occupations.groups) for (const k of ["saved", "assisted"]) assert.equal(typeof econ.adoption[k][g.id], "number", `no ${k} figure for ${g.id}`);
+  const saved = groupAverage(m.groups, econ.adoption.saved), assisted = groupAverage(m.groups, econ.adoption.assisted);
+  // The implied work sits above the hours workers save and not far past the hours they work with AI.
+  assert.ok(done > saved && done < assisted * 1.5 && done < m.index.f0 / 100, `implied ${done}, saved ${saved}, assisted ${assisted}`);
+  for (const sc of Object.values(econ.scenarios)) assert.ok(sc.peak > done / (m.index.f0 / 100), "peak adoption is below today's");
   for (const l of econ.labs) {
     const r = econ.revenue.filter((x) => x.lab === l.id).map((x) => ({ t: Date.parse(x.date), v: x.run_rate }));
     for (let i = 1; i < r.length; i++) assert.ok(r[i].v >= r[i - 1].v, `${l.id} run-rate falls`);

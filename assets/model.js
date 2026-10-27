@@ -238,14 +238,17 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
 }
 
 /* ---------- Economic value ---------- */
-// Lab revenue against the wage bill of the work AI can do:
-//   revenue(t) = wage bill × index(t) × adoption(t) × share(t)
-// The index is the share of white-collar working time AI can do (the model above).
-// Adoption is the share of that work AI actually does. It follows a logistic curve from
-// today's measured level toward a peak, starting at a stated annual growth multiple, so it
-// can grow fast early and must slow as it nears the peak.
-// Share is lab revenue per dollar of wages for the work AI does. It moves from today's
-// implied level to its long-run value in step with adoption, reaching it at the peak.
+// What the labs earn from U.S. white-collar work, built from four links:
+//   revenue(t) = value of the work AI can do(t) × adoption(t) × price(t) × cut(t)
+// - The value of the work AI can do is the wage bill times this site's index.
+// - Adoption is the share of that work AI actually does. It follows a logistic curve from
+//   today's level toward a peak, starting at a stated annual growth multiple, so it can grow
+//   fast early and must slow as it nears the peak.
+// - Price is what customers pay for AI work per dollar of wages the same work costs.
+// - Cut is the share of that spending that reaches the labs rather than the apps built on them.
+// Price and cut move from today's levels to their long-run values in step with adoption.
+// Today's adoption is not measured directly: it is what the labs' U.S. work revenue implies
+// at today's price and cut, checked against surveys of hours worked with AI.
 
 // Adoption t years from now.
 export function adoptionAt(t, { a0, growth, peak }) {
@@ -254,16 +257,21 @@ export function adoptionAt(t, { a0, growth, peak }) {
   return peak / (1 + ((peak - a0) / a0) * Math.exp(-k * t));
 }
 
-// The labs' share at a given adoption level.
-export function shareAt(adoption, { a0, peak, p0, share }) {
-  if (!(peak > a0)) return p0;
+// A value that moves from `from` (at today's adoption) to `to` (at peak adoption).
+export function driftAt(adoption, { a0, peak, from, to }) {
+  if (!(peak > a0)) return from;
   const done = Math.min(1, Math.max(0, (adoption - a0) / (peak - a0)));
-  return p0 + (share - p0) * done;
+  return from + (to - from) * done;
 }
 
-// Share of white-collar working time AI already does: hours saved by group, weighted by
-// each group's weight in the model. Groups without a figure are left out of the average.
-export function adoptionNow(groups, byGroup) {
+// The part of each lab's revenue that comes from U.S. work: run-rate × U.S. share × work share.
+export function scopedRevenue(rev, { us, work }) {
+  return rev * us * work;
+}
+
+// A survey share of white-collar hours: figures by group, weighted by each group's weight in
+// the model. Groups without a figure are left out of the average.
+export function groupAverage(groups, byGroup) {
   let sum = 0, w = 0;
   for (const g of groups) {
     const v = byGroup?.[g.id];
@@ -317,20 +325,34 @@ export function validateEconomics(econ, sourceIds = new Set()) {
     const dates = (econ.revenue || []).filter((r) => r.lab === lab).map((r) => r.date);
     if (dates.some((d, i) => i && d < dates[i - 1])) errors.push(`economics: ${lab} reports must be in date order`);
   }
+  const known = (tag, ids) => { for (const id of ids || []) if (sourceIds.size && !sourceIds.has(id)) errors.push(`economics: ${tag}: unknown source id ${id}`); };
+  const frac = (v) => v > 0 && v <= 1;
+  for (const lab of labs) {
+    const sc = econ.scope?.[lab];
+    if (!sc) { errors.push(`economics: no scope for ${lab}`); continue; }
+    if (!frac(sc.us) || !frac(sc.work)) errors.push(`economics: scope for ${lab}: us and work must be shares above 0 and at most 1`);
+    known(`scope ${lab}`, sc.sources);
+  }
+  for (const k of ["price", "cut"]) {
+    const x = econ[k];
+    if (!x || !frac(x.now)) errors.push(`economics: ${k}.now must be a share above 0 and at most 1`);
+    known(k, x?.sources);
+    for (const e of x?.evidence || []) known(`${k} evidence`, e.sources);
+  }
   const ad = econ.adoption;
-  if (!ad) errors.push("economics: no adoption data");
+  if (!ad) errors.push("economics: no adoption survey data");
   else {
     if (!isDate(ad.as_of)) errors.push("economics: adoption as_of must be YYYY-MM-DD");
-    const vals = Object.values(ad.by_group || {});
-    if (!vals.length) errors.push("economics: adoption has no group figures");
-    if (vals.some((v) => !(v >= 0 && v <= 100))) errors.push("economics: adoption figures must be percentages from 0 to 100");
-    for (const s of ad.sources || []) if (sourceIds.size && !sourceIds.has(s)) errors.push(`economics: adoption: unknown source id ${s}`);
+    for (const k of ["saved", "assisted"]) {
+      const vals = Object.values(ad[k] || {});
+      if (!vals.length) errors.push(`economics: adoption has no ${k} figures`);
+      if (vals.some((v) => !(v >= 0 && v <= 100))) errors.push(`economics: adoption ${k} figures must be percentages from 0 to 100`);
+    }
+    known("adoption", ad.sources);
   }
-  const s = econ.scenarios || {};
-  for (const [id, sc] of Object.entries(s)) {
+  for (const [id, sc] of Object.entries(econ.scenarios || {})) {
     if (!(sc.growth >= 1)) errors.push(`economics: scenario ${id} growth must be >= 1`);
-    if (!(sc.peak > 0 && sc.peak <= 1)) errors.push(`economics: scenario ${id} peak adoption must be above 0 and at most 1`);
-    if (!(sc.share > 0 && sc.share < 1)) errors.push(`economics: scenario ${id} share must be between 0 and 1`);
+    for (const k of ["peak", "price", "cut"]) if (!frac(sc[k])) errors.push(`economics: scenario ${id} ${k} must be a share above 0 and at most 1`);
   }
   return errors;
 }

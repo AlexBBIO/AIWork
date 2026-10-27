@@ -182,18 +182,30 @@
       <div class="funnel" id="funnel"></div>
     </section>
 
+    <section class="panel" aria-labelledby="vcheck-h">
+      <div class="panel-head">
+        <h2 id="vcheck-h">Checking how much work AI does</h2>
+        <p class="note" id="vcheck-note"></p>
+      </div>
+      <div class="vcheck" id="vcheck"></div>
+      <p class="note" id="vcheck-trend"></p>
+    </section>
+
     <section class="panel" aria-labelledby="vpath-h">
       <div class="panel-head">
-        <h2 id="vpath-h">Lab revenue as a share of white-collar pay</h2>
+        <h2 id="vpath-h">Lab revenue from U.S. white-collar work</h2>
         <p class="note" id="vpath-note"></p>
       </div>
       <div class="filters value-controls">
         <div class="ctl"><span id="scen-label">Scenario</span>
           <div class="seg" role="radiogroup" aria-labelledby="scen-label" id="scen-seg"></div>
         </div>
-        <label class="ctl slider"><span data-tip='{"title": "Adoption growth", "note": "How many times more of the work AI can do it is actually doing a year from now. Growth slows as adoption nears its peak."}'>Adoption growth, first year <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="4" step="0.1"></label>
+        <div class="sliders">
+        <label class="ctl slider"><span data-tip='{"title": "Adoption growth", "note": "How many times more of the work AI can do it is actually doing a year from now. Growth slows as adoption nears its peak."}'>Adoption growth, year one <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="4" step="0.1"></label>
         <label class="ctl slider"><span data-tip='{"title": "Peak adoption", "note": "The share of the work AI can do that it ends up doing once adoption matures."}'>Peak adoption <b id="peak-out"></b></span><input type="range" id="peak-in" min="0.2" max="1" step="0.05"></label>
-        <label class="ctl slider"><span data-tip='{"title": "Labs&#39; share at peak", "note": "Lab revenue per dollar of wages for the work AI does, once adoption peaks. The rest goes to customers as savings, to software built on the models and to lower prices."}'>Labs' share at peak <b id="share-out"></b></span><input type="range" id="share-in" min="0.05" max="0.6" step="0.01"></label>
+        <label class="ctl slider"><span data-tip='{"title": "Price at peak", "note": "What customers pay for AI work per dollar of wages the same work would cost, once adoption peaks. Competition and cheaper models push it down."}'>Price at peak, per $1 <b id="price-out"></b></span><input type="range" id="price-in" min="0.02" max="0.5" step="0.01"></label>
+        <label class="ctl slider"><span data-tip='{"title": "Labs&#39; cut at peak", "note": "The share of customers&#39; AI spending that reaches the labs rather than the apps and services built on their models, once adoption peaks."}'>Labs' cut at peak <b id="cut-out"></b></span><input type="range" id="cut-in" min="0.2" max="1" step="0.05"></label>
+        </div>
       </div>
       <div class="chart-box" id="vchart"></div>
       <div class="legend" id="vchart-legend"></div>
@@ -214,6 +226,15 @@
         <p class="note" id="vdata-note"></p>
       </div>
       <div class="table-scroll"><table class="data" id="revenue-table"></table></div>
+      <h3 class="sub-h">From total revenue to U.S. work</h3>
+      <p class="note" id="scope-note"></p>
+      <div class="table-scroll"><table class="data" id="scope-table"></table></div>
+      <h3 class="sub-h">What AI work costs customers</h3>
+      <p class="note" id="price-note"></p>
+      <div class="table-scroll"><table class="data" id="price-table"></table></div>
+      <h3 class="sub-h">How much of that spending reaches the labs</h3>
+      <p class="note" id="cut-note"></p>
+      <div class="table-scroll"><table class="data" id="cut-table"></table></div>
       <h3 class="sub-h">What the labs project</h3>
       <p class="note" id="vproj-note"></p>
       <div class="table-scroll"><table class="data" id="projection-table"></table></div>
