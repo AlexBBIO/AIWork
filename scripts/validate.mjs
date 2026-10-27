@@ -1,7 +1,7 @@
 // Validate the data files and print a summary of the latest assessment.
 // Usage: node scripts/validate.mjs [--site Opus] [assessment-id]
 // --site picks a site folder (default: the root site); each site has its own model and data.
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const at = args.indexOf("--site");
@@ -18,6 +18,12 @@ const assessments = Object.fromEntries(index.assessments.map((id) => [id, read(`
 let errors = [];
 for (const id of index.assessments) errors.push(...validate({ taxonomy, occupations, assessment: assessments[id] }).map((e) => `[${id}] ${e}`));
 errors.push(...validateIndex({ taxonomy, index, assessments }));
+const econPath = new URL("data/economics.json", base);
+if (existsSync(econPath)) {
+  const { validateEconomics } = await import(new URL("assets/model.js", base));
+  const econ = JSON.parse(readFileSync(econPath));
+  errors.push(...validateEconomics(econ, new Set((econ.sources || []).map((s) => s.id))));
+}
 for (const e of errors) console.error(`  ✗ ${site}${e}`);
 if (errors.length) process.exit(1);
 

@@ -63,7 +63,7 @@ try {
         failures.push(`${vp.width}px console: ${m.text()}`);
     });
     for (const site of ["", "Opus/"]) {
-      for (const view of ["overview", "jobs/swe", "tasks/meetings", "method"]) {
+      for (const view of ["overview", "jobs/swe", "tasks/meetings", "value", "method"]) {
         await page.goto(`${base}${site}#${view}`, { waitUntil: "networkidle" });
         await page.waitForFunction(
           () =>

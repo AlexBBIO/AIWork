@@ -127,3 +127,43 @@ test("snapshot highlights cite sources the live snapshot lists", () => {
   const errs = validateIndex({ taxonomy, index, assessments: { ...assessments, [broken.id]: broken } });
   assert.ok(errs.some((e) => e.includes("unknown source nope")));
 });
+
+test("capture starts at today's level, grows at the stated rate and stays under its ceiling", async () => {
+  const { captureAt } = await import("../assets/model.js");
+  const p = { c0: 0.03, growth: 2.5, ceiling: 0.2 };
+  close(captureAt(0, p), 0.03, 1e-12);
+  const early = captureAt(0.01, p) / captureAt(0, p);
+  close(Math.log(early) / 0.01, Math.log(2.5), 0.01);
+  let prev = 0;
+  for (let t = 0; t <= 30; t += 0.5) { const c = captureAt(t, p); assert.ok(c >= prev && c < 0.2); prev = c; }
+  assert.ok(captureAt(30, p) > 0.199);
+  close(captureAt(5, { ...p, growth: 1 }), 0.03, 1e-12);
+});
+
+test("lab revenue interpolates log-linearly and only inside its reports", async () => {
+  const { revenueAt, interpolate } = await import("../assets/model.js");
+  const reports = [{ t: 0, v: 10 }, { t: 1, v: 40 }];
+  close(revenueAt(reports, 0.5), 20, 1e-9);
+  assert.equal(revenueAt(reports, -0.1), null);
+  assert.equal(revenueAt(reports, 1.1), null);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 1), 2, 1e-12);
+  close(interpolate([{ t: 0, v: 1 }, { t: 2, v: 3 }], 5), 3, 1e-12);
+});
+
+test("the shipped revenue data validates and sets a sensible starting capture", async () => {
+  const { validateEconomics, revenueAt } = await import("../assets/model.js");
+  const econ = read("economics.json");
+  assert.deepEqual(validateEconomics(econ, new Set(econ.sources.map((s) => s.id))), []);
+  const bad = { ...econ, revenue: [...econ.revenue, { lab: "nope", date: "2026-01-01", run_rate: -1, sources: ["missing"] }] };
+  const errs = validateEconomics(bad, new Set(econ.sources.map((s) => s.id)));
+  assert.ok(errs.some((e) => e.includes("unknown lab")) && errs.some((e) => e.includes("positive")) && errs.some((e) => e.includes("unknown source")));
+  const m = computeModel({ taxonomy, occupations, assessment: live, weight: "wage" });
+  const latest = econ.labs.reduce((s, l) => { const r = econ.revenue.filter((x) => x.lab === l.id); return s + r[r.length - 1].run_rate; }, 0);
+  const capture = latest / ((m.totals.wageBill / 1000) * (m.index.f0 / 100));
+  assert.ok(capture > 0 && capture < 0.2, `capture ${capture}`);
+  for (const l of econ.labs) {
+    const r = econ.revenue.filter((x) => x.lab === l.id).map((x) => ({ t: Date.parse(x.date), v: x.run_rate }));
+    for (let i = 1; i < r.length; i++) assert.ok(r[i].v >= r[i - 1].v, `${l.id} run-rate falls`);
+    assert.ok(revenueAt(r, (r[0].t + r[r.length - 1].t) / 2) > 0);
+  }
+});

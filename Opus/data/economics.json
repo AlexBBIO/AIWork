@@ -1,0 +1,347 @@
+{
+  "as_of": "2026-10-27",
+  "labs": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI"
+    }
+  ],
+  "excluded": "Google discloses no Gemini or generative-AI revenue figure; Mistral, Zhipu, Moonshot, DeepSeek, MiniMax, xAI's model revenue and Cohere together add roughly $7.5B a year, about 6% more",
+  "revenue": [
+    {
+      "lab": "anthropic",
+      "date": "2025-01-01",
+      "run_rate": 1,
+      "sources": [
+        "anthropic-series-f"
+      ],
+      "note": "Approximately $1B at the start of 2025"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2025-08-31",
+      "run_rate": 5,
+      "sources": [
+        "anthropic-series-f"
+      ],
+      "note": "Over $5B by August 2025"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2025-10-15",
+      "run_rate": 7,
+      "sources": [
+        "reuters-anthropic-oct25"
+      ],
+      "note": "\"Approaching $7 billion this month\", company to Reuters"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2025-12-31",
+      "run_rate": 9,
+      "sources": [
+        "anthropic-compute"
+      ],
+      "note": "Approximately $9B at the end of 2025"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-02-12",
+      "run_rate": 14,
+      "sources": [
+        "anthropic-series-g"
+      ]
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-03-03",
+      "run_rate": 19,
+      "sources": [
+        "bloomberg-anthropic-mar26"
+      ],
+      "note": "Nearly $20B"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-04-06",
+      "run_rate": 30,
+      "sources": [
+        "anthropic-compute"
+      ],
+      "note": "Surpassed $30B"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-05-28",
+      "run_rate": 47,
+      "sources": [
+        "anthropic-series-h"
+      ],
+      "note": "Crossed $47B earlier in May"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-07-31",
+      "run_rate": 65,
+      "sources": [
+        "reuters-anthropic-jul26"
+      ],
+      "note": "Topped $65B by the end of July"
+    },
+    {
+      "lab": "anthropic",
+      "date": "2026-09-30",
+      "run_rate": 67.2,
+      "sources": [
+        "bloomberg-anthropic-q3",
+        "anthropic-s1"
+      ],
+      "note": "Q3 revenue of $16.8B × 4, a lower bound on the end-of-quarter run-rate; the S-1 leaves the October 31 run-rate blank"
+    },
+    {
+      "lab": "openai",
+      "date": "2025-06-09",
+      "run_rate": 10,
+      "sources": [
+        "cnbc-openai-jun25"
+      ],
+      "note": "Excludes Microsoft licensing and one-time deals"
+    },
+    {
+      "lab": "openai",
+      "date": "2025-12-31",
+      "run_rate": 20,
+      "sources": [
+        "reuters-openai-cfo"
+      ],
+      "note": "\"Surpassed $20 billion\", CFO"
+    },
+    {
+      "lab": "openai",
+      "date": "2026-03-31",
+      "run_rate": 24,
+      "sources": [
+        "openai-mar26"
+      ],
+      "note": "About $2B a month"
+    },
+    {
+      "lab": "openai",
+      "date": "2026-07-31",
+      "run_rate": 40,
+      "sources": [
+        "bloomberg-openai-jul26"
+      ],
+      "note": "Surpassed $40B"
+    },
+    {
+      "lab": "openai",
+      "date": "2026-09-30",
+      "run_rate": 50,
+      "sources": [
+        "ft-openai-sep26"
+      ],
+      "note": "About $50B net of partners; about $68–70B gross"
+    }
+  ],
+  "scenarios": {
+    "slow": {
+      "label": "Slow",
+      "growth": 1.4,
+      "ceiling": 0.1,
+      "note": "Capture grows 1.4x in the first year toward 10% of the pay for AI-doable work: adoption stalls on integration, trust and price competition."
+    },
+    "base": {
+      "label": "Base",
+      "growth": 2.0,
+      "ceiling": 0.2,
+      "note": "Capture grows 2x in the first year (it grew about 2.7x in the past year) toward 20%. This roughly matches the labs' own revenue projections for 2028 to 2030."
+    },
+    "fast": {
+      "label": "Fast",
+      "growth": 3.0,
+      "ceiling": 0.35,
+      "note": "Capture keeps its recent pace (about 3x a year) toward 35%: labs bill for agents much as firms pay for outsourced work."
+    }
+  },
+  "projections": [
+    {
+      "lab": "Anthropic",
+      "what": "Run-rate above $100B by the end of 2026",
+      "sources": [
+        "nyt-anthropic-100b"
+      ]
+    },
+    {
+      "lab": "OpenAI",
+      "what": "Annualized revenue of $70B or more by the end of 2026",
+      "sources": [
+        "ft-openai-sep26"
+      ]
+    },
+    {
+      "lab": "Anthropic",
+      "what": "2028 revenue of roughly $190–200B",
+      "sources": [
+        "reuters-anthropic-2028"
+      ]
+    },
+    {
+      "lab": "OpenAI",
+      "what": "Revenue of $350B in 2030 (July 2026 investor deck); $280B+ in the February plan",
+      "sources": [
+        "ft-openai-deck",
+        "fortune-openai-2030"
+      ]
+    }
+  ],
+  "method": [
+    [
+      "How it is computed",
+      [
+        "Lab revenue = U.S. white-collar wage bill × share of that work AI can do × capture. The wage bill is the covered occupations' employment times mean wage (BLS OEWS, May 2025), held at that level so dollars stay comparable. The share of work AI can do is this site's index, weighted by wages: its two forecasts, then its trend.",
+        "Capture is the share of the wages for AI-doable work that the labs earn as revenue. It is measured today as combined revenue divided by those wages, and projected on an S-curve: it starts at today's level, grows at the scenario's first-year rate and slows as it nears the scenario's ceiling."
+      ]
+    ],
+    [
+      "What the ceiling means",
+      [
+        "A ceiling of 20% means that once adoption matures, each dollar of pay for work AI can do earns the labs about 20 cents a year. The rest stays with customers as savings, with the software built on the models, and in lower prices as labs compete. It is an assumption, not a measurement; the sliders let you set your own."
+      ]
+    ],
+    [
+      "What this is not",
+      [
+        "Lab revenue is global and includes consumer subscriptions, while the wage bill is U.S. white-collar pay, so the ratio is a yardstick for scale rather than a claim that the revenue replaces U.S. wages. About 72% of Anthropic's revenue is billed to U.S. addresses (S-1); OpenAI does not disclose a split; its revenue was about 60% consumer at the start of 2026 and mostly enterprise by August.",
+        "Anthropic books cloud-marketplace sales gross, OpenAI's figures here are net of partners, and Anthropic's latest point is a quarterly average, so today's combined figure is conservative. Revenue is not job loss, and the wage bill leaves out the self-employed and occupations outside the 98 covered."
+      ]
+    ]
+  ],
+  "sources": [
+    {
+      "id": "anthropic-series-f",
+      "title": "Anthropic, Series F announcement (Sep 2025)",
+      "url": "https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation",
+      "tier": "primary"
+    },
+    {
+      "id": "reuters-anthropic-oct25",
+      "title": "Reuters, Anthropic aims to nearly triple revenue (Oct 2025)",
+      "url": "https://finance.yahoo.com/news/exclusive-anthropic-aims-nearly-triple-170234463.html",
+      "tier": "secondary"
+    },
+    {
+      "id": "anthropic-compute",
+      "title": "Anthropic, Google and Broadcom compute partnership (Apr 2026)",
+      "url": "https://www.anthropic.com/news/google-broadcom-partnership-compute",
+      "tier": "primary"
+    },
+    {
+      "id": "anthropic-series-g",
+      "title": "Anthropic, Series G announcement (Feb 2026)",
+      "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation",
+      "tier": "primary"
+    },
+    {
+      "id": "bloomberg-anthropic-mar26",
+      "title": "Bloomberg, Anthropic nears $20 billion run rate (Mar 2026)",
+      "url": "https://news.bgov.com/artificial-intelligence/anthropic-nears-20-billion-revenue-run-rate-amid-pentagon-feud",
+      "tier": "secondary"
+    },
+    {
+      "id": "anthropic-series-h",
+      "title": "Anthropic, Series H announcement (May 2026)",
+      "url": "https://www.anthropic.com/news/series-h",
+      "tier": "primary"
+    },
+    {
+      "id": "reuters-anthropic-jul26",
+      "title": "Reuters, Anthropic run rate tops $65 billion (Aug 2026)",
+      "url": "https://www.investing.com/news/stock-market-news/anthropic-revenue-run-rate-tops-65-billion-source-says-4864031",
+      "tier": "secondary",
+      "note": "Blocks automated fetching"
+    },
+    {
+      "id": "bloomberg-anthropic-q3",
+      "title": "Bloomberg, Anthropic revenue hits $16.8 billion in quarter before IPO (Oct 2026)",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-14/anthropic-revenue-jumps-to-16-8-billion-in-quarter-before-ipo",
+      "tier": "secondary",
+      "note": "Blocks automated fetching"
+    },
+    {
+      "id": "anthropic-s1",
+      "title": "Anthropic PBC, Form S-1 (Oct 26, 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/0002130357/000162828026067168/anthropicpbc-sx1.htm",
+      "tier": "primary",
+      "note": "Q3 revenue was 86 times Q4 2024's; 27.8% of H1 2026 revenue billed outside the U.S. Blocks automated fetching"
+    },
+    {
+      "id": "cnbc-openai-jun25",
+      "title": "CNBC, OpenAI hits $10 billion in annual recurring revenue (Jun 2025)",
+      "url": "https://www.nbcmiami.com/news/business/money-report/openai-hits-10-billion-in-annual-recurring-revenue-fueled-by-chatgpt-growth/3632896/",
+      "tier": "secondary"
+    },
+    {
+      "id": "reuters-openai-cfo",
+      "title": "Reuters, OpenAI CFO says annualized revenue passed $20 billion (Jan 2026)",
+      "url": "https://finance.yahoo.com/news/openai-cfo-says-annualized-revenue-173519097.html",
+      "tier": "secondary"
+    },
+    {
+      "id": "openai-mar26",
+      "title": "OpenAI, Accelerating the next phase of AI (Mar 2026)",
+      "url": "https://openai.com/index/accelerating-the-next-phase-ai/",
+      "tier": "primary",
+      "note": "Blocks automated fetching"
+    },
+    {
+      "id": "bloomberg-openai-jul26",
+      "title": "Bloomberg, OpenAI revenue run rate tops $40 billion (Aug 2026)",
+      "url": "https://finance.yahoo.com/technology/ai/articles/openai-revenue-run-rate-tops-224009196.html",
+      "tier": "secondary"
+    },
+    {
+      "id": "ft-openai-sep26",
+      "title": "Bloomberg/FT, OpenAI expects $70 billion annualized revenue by end-2026 (Oct 2026)",
+      "url": "https://ca.investing.com/news/stock-market-news/openai-expects-to-reach-70-bln-revenue-by-end2026-bloomberg-reports-4872737",
+      "tier": "secondary",
+      "note": "Blocks automated fetching"
+    },
+    {
+      "id": "nyt-anthropic-100b",
+      "title": "NYT via Gulf News, Anthropic on track to top $100 billion revenue pace (Sep 2026)",
+      "url": "https://gulfnews.com/world/americas/anthropic-on-track-to-top-100-billion-revenue-pace-ahead-of-potential-ipo-1.500680887",
+      "tier": "secondary"
+    },
+    {
+      "id": "reuters-anthropic-2028",
+      "title": "Reuters, Anthropic IPO valuation hinges on $190–200 billion 2028 revenue forecast (Aug 2026)",
+      "url": "https://www.investing.com/news/stock-market-news/anthropic-ipo-valuation-hinges-on-190200-billion-2028-revenue-forecast-sources-say-4862222",
+      "tier": "secondary",
+      "note": "Blocks automated fetching"
+    },
+    {
+      "id": "ft-openai-deck",
+      "title": "FT via Tom's Hardware, OpenAI projections to 2030 (Sep 2026)",
+      "url": "https://finance.yahoo.com/technology/ai/articles/openai-projections-point-massive-278-120000345.html",
+      "tier": "secondary"
+    },
+    {
+      "id": "fortune-openai-2030",
+      "title": "Fortune, OpenAI revenue forecast of $280 billion in 2030 (Feb 2026)",
+      "url": "https://fortune.com/2026/02/20/openai-revenue-forecast-280-billion-2030-capex-sam-altman/",
+      "tier": "secondary"
+    },
+    {
+      "id": "epoch-revenue",
+      "title": "Epoch AI, An update on AI's most important number (Aug 2026)",
+      "url": "https://epoch.ai/gradient-updates/an-update-on-ais-most-important-number",
+      "tier": "independent",
+      "note": "OpenAI and Anthropic combined grew from $30B to $105B by August 2026"
+    }
+  ]
+}
