@@ -194,8 +194,11 @@ main { padding-block: var(--s-6) var(--s-7); }
 .fn-label small { display: block; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
 .fn-track { display: flex; gap: 2px; height: 18px; }
 .fn-bar { display: block; height: 100%; background: var(--t0); border-radius: 2px; }
-.fn-row:first-child .fn-bar { background: var(--rule-strong); }
-.fn-row:last-child .fn-bar { background: var(--t1); }
+.funnel .fn-row:first-child .fn-bar { background: var(--rule-strong); }
+.funnel .fn-row:last-child .fn-bar { background: var(--t1); }
+.vcheck { display: flex; flex-direction: column; gap: var(--s-3); margin-bottom: var(--s-3); }
+.fn-bar.survey { background: var(--past); }
+.fn-bar.implied { background: var(--t1); }
 .fn-bar.next { background: var(--t2); }
 .fn-val { font: 500 0.86rem var(--f-mono); text-align: right; }
 .value-controls { align-items: end; gap: var(--s-3) var(--s-6); }
