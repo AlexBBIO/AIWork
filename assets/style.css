@@ -129,6 +129,7 @@ main { padding-block: var(--s-6) var(--s-7); }
 
 /* Evidence-quality strip */
 .evidence { display: flex; flex-direction: column; gap: var(--s-2); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-3) var(--s-4); }
+.panel .evidence { border: 0; padding: 0; }
 .evidence .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); font-size: 0.86rem; color: var(--ink-2); }
 .evidence .bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; width: 100%; background: var(--rule); }
 .evidence .bar > span { height: 100%; }
