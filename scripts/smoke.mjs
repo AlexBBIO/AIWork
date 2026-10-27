@@ -79,7 +79,10 @@ try {
             `${vp.width}px /${site}#${view}: horizontal overflow of ${w}px`,
           );
       }
-      const h1 = await page.textContent("#lead-h1");
+      // The headline figure is in the h1 on the root site and beside it on /Opus/.
+      const h1 = await page.evaluate(
+        () => (document.getElementById("lead-figure") || document.getElementById("lead-h1")).textContent,
+      );
       if (!/\d+%/.test(h1))
         failures.push(
           `${vp.width}px /${site}: headline has no percentage: ${h1}`,

@@ -19,11 +19,15 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="mast">
-  <div class="wrap mast-row">
-    <a class="brand" href="#overview">
+  <div class="wrap mast-top">
+    <a class="brand" href="#overview" aria-label="Headroom, Opus revision: overview">
+      <span class="brand-mark" aria-hidden="true">H</span>
       <span class="brand-name">Headroom</span>
-      <span class="brand-sub">AI vs. U.S. white-collar work</span>
+      <span class="edition">Opus</span>
     </a>
+    <a class="original" href="../">Compare original <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="wrap mast-nav">
     <nav class="tabs" aria-label="Sections">
       <a href="#overview" data-view="overview">Overview</a>
       <a href="#jobs" data-view="jobs">Jobs</a>
@@ -31,7 +35,7 @@
       <a href="#method" data-view="method">Method</a>
     </nav>
     <div class="measure">
-      <span class="measure-label" id="measure-label">Weight by</span>
+      <span class="sr" id="measure-label">Weight the index by</span>
       <div class="seg" role="radiogroup" aria-labelledby="measure-label" id="weight-seg">
         <button type="button" id="weight-wage" role="radio" data-value="wage" title="Weight each occupation by its total wages (employment × mean wage)">Wages</button>
         <button type="button" id="weight-employment" role="radio" data-value="employment" title="Weight each occupation by headcount">People</button>
@@ -48,13 +52,25 @@
 
   <!-- Overview -->
   <section id="view-overview" class="view" aria-label="Overview">
-    <div class="lead">
-      <p class="eyebrow" id="lead-eyebrow"></p>
-      <h1 id="lead-h1">Loading…</h1>
-      <p class="def">Share of working time spent on tasks the best public AI model can do to a competent professional's standard, with no more than light review. It measures capability, not adoption.</p>
-      <p class="lede" id="lead-lede"></p>
+    <div class="hero">
+      <div class="hero-main">
+        <p class="eyebrow" id="lead-eyebrow"></p>
+        <h1 id="lead-h1">Loading…</h1>
+        <div class="hero-score"><span class="figure" id="lead-figure"></span><p id="lead-figure-note"></p></div>
+        <p class="def">A task-by-task estimate: work a competent professional would accept after no more than light review. It measures capability, not adoption.</p>
+        <p class="lede" id="lead-lede"></p>
+        <div class="scope" id="lead-scope"></div>
+      </div>
+      <aside class="hero-panel" id="readout" aria-labelledby="readout-h"></aside>
     </div>
-    <div class="readout" id="readout"></div>
+    <form class="search-callout" id="hero-search" role="search">
+      <div><h2>What does this mean for your work?</h2><p>Find an occupation and look inside its working week.</p></div>
+      <div class="search-row">
+        <label class="sr" for="hero-query">Find your occupation</label>
+        <input id="hero-query" type="search" placeholder="Try software developer or teacher" autocomplete="off">
+        <button class="btn primary" type="submit">Explore</button>
+      </div>
+    </form>
 
     <section class="panel" aria-labelledby="timeline-h">
       <div class="panel-head">
@@ -127,7 +143,7 @@
   <section id="view-tasks" class="view" aria-labelledby="tasks-h" hidden>
     <div class="lead lead-sm">
       <h1 id="tasks-h">Task types</h1>
-      <p class="lede">Every task in every job maps to one of these 29 types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence and sources behind it.</p>
+      <p class="lede">Every task in every job maps to one of these <span id="arch-count">30</span> types. Each is scored for how much of it the frontier model can do at professional quality, now and for the next two generations, up to a ceiling set by things intelligence can't change. Select a row for the evidence and sources behind it.</p>
     </div>
     <div class="filters">
       <label class="ctl"><span>Order by</span>
@@ -164,7 +180,7 @@
         <li><b>Forecast ranges stop at today's score and at the ceiling</b>, since scores do not fall and cannot pass the ceiling.</li>
         <li><b>Every snapshot highlight links to its sources</b>, and the source tiers are defined by who ran the evaluation.</li>
         <li><b>Corrections from three source checks</b>: METR horizons and doubling time, the OSWorld and τ²-bench airline figures, Mercor's wording, the frontier on each snapshot date, and primary pages in place of aggregators for GDPval-AA and τ²-bench telecom.</li>
-        <li><b>Reading aids</b>: a definition under the headline, the level at saturation, a biggest-gains list, a pace check under the timeline, and higher-contrast tier colours.</li>
+        <li><b>Reading aids</b>: a definition under the headline, the level at saturation, a biggest-gains list, a pace check beside the forecasts, higher-contrast tier colours, and tooltips that explain and highlight each band, step through a task type's history and open the evidence behind each snapshot.</li>
       </ul>
     </section>
     <section class="panel" aria-labelledby="hist-h">
@@ -174,7 +190,7 @@
       </div>
       <div class="snapshots" id="snapshots"></div>
     </section>
-    <section class="panel" aria-labelledby="check-h">
+    <section class="panel" id="m-forecasts" aria-labelledby="check-h">
       <div class="panel-head">
         <h2 id="check-h">Checking the forecasts</h2>
         <p class="note">Each live snapshot's Frontier+1 and Frontier+2 forecasts are kept when it is retired, so the next snapshots can be scored against them.</p>
@@ -203,7 +219,7 @@
   </section>
 </main>
 
-<div id="tooltip" class="tooltip" aria-hidden="true" hidden></div>
+<div id="tooltip" class="tooltip" aria-hidden="true"></div>
 <script type="module" src="assets/app.js"></script>
 </body>
 </html>
