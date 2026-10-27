@@ -4,7 +4,7 @@
   "anchor": "Claude Opus 4.6",
   "label": "Opus release",
   "kind": "backfill",
-  "peers": "GPT-5.3-Codex (same day; TB 2.0 77.3%), Gemini 3.1 Pro (Feb 19; top of AA index), GPT-5.4 (Mar 5; GDPval 83.0%, OSWorld-V 75.0%)",
+  "peers": "GPT-5.3-Codex (same day; TB 2.0 77.3%), Gemini 3.1 Pro (Feb 19; top of AA index), GPT-5.4 (Mar 5; GDPval 83.0%, OSWorld-V 75.0%). Contested",
   "highlights": [
     "METR 11h59m / 1h10m",
     "OSWorld-Verified 72.7%; GDPval-AA +144 Elo over GPT-5.2 and +190 over Opus 4.5",
@@ -100,5 +100,5 @@
       "f0": 2
     }
   },
-  "frontier": "Contested: Opus 4.6 and GPT-5.3-Codex, released the same day; Gemini 3.1 Pro (Feb 19) and GPT-5.4 (Mar 5) followed within a month"
+  "frontier": "Contested: Opus 4.6, GPT-5.4 (OSWorld-Verified, GDPval) and Gemini 3.1 Pro (Intelligence Index)"
 }

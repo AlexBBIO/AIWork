@@ -1,0 +1,121 @@
+{
+  "id": "opus-5",
+  "date": "2026-07-24",
+  "anchor": "Claude Opus 5",
+  "label": "Opus release",
+  "kind": "backfill",
+  "peers": "Claude Fable 5 (public) / Mythos 5 (gated), both Jun 9; GPT-5.6 Sol (Jul 9; AA index 59 vs Fable 5's 60)",
+  "highlights": [
+    {
+      "text": "SWE-bench Pro 79.2% vs Fable 5 80.3%; OSWorld 2.0 70.6% vs GPT-5.6 Sol 62.6% (vendor, via DataCamp)",
+      "sources": [
+        "datacamp-opus-5"
+      ]
+    },
+    {
+      "text": "BrowseComp 90.8%; GDPval-AA v2 1861 vs GPT-5.6 Sol 1736",
+      "sources": [
+        "datacamp-opus-5"
+      ]
+    },
+    {
+      "text": "Fable 5 RLI 15.8%; the frontier \"more than quadrupled in under eight months\"",
+      "sources": [
+        "cais-rli"
+      ]
+    }
+  ],
+  "scores": {
+    "draft": {
+      "f0": 82
+    },
+    "edit": {
+      "f0": 86
+    },
+    "translate": {
+      "f0": 76
+    },
+    "research": {
+      "f0": 76
+    },
+    "analysis": {
+      "f0": 62
+    },
+    "expert": {
+      "f0": 54
+    },
+    "diagnosis": {
+      "f0": 53
+    },
+    "code": {
+      "f0": 78
+    },
+    "debug": {
+      "f0": 66
+    },
+    "design_tech": {
+      "f0": 47
+    },
+    "entry": {
+      "f0": 82
+    },
+    "docproc": {
+      "f0": 75
+    },
+    "accounting": {
+      "f0": 64
+    },
+    "compliance": {
+      "f0": 62
+    },
+    "scheduling": {
+      "f0": 62
+    },
+    "project": {
+      "f0": 54
+    },
+    "followup": {
+      "f0": 69
+    },
+    "service": {
+      "f0": 80
+    },
+    "support": {
+      "f0": 69
+    },
+    "creative": {
+      "f0": 56
+    },
+    "media": {
+      "f0": 33
+    },
+    "grading": {
+      "f0": 70
+    },
+    "teaching": {
+      "f0": 9
+    },
+    "sales": {
+      "f0": 26
+    },
+    "relationship": {
+      "f0": 11
+    },
+    "meetings": {
+      "f0": 7
+    },
+    "people": {
+      "f0": 12
+    },
+    "strategy": {
+      "f0": 28
+    },
+    "care": {
+      "f0": 8
+    },
+    "physical": {
+      "f0": 3
+    }
+  },
+  "frontier": "Claude Fable 5, public since June 9; this point is scored at Fable 5 level"
+}

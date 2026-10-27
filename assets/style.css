@@ -114,7 +114,6 @@ main { padding-block: var(--s-6) var(--s-7); }
 .view { display: flex; flex-direction: column; gap: var(--s-5); }
 .lead { display: flex; flex-direction: column; gap: var(--s-3); padding-bottom: var(--s-2); }
 .eyebrow { font: 500 0.8rem var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.def { color: var(--ink); max-width: 66ch; font-size: 0.95rem; font-weight: 500; border-left: 3px solid var(--accent); padding-left: var(--s-3); }
 .lede { color: var(--ink-2); max-width: 66ch; font-size: 1.05rem; }
 .banner { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; background: var(--banner-bg); color: var(--banner-ink); padding: var(--s-2) var(--s-3); border-radius: var(--radius); font-size: 0.9rem; margin-bottom: var(--s-4); }
 .banner .link-btn { color: inherit; }
@@ -143,7 +142,6 @@ main { padding-block: var(--s-6) var(--s-7); }
 .swatch.open, .fill-open { background: repeating-linear-gradient(135deg, var(--open) 0 3px, transparent 3px 6px); background-color: color-mix(in srgb, var(--open) 35%, var(--surface)); }
 .swatch.human, .fill-struct { background: var(--struct); }
 .swatch.line { width: 14px; height: 2px; border-radius: 0; background: var(--ink); }
-.swatch.trend { border-radius: 50%; border: 2px solid var(--muted); background: var(--surface); }
 .legend { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); font-size: 0.82rem; color: var(--ink-2); }
 .legend > span { display: inline-flex; align-items: center; gap: var(--s-2); }
 .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
@@ -278,7 +276,6 @@ table.data td.num, table.data th.num { text-align: right; font-family: var(--f-m
 #arch-table input[type="number"] { width: 4.2rem; text-align: right; font-family: var(--f-mono); font-size: 0.82rem; padding: 0.25rem 0.35rem; min-height: 1.9rem; }
 #arch-table input.edited { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 table.calib td.diff { font-family: var(--f-mono); font-size: 0.8rem; }
-table.calib tr.off td { color: var(--muted); }
 
 /* Method */
 .snapshots { display: flex; flex-direction: column; gap: var(--s-3); }

@@ -4,7 +4,7 @@
   "anchor": "Claude Opus 4.1",
   "label": "Before agentic models",
   "kind": "backfill",
-  "peers": "GPT-5 (Aug 7), Gemini 2.5 Pro",
+  "peers": "GPT-5 (Aug 2025), Gemini 2.5 Pro. Contested: Opus 4.1 led GDPval, GPT-5 led METR horizon",
   "highlights": [
     "GDPval 47.6% wins-or-ties, best of all models tested",
     "METR 1h40m at 50% / 23m at 80%, vs GPT-5 3h23m / 38m (METR's current results file)",
@@ -100,6 +100,6 @@
       "f0": 1
     }
   },
-  "frontier": "Claude Opus 4.1, best on GDPval; GPT-5 followed two days later and led METR's time horizon",
+  "frontier": "Contested: Opus 4.1 led GDPval, GPT-5 led METR's horizon",
   "milestone": true
 }

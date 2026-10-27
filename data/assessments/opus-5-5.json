@@ -4,7 +4,7 @@
   "anchor": "Claude Opus 5.5",
   "label": "Current frontier",
   "kind": "live",
-  "peers": "Fable 5.1 / Mythos 5.1 (Sep 1), GPT-6 Astra (Sep 4), Gemini 4 Argon (GA Oct 13)",
+  "peers": "Fable 5.1 / Mythos 5.1 (Sep 1), GPT-6 Astra (Sep 4), Gemini 4 Argon (GA Oct 13). Opus 5.5 is the frontier: AA #1 (58), ECI 169 tied with GPT-6 Astra",
   "highlights": [
     "RLI 21.25%, #1 (GPT-6 Astra 20.83%)",
     "GDPval-AA v2.1 1846 on Anthropic's table, tracked to 1866 by mid-October",
@@ -14,12 +14,12 @@
   "updated": "2026-10-27",
   "cadence_months": 6,
   "definition": "Share of the time professionals currently spend on a task that the best publicly available model could do at the quality of a competent professional, with no more than light review, given tools and integrations reasonably available at the time. It measures technical capability, not adoption.",
-  "method_note": "Scores triangulate expert-parity rates (GDPval), reliability-adjusted time horizons (METR 80%), end-to-end automation rates (Remote Labor Index), narrow agentic benchmarks and labor-side studies. Frontier+1 and Frontier+2 are not separate judgments: each is Now + g × (Ceiling − Now), applied twice, with g about 0.40 for codified types (0.45 for coding and debugging), 0.25 for judgment types (0.20 for accountable strategy) and 0.10 to 0.15 for interpersonal and physical types, set from the pace at which scores closed their gaps over the previous ten months, scaled to one generation.",
-  "report_url": "https://github.com/AlexBBIO/AIWork/blob/HEAD/reports/AI%20saturation%20of%20white%20collar%20work.md",
+  "method_note": "Scores triangulate expert-parity rates (GDPval), reliability-adjusted time horizons (METR 80%), end-to-end automation rates (Remote Labor Index), narrow agentic benchmarks and labor-side studies. Frontier+1 and Frontier+2 are not separate judgments: each is Now + g × (Ceiling − Now), applied twice, with g about 0.40 for codified types (0.45 for coding and debugging), 0.25 for judgment types (0.20 for accountable strategy) and 0.10 to 0.15 for interpersonal and physical types, the pace at which scores closed their gaps over the previous ten months. See reports/AI saturation of white collar work.md.",
   "caveats": [
-    "Scores are calibrated judgments, not direct measurements. Sales, scheduling, compliance review, claims processing, bookkeeping, creative concepting, systems design and 2026 translation have no benchmark with published model scores.",
-    "Most 2026 benchmark figures are vendor-reported and reached through secondary sites; every source is tiered as primary, independent or secondary. METR has published no time horizon for any Anthropic model since Mythos Preview (April 2026); its only later horizon, about 11 hours for GPT-5.6 Sol in June 2026, is one METR itself does not consider robust.",
+    "Scores are calibrated judgments, not direct measurements. Sales, scheduling, compliance, bookkeeping and 2026 translation have no benchmark with published model scores; 55% of the wage-weighted index sits in task types scored with low confidence.",
+    "Most 2026 benchmark figures are vendor-reported and reached through secondary sites; every source is tiered as primary, independent or secondary. No independent METR time horizon exists for any model released after May 2026.",
     "Earlier snapshots score the best publicly available model on each Opus release date, excluding gated models such as Mythos Preview. The Opus 5 point is scored at Fable 5 level, the public frontier at the time.",
+    "Forecast ranges are ±5 points at Frontier+1 and ±8 at Frontier+2 for medium-confidence task types, narrower for high and wider for low. The index range sums them, which assumes the errors move together.",
     "Task time shares are the author's estimates informed by O*NET task statements; no survey measures white-collar time by activity, and from 2027 on the mix matters more than the scores."
   ],
   "sources": [
@@ -340,7 +340,7 @@
       "group": "Professional-work benchmarks",
       "tier": "independent",
       "accessed": "2026-10-27",
-      "note": "Updated September 2026 (mean score) with different figures from the July snapshot used here"
+      "note": "Re-run in September 2026 with different figures from the July snapshot used here"
     },
     {
       "id": "llmlearner-tau2-telecom",
@@ -376,6 +376,15 @@
       "tier": "secondary",
       "accessed": "2026-10-27",
       "note": "Notes OpenAI's July 2026 audit found about 30% of the public split broken"
+    },
+    {
+      "id": "decodethefuture",
+      "title": "decodethefuture, AI agent benchmarks 2026",
+      "url": "https://decodethefuture.org/en/ai-agent-benchmarks-2026/",
+      "group": "Professional-work benchmarks",
+      "tier": "secondary",
+      "accessed": "2026-10-27",
+      "note": "Blocks automated fetching"
     },
     {
       "id": "andonlabs-vb2",
@@ -443,7 +452,7 @@
       "group": "Professional-work benchmarks",
       "tier": "secondary",
       "accessed": "2026-10-27",
-      "note": "Partial and strict scores attributed to Anthropic system cards; lists no Opus 5.5 row"
+      "note": "Partial and strict scores attributed to Anthropic system cards"
     },
     {
       "id": "bettersheets",
@@ -487,7 +496,7 @@
       "group": "Capability trends and forecasts",
       "tier": "independent",
       "accessed": "2026-10-27",
-      "note": "Per-model 50% and 80% horizons after the March 2026 correction; doubling time 128.7 days, fitted without models above 16 hours"
+      "note": "Per-model 50% and 80% horizons after the March 2026 correction"
     },
     {
       "id": "metr-th11",
@@ -512,8 +521,7 @@
       "url": "https://metr.org/blog/2026-06-26-gpt-5-6-sol/",
       "group": "Capability trends and forecasts",
       "tier": "independent",
-      "accessed": "2026-10-27",
-      "note": "Pre-deployment; about 11.3 hours at 50%, which METR does not consider a robust measurement"
+      "accessed": "2026-10-27"
     },
     {
       "id": "epoch-brief",
@@ -931,6 +939,7 @@
       "sources": [
         "llmlearner-tau2-telecom",
         "llmstats-opus-4-8",
+        "decodethefuture",
         "benchmarklist-osworld2"
       ]
     },
@@ -1070,21 +1079,21 @@
     "code": "SWE-bench Pro climbed 53.4% (Opus 4.6) → 64.3% → 69.2% → 79.2% (Opus 5, vendor-reported via DataCamp); METR's 80% horizon rose from 23 minutes (Opus 4.1) to 49 minutes (Opus 4.5), 70 minutes (Opus 4.6) and 3h06m (Mythos Preview); harder FrontierCode sits at 54.4%.",
     "debug": "Terminal-Bench 2.0 rose from 59.3% (Opus 4.5) to 69.4% (Opus 4.7), with GPT-5.3-Codex and GPT-5.5 at 77–83%; harder TB 4.0 went 52.3% → 66.4% from Opus 5 to 5.5 (59.6% independently measured).",
     "design_tech": "No direct benchmark. Agents now finish 680,000-line migrations in under a day, but METR saw limited judgement and taste gains in Opus 5.5, and CAIS found Fable 5's CAD and architecture deliverables unacceptable as finished work.",
-    "entry": "OSWorld-Verified climbed from 66.3% (Opus 4.5) to 83.4% (Opus 4.8), past the 72.4% human baseline that GPT-5.4 first crossed in March 2026; SpreadsheetBench V1 is ~99% but 12–14% of tasks flip between runs, and on OSWorld 2.0 Anthropic's strict full-completion rates run about 36 points below partial credit (Fable 5.1: 77.9% partial, 41.7% strict).",
+    "entry": "OSWorld-Verified climbed from 66.3% (Opus 4.5) to 83.4% (Opus 4.8), past the 72.4% human baseline that GPT-5.4 first crossed in March 2026; SpreadsheetBench V1 is ~99% but 12–14% of tasks flip between runs, and on OSWorld 2.0 Anthropic's strict full-completion rates run about 35 points below partial credit (Fable 5.1: 77.9% partial, 41.7% strict).",
     "docproc": "No claims-processing benchmark; Vals archived MortgageTax and similar QA sets as saturated, GDPval models neared expert parity in government and retail tasks, and Office & Admin API traffic rose to 13%; exception handling keeps scores below data entry.",
     "accounting": "No public month-end-close leaderboard exists (AccountingBench publishes none); general models score about 35% on real-workbook SpreadsheetBench V2 and Tax Agent Bench ranks Opus 5.5 third, so zero-error reconciliation still demands real checking.",
     "compliance": "Policy-following is strong (tau2 telecom 99%; LegalBench led by Fable 5), but no compliance-review benchmark exists, ESADE puts 44.7% of legal time in tacit expert judgement, and attestations need a named accountable human.",
     "scheduling": "No scheduling benchmark; computer use passed the human OSWorld-Verified baseline in March 2026 (GPT-5.4 75.0% vs 72.4%), the harder tau2 airline domain tops out near 88%, and Cowork (January) plus Claude in Chrome (GA August) added calendar and browser access; multi-party coordination is unmeasured.",
     "project": "Opus 5 grew a simulated vending business to $11,182 on Vending-Bench 2; AutomationBench reached 40.0% on Anthropic's run (Gemini 4 Argon reports 51.3%) and RLI 21.25% (Opus 5.5), while the reliable horizon of hours trails multi-week projects.",
     "service": "tau2 telecom saturated at 99% (Opus 4.6) while the harder airline domain tops out near 88%; Anthropic's observed-exposure study ranks customer service representatives second only to programmers, but live channels need every answer right, not most of them.",
-    "support": "tau2 telecom, a simulated user-troubleshooting task, is saturated near 99%, and OSWorld-Verified reached 83.4% (Opus 4.8), past the 72.4% human baseline, but strict full-completion rates on OSWorld 2.0 run about 36 points below partial credit and hardware fixes stay on-site.",
+    "support": "tau2 telecom, a simulated user-troubleshooting task, is saturated near 99%, and OSWorld-Verified reached 83.4% (Opus 4.8) and ~90% by October 2026, but strict full-completion rates on OSWorld 2.0 run about 35 points below partial credit and hardware fixes stay on-site.",
     "creative": "No concept-quality benchmark; CAIS reports hours-long digital art now done in minutes and 80% of Claude marketing-content conversations are work, but METR saw limited taste gains in Opus 5.5, and ESADE finds authorship co-occurs with exposure rather than shielding against it, so what keeps credited ideas with people is preference and accountability.",
     "media": "Remote Labor Index rose from 2.5% (October 2025) to 21.25% (Opus 5.5), yet CAIS judged Fable 5's 2D video ads, 3D/CAD and architecture deliverables unacceptable, and Microsoft found image generation among the lowest-success Copilot activities.",
     "grading": "Vals' SAGE grading benchmark ranks Opus 4.7 first (scores unpublished), Educational Instruction rose from 9% to 15% of Claude.ai use, and rubric-style text work is near parity; teachers still own grades and sensitive feedback.",
     "teaching": "ESADE rates presence-requiring tasks 14.1% replaceable versus 70.5% for purely informational ones; AI explanation is strong in chat, but classroom instruction and behaviour management need an accountable adult in the room.",
     "sales": "No benchmark; sales-outreach automation at least doubled its share of Claude API traffic by February 2026 and Microsoft scores services sales reps 0.35 applicability, but Vending-Bench 2 scores negotiation on profit, not on trust, and no study measures whether counterparties accept an agent.",
     "relationship": "No benchmark exists; ESADE's relational-nexus bundling factor is nearly uncorrelated with exposure (correlation of at most 0.13), and Stanford finds employment flat or rising where AI complements experienced workers; AI drafts the check-in, the trust accrues to people.",
-    "meetings": "Most of this time is live participation, the human contribution. The score credits the prep, notes, summaries and async replies inside it, and Microsoft finds the AI's own actions centre on communicating, but no benchmark measures a model standing in for a participant.",
+    "meetings": "Notes and summaries score under editing; live participation is the human contribution. Microsoft finds the AI's own actions centre on communicating, which supports async answers, but no benchmark measures a model standing in for a participant.",
     "people": "Management is only 3–5% of Claude.ai conversations, ESADE's organisational-responsibility factor keeps hiring and performance decisions with a person, and screening or drafting subtasks score elsewhere, leaving AI a support role.",
     "strategy": "Mercor's APEX-Agents consulting scores reached ~80% for Opus 5.5 (metric unlabeled), but ESADE rates tacit C4 judgement 0% replaceable and 74.4% augmentable, and METR saw limited judgement gains: analysis delegates, accountable decisions do not.",
     "care": "Microsoft scores home health aides and nursing assistants 0.04 applicability, and ESADE puts community and social service expert complementarity at 26.8% of time; case notes score under documents, while the in-person relationship stays human.",
@@ -1122,10 +1131,6 @@
       "41": 59.2,
       "43": 65.2
     },
-    "note": "ESADE rates all 24,087 O*NET task-activity pairs against 33 benchmarks, time-weights tasks within each occupation with UK ONS data, and averages occupations within a group without employment weights, so neither Headroom weighting is exactly like for like. Its Sales group includes about 7 million retail salespersons and cashiers, and its Healthcare group covers every practitioner, so those two rows are not comparable. Headroom's 'light review' standard sits between ESADE's replace and augment layers.",
-    "not_comparable": [
-      "29",
-      "41"
-    ]
+    "note": "ESADE rates all 24,087 O*NET task-activity pairs against 33 benchmarks and time-weights them with UK ONS data. Its Sales group includes about 7 million retail salespersons and cashiers, and its Healthcare group covers every practitioner, so those two rows are not like for like. Headroom's 'light review' standard sits between ESADE's replace and augment layers."
   }
 }

@@ -4,7 +4,7 @@ Date: 2026-10-27. Scope: the site, the model, the data, the report, and a re-che
 
 ## Verdict
 
-The thesis holds up and the site presents it well. The model reproduces, the forecasts are a fair continuation of the record, the report matches the data exactly, and the sources behind the biggest numbers check out. This pass found one modelling inconsistency (forecast ranges that broke the model's own rules), one claim the site's own report contradicted (no METR horizon after May 2026), one figure with no readable source (OSWorld-Verified "about 90%"), and a set of smaller wording, labelling and UX issues. All of those are fixed on this branch. A short list of judgment calls is left for you at the end.
+The thesis holds up and the site presents it well. The model reproduces, the forecasts are a fair continuation of the record, the report matches the data exactly, and the sources behind the biggest numbers check out. This pass found one modelling inconsistency (forecast ranges that broke the model's own rules), one claim the site's own report contradicted (no METR horizon after May 2026), one figure with no readable source (OSWorld-Verified "about 90%"), and a set of smaller wording, labelling and UX issues. All of those are fixed in the Opus revision, served at `/Opus/` from the `Opus/` folder, together with the further improvements listed at the end. The original site at `/` is unchanged; the corrections to the research report apply to both.
 
 ## What checks out
 
@@ -34,7 +34,7 @@ The thesis holds up and the site presents it well. The model reproduces, the for
 
 **Build and render.** Validator, 11 unit tests and the browser smoke test pass. All four views render at 1280px and 390px in light and dark mode with no console errors and no horizontal overflow. Deep links land below the sticky header.
 
-## Fixed in this pass
+## Fixed in the Opus revision
 
 ### Model
 
@@ -69,17 +69,33 @@ The thesis holds up and the site presents it well. The model reproduces, the for
 16. **Sources list** states the common access date once instead of repeating it on all 81 entries.
 17. **Shared scenario links** now carry the weighting, so the recipient sees the same numbers.
 
-## Left for you
+## Further changes in the Opus revision
 
-Ranked by how much they would improve the site. None is a correction.
+These were judgment calls rather than corrections; they are made in `/Opus/` only.
 
-1. **Split `meetings`.** It is the largest task type (10.7% of the wage-weighted index), low confidence, and blends prep, notes and async replies (which AI does well) with live participation (which it does not). Splitting it would make the score defensible line by line and would probably raise the index slightly: each 5 points on the meetings score moves the headline by about half a point. This is a modelling choice, so I did not make it.
-2. **Link the snapshot highlights to sources.** The benchmark figures on the Method tab's snapshot cards carry no links; 41 of the 81 sources are reachable only from the full list. A `sources` array per highlight, like the task types have, would close that.
-3. **F+2 colour contrast.** The Frontier+2 blue is about 2.1:1 against the surface in both themes (#86b6ef on white, #184f95 on #161a21), under the 3:1 guideline for chart marks. It shows in the week grid and the dot plot. A slightly deeper light-mode value and a lighter dark-mode value would fix it without changing the palette's logic.
-4. **A "biggest movers" list on the Overview.** Most and least exposed today are both static rankings. A list of jobs gaining the most hours by Frontier+2 would show where the change lands next, which is the thesis's forward-looking half.
-5. **Remaining secondary relays.** The 1866 GDPval-AA figure rests on an anonymous aggregator (itdoeswhatnow); the four BenchLM pages mix benchmark versions. Where Artificial Analysis publishes the figure directly, cite it instead.
-6. **Generate the share image in the build.** `assets/og.png` is a static picture of the headline; the README now lists it as a step when adding an assessment, but rendering it from the data would stop it going stale.
-7. **Small interaction fixes.** Group rows look clickable while a search is active but do nothing; Mercor's own benchmark pages could be tiered primary rather than independent.
+1. **Meetings is split in two.** `meetings` was the largest task type (10.7% of the wage-weighted index) and blended prep, notes and async replies with live participation. Its evidence note said the score of 18 credited the prep and follow-up inside it, but a quarter of that time at a writing-work score would on its own contribute more than 18 points, so the old score implied almost no follow-up time. The revision has two types:
+
+   | Task type | Opus 4.1 → 5.5 | F+1 | F+2 | Ceiling | Confidence |
+   |---|---|---|---|---|---|
+   | Live meetings & discussion (`meetings`) | 3, 4, 5, 6, 6, 7, 8 | 14 | 19 | 45 | Low |
+   | Meeting prep, notes & follow-up (`followup`) | 36, 48, 56, 61, 65, 69, 73 | 80 | 84 | 90 | Low |
+
+   Every meetings task is split the same way: three quarters live, one quarter prep and follow-up, an assumption, since no survey splits meeting time this way. Follow-up tracks drafting about 11–14 points lower, because it needs transcripts and workplace context that GDPval-style tasks hand over; its forecast uses the codified closure rate (0.40). Live meetings use the interpersonal rate (0.15), and its ceiling of 45 keeps the combined ceiling where it was (0.75 × 45 + 0.25 × 90 ≈ 56, against 55). Twenty occupations now have seven tasks, so the task limit is 2 to 7.
+
+   | Wage-weighted index | Original | Revision |
+   |---|---|---|
+   | Opus 4.1 | 25.3 | 25.7 |
+   | Now (Opus 5.5) | 47.9 | 48.6 |
+   | Frontier+1 | 54.7 | 55.4 |
+   | Frontier+2 | 59.3 | 60.0 |
+   | Ceiling | 74.3 | 74.5 |
+
+   The headline rounds to 49% instead of 48%, and the gain since Opus 4.1 is unchanged at 23 points.
+2. **Snapshot highlights cite their sources.** Each highlight is now `{text, sources}`, shown as tiered links on the Method tab; the validator rejects unknown ids.
+3. **Higher-contrast tier colours.** Now, F+1 and F+2 are at least 3.2:1 against the surface in both themes (they were as low as 2.1:1), and the three tiers sit about 1.7–2:1 apart, separated by the bars' 2px gaps.
+4. **Biggest gains list** on the Overview: the six jobs that gain the most points by Frontier+2.
+5. **Share image from data.** `scripts/og.mjs` renders `assets/og.png` from a site's live assessment and palette; the revision's image shows 49%.
+6. **Interaction and labelling.** Groups can be collapsed while a search is showing them. On reflection the Mercor, Scale, Vals and Andon Labs pages are correctly tiered independent (third parties evaluating other companies' models); the tier definitions on the Method tab now say that instead of calling benchmark authors primary. A "This revision" panel on the Method tab lists the changes and links back to the original.
 
 ## Appendix: how this pass was done
 

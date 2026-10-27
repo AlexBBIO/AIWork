@@ -18,6 +18,10 @@ Occupations are weighted by **wages** (employment × mean wage) or by **people**
 
 **History:** each Claude Opus release since Opus 4.1 (Aug 2025) is a dated snapshot. Earlier snapshots are *backfilled*: scored after the fact from benchmark results, for the frontier only, and the point reflects the best public model on that date even when it was not the Opus model (the Opus 5 point is scored at Fable 5 level). The live snapshot also carries forecasts for Frontier+1 and Frontier+2 with explicit dates. The research behind the scores is in `reports/` and `research_notes/`; `reports/site_audit_2026-10-27.md` is an audit of the site and its sources, and `reports/site_audit_2026-10-27_second_pass.md` a follow-up check.
 
+## Two versions
+
+The root site (`/`) is the original. `Opus/` is a revised version served at `/Opus/`, built from the audits in `reports/`: meetings split into live meetings and prep and follow-up, forecast ranges cut off at today's score and the ceiling, sourced snapshot highlights, higher-contrast colours and the corrections from both source checks. Each version has its own `index.html`, `assets/` and `data/`, so they can differ without affecting each other; `Opus/tests/` holds the revision's tests. To make the revision the main site, copy `Opus/index.html`, `Opus/assets` and `Opus/data` over the root ones.
+
 ## Files
 
 ```
@@ -33,17 +37,19 @@ data/assessments/<id>.json     one snapshot (ids are the anchor model, e.g. opus
 reports/, research_notes/      research behind the scores
 assets/model.js                the model (shared by site, validator and tests)
 assets/app.js, style.css       the site
-scripts/validate.mjs           checks the data and prints the headline numbers
-scripts/build.mjs              validates, copies the site into dist/ and writes data/bundle.json
-scripts/smoke.mjs              browser smoke test against dist/ (needs playwright)
-tests/model.test.mjs           unit tests for the model (node --test)
+scripts/validate.mjs           checks the data and prints the headline numbers (--site Opus for the revision)
+scripts/build.mjs              validates both sites, copies them into dist/ and dist/Opus/, writes data/bundle.json
+scripts/smoke.mjs              browser smoke test of both sites against dist/ (needs playwright)
+scripts/og.mjs                 renders a site's share image, assets/og.png, from its data (needs playwright)
+tests/model.test.mjs           unit tests for the model (node --test runs these and Opus/tests/)
+Opus/                          the revised site: index.html, assets/, data/, tests/
 ```
 
 ## Running locally
 
 ```sh
 python3 -m http.server 8000   # then open http://localhost:8000 (the site falls back to the source data files)
-node scripts/validate.mjs     # validate data and print the index
+node scripts/validate.mjs     # validate data and print the index (add --site Opus for the revision)
 node --test                   # unit tests
 node scripts/build.mjs        # validate and build dist/
 ```
@@ -57,7 +63,7 @@ The site is addressable: `#jobs/<occupation id>` opens a job, `#tasks/<task type
 3. For an occupation where a task type behaves differently, add an override: `"overrides": {"lawyer:draft": {"f0": 60, "f1": 78, "f2": 88, "ceiling": 95}}`.
 4. Change the previous live file's `kind` to `backfill` but **keep** its `f1`, `f2`, `ceiling` and `forecast_dates`: the Method tab scores each retired forecast against the snapshot closest to its due date.
 5. Add the id to `index.json`, set `latest`, and run `node scripts/validate.mjs` and `node --test`. The validator rejects a `latest` that is not live, missing evidence or confidence, unknown source ids, a score that falls between snapshots, and malformed dates.
-6. Update `assets/og.png`, the share image: it shows the headline percentage and the band split as a static picture.
+6. Regenerate the share image with `node scripts/og.mjs` (and `--site Opus`): it shows the headline percentage and the band split as a static picture.
 
 ## Caveats
 
@@ -69,7 +75,7 @@ The site is addressable: `#jobs/<occupation id>` opens a job, `#tasks/<task type
 
 ## Deploying
 
-The site is static and deploys on Vercel. `vercel.json` runs `node scripts/build.mjs`, which validates the data (a bad data file fails the deploy), copies `index.html`, `assets/` and `data/` into `dist/` and writes `dist/data/bundle.json` so the page loads with one data request. Research notes and reports are not deployed.
+The site is static and deploys on Vercel. `vercel.json` runs `node scripts/build.mjs`, which validates the data (a bad data file fails the deploy), copies `index.html`, `assets/` and `data/` into `dist/` and writes `dist/data/bundle.json` so the page loads with one data request. The Opus revision goes to `dist/Opus/`; `trailingSlash` in `vercel.json` sends `/Opus` to `/Opus/` so its relative paths resolve. Research notes and reports are not deployed.
 
 To set it up, import the GitHub repo at https://vercel.com/new, keep the settings from `vercel.json`, and deploy. Every push to the production branch then redeploys; other branches get preview URLs. Once the domain is known, set `og:image` in `index.html` to the absolute URL of `assets/og.png` and add `og:url`.
 

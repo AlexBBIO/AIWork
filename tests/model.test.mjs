@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { computeModel, projectArchetype, scoreBand, scoreRange, validate, validateIndex } from "../assets/model.js";
+import { computeModel, projectArchetype, scoreBand, validate, validateIndex } from "../assets/model.js";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../data/${p}`, import.meta.url)));
 const taxonomy = read("taxonomy.json");
@@ -40,7 +40,7 @@ test("backfilled snapshots collapse every tier onto f0", () => {
   const a = assessments[index.assessments[0]];
   assert.equal(a.kind, "backfill");
   const m = computeModel({ taxonomy, occupations, assessment: a });
-  for (const x of m.archetypes) { assert.equal(x.f1, x.f0); assert.equal(x.f2, x.f0); assert.deepEqual(x.range.f2, [x.f0, x.f0]); }
+  for (const x of m.archetypes) { assert.equal(x.f1, x.f0); assert.equal(x.f2, x.f0); assert.equal(x.band.f1, 0); }
   for (const v of m.index.proj) close(v, m.index.f0);
 });
 
@@ -74,23 +74,7 @@ test("uncertainty bands follow confidence", () => {
   assert.ok(high.f1 < low.f1 && high.f2 < low.f2);
   assert.ok(low.f2 > low.f1);
   const m = computeModel({ taxonomy, occupations, assessment: live });
-  const width = (r) => r[1] - r[0];
-  assert.ok(width(m.index.range.f2) > width(m.index.range.f1) && width(m.index.range.f1) > 0);
-});
-
-test("forecast ranges stay between today's score and the ceiling", () => {
-  assert.deepEqual(scoreRange({ f0: 18, f1: 24, f2: 29, ceiling: 55 }, { f1: 7, f2: 11.2 }).f1, [18, 31]);
-  assert.deepEqual(scoreRange({ f0: 88, f1: 92, f2: 95, ceiling: 99 }, { f1: 5, f2: 8 }).f2, [88, 99]);
-  for (const weight of ["wage", "employment"]) {
-    const m = computeModel({ taxonomy, occupations, assessment: live, weight });
-    for (const x of m.archetypes) for (const k of ["f1", "f2"]) {
-      const [lo, hi] = x.range[k];
-      assert.ok(lo >= x.f0 && lo <= x[k] && hi >= x[k] && hi <= x.ceiling, `${x.id} ${k}: ${lo}–${hi}`);
-    }
-    const { f0, f1, f2, limit, range } = m.index;
-    assert.ok(range.f1[0] >= f0 && range.f1[0] < f1 && range.f1[1] > f1 && range.f2[1] <= limit);
-    assert.ok(range.f2[0] < f2 && range.f2[1] > f2);
-  }
+  assert.ok(m.index.band.f2 > m.index.band.f1 && m.index.band.f1 > 0);
 });
 
 test("the shipped data validates", () => {
