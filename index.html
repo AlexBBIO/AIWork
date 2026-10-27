@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Headroom Index</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How much U.S. white-collar work current and next-generation AI models can do, task by task, and how far that is from saturation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="mast">
+  <div class="wrap mast-row">
+    <div class="brand">
+      <span class="brand-name">Headroom</span>
+      <span class="brand-sub">U.S. white-collar work vs. AI capability</span>
+    </div>
+    <div class="controls">
+      <label class="ctl">
+        <span>Assessment</span>
+        <select id="assessment-select"></select>
+      </label>
+      <div class="seg" role="radiogroup" aria-label="Weight occupations by">
+        <button type="button" id="weight-wage" role="radio" data-weight="wage">Wage bill</button>
+        <button type="button" id="weight-employment" role="radio" data-weight="employment">Jobs</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow" id="hero-eyebrow">Assessment</p>
+    <h1>How much U.S. white-collar work can AI models do?</h1>
+    <p class="lede" id="hero-lede"></p>
+    <div id="edits-banner" class="banner" hidden>
+      <span>Showing your edited scores, not the published assessment.</span>
+      <button type="button" id="reset-edits-top" class="link-btn">Reset to published</button>
+    </div>
+    <div class="readout" id="readout"></div>
+    <figure class="gauge-fig">
+      <div id="gauge" class="gauge"></div>
+      <figcaption id="gauge-legend" class="legend"></figcaption>
+    </figure>
+  </section>
+
+  <section class="panel" aria-labelledby="curve-h">
+    <div class="panel-head">
+      <h2 id="curve-h">Saturation curve</h2>
+      <p class="note">Index by model generation. Frontier through Frontier+2 are scored; later generations extend each task's trend toward its limit.</p>
+    </div>
+    <div class="chart-box" id="curve"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="remain-h">
+    <div class="panel-head">
+      <h2 id="remain-h">What's left after Frontier+2</h2>
+      <p class="note">Points of total white-collar work each task type still holds after Frontier+2, split into work a smarter model could still take and work held back by presence, sign-off or human preference.</p>
+    </div>
+    <div id="remaining" class="hbars"></div>
+    <button type="button" id="remaining-toggle" class="link-btn">Show all task types</button>
+  </section>
+
+  <section class="panel" aria-labelledby="occ-h">
+    <div class="panel-head">
+      <h2 id="occ-h">Occupations</h2>
+      <p class="note">Select a row to see its task breakdown. Weight is the occupation's share of the covered white-collar total.</p>
+    </div>
+    <div class="filters">
+      <label class="ctl"><span>Group</span><select id="group-filter"><option value="">All groups</option></select></label>
+      <label class="ctl grow"><span>Search</span><input id="occ-search" type="search" placeholder="Title or SOC code"></label>
+    </div>
+    <div class="table-scroll"><table class="data" id="occ-table"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="group-h">
+    <div class="panel-head">
+      <h2 id="group-h">By occupation group</h2>
+    </div>
+    <div class="table-scroll"><table class="data" id="group-table"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="arch-h">
+    <div class="panel-head">
+      <h2 id="arch-h">Task scores</h2>
+      <p class="note">Every task maps to one of these types. Edit a score to test a scenario; edits stay in this browser only.</p>
+    </div>
+    <div class="filters">
+      <button type="button" id="reset-edits" class="btn" disabled>Reset to published</button>
+    </div>
+    <div class="table-scroll"><table class="data" id="arch-table"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="hist-h">
+    <div class="panel-head">
+      <h2 id="hist-h">Assessment history</h2>
+      <p class="note">Each assessment is a dated set of task scores. Re-scoring regularly shows whether new models land where the last projection said they would.</p>
+    </div>
+    <div class="chart-box" id="history-chart"></div>
+    <div class="table-scroll"><table class="data" id="history-table"></table></div>
+  </section>
+
+  <section class="panel method" aria-labelledby="method-h">
+    <h2 id="method-h">Method</h2>
+    <div class="method-grid">
+      <div>
+        <h3>Structure</h3>
+        <p>Each occupation is split into tasks with a share of working time. Each task maps to one of 29 task types, and each task type gets a saturation score for three model tiers plus a ceiling.</p>
+        <p id="method-definition"></p>
+      </div>
+      <div>
+        <h3>Weights</h3>
+        <p><b>Wage bill</b> weights each occupation by employment times mean wage, so the index reads as a share of what employers pay for white-collar work. <b>Jobs</b> weights by headcount, so it reads as a share of people's working time.</p>
+        <p id="method-source"></p>
+      </div>
+      <div>
+        <h3>Projection and limit</h3>
+        <p>For each task type, the limit is the lower of its ceiling and the point where the Frontier to Frontier+2 trend flattens on its own. Past Frontier+2, the gap to that limit shrinks each generation by the ratio the last step implied.</p>
+        <p>The saturation point is the first generation that adds less than one point to the index.</p>
+      </div>
+      <div>
+        <h3>Updating</h3>
+        <p>Add a dated file to <code>data/assessments/</code>, list it in <code>index.json</code>, and run <code>node scripts/validate.mjs</code>. Occupation data lives in <code>data/occupations.json</code>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="tooltip" class="tooltip" role="status" hidden></div>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>
