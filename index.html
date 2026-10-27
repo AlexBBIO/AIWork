@@ -191,8 +191,9 @@
         <div class="ctl"><span id="scen-label">Scenario</span>
           <div class="seg" role="radiogroup" aria-labelledby="scen-label" id="scen-seg"></div>
         </div>
-        <label class="ctl slider"><span>Capture growth, first year <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="5" step="0.1"></label>
-        <label class="ctl slider"><span>Capture ceiling <b id="ceiling-out"></b></span><input type="range" id="ceiling-in" min="0.05" max="0.5" step="0.01"></label>
+        <label class="ctl slider"><span data-tip='{"title": "Adoption growth", "note": "How many times more of the work AI can do it is actually doing a year from now. Growth slows as adoption nears its peak."}'>Adoption growth, first year <b id="growth-out"></b></span><input type="range" id="growth-in" min="1" max="4" step="0.1"></label>
+        <label class="ctl slider"><span data-tip='{"title": "Peak adoption", "note": "The share of the work AI can do that it ends up doing once adoption matures."}'>Peak adoption <b id="peak-out"></b></span><input type="range" id="peak-in" min="0.2" max="1" step="0.05"></label>
+        <label class="ctl slider"><span data-tip='{"title": "Labs&#39; share at peak", "note": "Lab revenue per dollar of wages for the work AI does, once adoption peaks. The rest goes to customers as savings, to software built on the models and to lower prices."}'>Labs' share at peak <b id="share-out"></b></span><input type="range" id="share-in" min="0.05" max="0.6" step="0.01"></label>
       </div>
       <div class="chart-box" id="vchart"></div>
       <div class="legend" id="vchart-legend"></div>
@@ -235,7 +236,7 @@
         <li><b>Forecast ranges stop at today's score and at the ceiling</b>, since scores do not fall and cannot pass the ceiling.</li>
         <li><b>Every snapshot highlight links to its sources</b>, and the source tiers are defined by who ran the evaluation.</li>
         <li><b>Corrections from three source checks</b>: METR horizons and doubling time, the OSWorld and τ²-bench airline figures, Mercor's wording, the frontier on each snapshot date, and primary pages in place of aggregators for GDPval-AA and τ²-bench telecom.</li>
-        <li><b>A Value page</b> that sets the frontier labs' revenue against the white-collar wage bill and projects it as models can do more of the work and labs earn more of what that work is worth, with adjustable scenarios.</li>
+        <li><b>A Value page</b> that sets the frontier labs' revenue against the white-collar wage bill and projects it as models can do more of the work, more of that work is handed to them, and labs earn a share of what it is worth, with adjustable scenarios.</li>
         <li><b>Reading aids</b>: a definition under the headline, the level at saturation, a biggest-gains list, a pace check beside the forecasts, a colour scheme where blue is AI capability and clay is the work that needs a person, and tooltips that explain and highlight each band, step through a task type's history and open the evidence behind each snapshot.</li>
       </ul>
     </section>

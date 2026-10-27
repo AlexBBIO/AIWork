@@ -148,24 +148,53 @@
       "note": "About $50B net of partners; about $68–70B gross"
     }
   ],
+  "adoption": {
+    "as_of": "2026-07-01",
+    "label": "Q3 2026",
+    "measure": "Hours saved with generative AI, as a share of all work hours, by BLS major occupation group (employed adults 18 to 64, self-reported)",
+    "by_group": {
+      "11": 5.22,
+      "13": 2.74,
+      "15": 3.64,
+      "17": 1.99,
+      "19": 2.7,
+      "21": 2.69,
+      "23": 2.61,
+      "25": 2.2,
+      "27": 2.96,
+      "29": 1.14,
+      "41": 1.51,
+      "43": 1.54
+    },
+    "all_workers": 2.08,
+    "year_ago": 2.55,
+    "sources": [
+      "stlfed-rps-time-savings",
+      "fred-blog-time-savings"
+    ],
+    "note": "Weighted by each group's share of the covered wage bill. A year earlier (Q3 2025) the same weighting gives 2.55%."
+  },
   "scenarios": {
     "slow": {
       "label": "Slow",
       "growth": 1.4,
-      "ceiling": 0.1,
-      "note": "Capture grows 1.4x in the first year toward 10% of the pay for AI-doable work: adoption stalls on integration, trust and price competition."
+      "peak": 0.5,
+      "share": 0.15,
+      "note": "Adoption grows 1.4x in the first year and levels off at half of the work AI can do, held back by integration, trust and regulation. Competition pushes the labs' share down to 15¢ per dollar of pay."
     },
     "base": {
       "label": "Base",
-      "growth": 2.0,
-      "ceiling": 0.2,
-      "note": "Capture grows 2x in the first year (it grew about 2.7x in the past year) toward 20%. This roughly matches the labs' own revenue projections for 2028 to 2030."
+      "growth": 1.8,
+      "peak": 0.75,
+      "share": 0.25,
+      "note": "Adoption grows 1.8x in the first year, between the survey's pace of hours saved (about 1.2x in the past year) and revenue's (about 5x), and levels off at three-quarters of the work AI can do. The labs' share settles at 25¢ per dollar. This roughly matches the labs' own revenue projections for 2028 to 2030."
     },
     "fast": {
       "label": "Fast",
-      "growth": 3.0,
-      "ceiling": 0.35,
-      "note": "Capture keeps its recent pace (about 3x a year) toward 35%: labs bill for agents much as firms pay for outsourced work."
+      "growth": 2.5,
+      "peak": 0.9,
+      "share": 0.35,
+      "note": "Adoption grows 2.5x in the first year as agents take on whole tasks, and reaches 90% of the work AI can do. Labs keep 35¢ per dollar, billing for agents much as firms pay for outsourced work."
     }
   },
   "projections": [
@@ -203,21 +232,22 @@
     [
       "How it is computed",
       [
-        "Lab revenue = U.S. white-collar wage bill × share of that work AI can do × capture. The wage bill is the covered occupations' employment times mean wage (BLS OEWS, May 2025), held at that level so dollars stay comparable. The share of work AI can do is this site's index, weighted by wages: its two forecasts, then its trend.",
-        "Capture is the share of the wages for AI-doable work that the labs earn as revenue. It is measured today as combined revenue divided by those wages, and projected on an S-curve: it starts at today's level, grows at the scenario's first-year rate and slows as it nears the scenario's ceiling."
+        "Lab revenue = U.S. white-collar wage bill × share of that work AI can do × share of that work AI actually does × labs' share of its value. The wage bill is the covered occupations' employment times mean wage (BLS OEWS, May 2025), held at that level so dollars stay comparable. The share AI can do is this site's index, weighted by wages: its two forecasts, then its trend.",
+        "The work AI actually does today comes from the St. Louis Fed's Real-Time Population Survey: the share of work hours that workers say generative AI saved them, by occupation group, weighted by this site's wage bill. Divided by what AI can do, it gives today's adoption. It is projected on an S-curve: it grows at the scenario's first-year rate and slows as it nears the scenario's peak."
       ]
     ],
     [
-      "What the ceiling means",
+      "The labs' share of the value",
       [
-        "A ceiling of 20% means that once adoption matures, each dollar of pay for work AI can do earns the labs about 20 cents a year. The rest stays with customers as savings, with the software built on the models, and in lower prices as labs compete. It is an assumption, not a measurement; the sliders let you set your own."
+        "Today's share is lab revenue divided by the pay for the work AI does. It comes out high, about two-thirds, partly because revenue is global and includes consumer subscriptions while the work is U.S. white-collar, and partly because the survey counts only hours that workers save themselves: it misses work agents take on without a worker in the loop and extra output in the same hours. Read it as an upper bound.",
+        "As adoption grows, the share moves to the scenario's long-run value, reaching it at peak adoption. A long-run share of 25% means each dollar of pay for work AI does earns the labs about 25 cents a year; the rest stays with customers as savings, with the software built on the models, and in lower prices as labs compete. It is an assumption, not a measurement; the sliders let you set your own."
       ]
     ],
     [
       "What this is not",
       [
-        "Lab revenue is global and includes consumer subscriptions, while the wage bill is U.S. white-collar pay, so the ratio is a yardstick for scale rather than a claim that the revenue replaces U.S. wages. About 72% of Anthropic's revenue is billed to U.S. addresses (S-1); OpenAI does not disclose a split; its revenue was about 60% consumer at the start of 2026 and mostly enterprise by August.",
-        "Anthropic books cloud-marketplace sales gross, OpenAI's figures here are net of partners, and Anthropic's latest point is a quarterly average, so today's combined figure is conservative. Revenue is not job loss, and the wage bill leaves out the self-employed and occupations outside the 98 covered."
+        "Lab revenue is global, while the wage bill is U.S. white-collar pay, so the ratio is a yardstick for scale rather than a claim that the revenue replaces U.S. wages. About 72% of Anthropic's revenue is billed to U.S. addresses (S-1); OpenAI does not disclose a split; its revenue was about 60% consumer at the start of 2026 and mostly enterprise by August.",
+        "Anthropic books cloud-marketplace sales gross, OpenAI's figures here are net of partners, and Anthropic's latest point is a quarterly average, so today's combined figure is conservative. Hours saved are self-reported. Revenue is not job loss, and the wage bill leaves out the self-employed and occupations outside the 98 covered."
       ]
     ]
   ],
@@ -342,6 +372,18 @@
       "url": "https://epoch.ai/gradient-updates/an-update-on-ais-most-important-number",
       "tier": "independent",
       "note": "OpenAI and Anthropic combined grew from $30B to $105B by August 2026"
+    },
+    {
+      "id": "stlfed-rps-time-savings",
+      "title": "St. Louis Fed, Generative AI time savings by occupation (Real-Time Population Survey, FRED, Q3 2026)",
+      "url": "https://fred.stlouisfed.org/series/RPSGENAITSOCC1",
+      "tier": "primary"
+    },
+    {
+      "id": "fred-blog-time-savings",
+      "title": "FRED Blog, Does generative AI save time at work? (Aug 2026)",
+      "url": "https://fred.stlouisfed.org/blog/2026/08/does-generative-ai-save-time-at-work",
+      "tier": "primary"
     }
   ]
 }
