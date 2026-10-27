@@ -30,6 +30,13 @@ export function scoreBand(score, assessment) {
   return { f1: score.range?.f1 ?? u.f1 * mult, f2: score.range?.f2 ?? u.f2 * mult };
 }
 
+// The forecast range as [low, high] for f1 and f2: the half-width either side of the
+// forecast, cut off at today's score (scores do not fall) and at the ceiling.
+export function scoreRange({ f0, f1, f2, ceiling }, half) {
+  const cut = (v, h) => [Math.max(f0, v - h), Math.min(ceiling, v + h)];
+  return { f1: cut(f1, half.f1), f2: cut(f2, half.f2) };
+}
+
 // Checks one assessment against the taxonomy and occupations. Returns a list of errors.
 export function validate({ taxonomy, occupations, assessment }) {
   const errors = [];
@@ -47,7 +54,7 @@ export function validate({ taxonomy, occupations, assessment }) {
     if (!o.title || !o.soc) errors.push(`${o.id}: needs title and soc`);
     if (!groupIds.has(o.group)) errors.push(`${o.id}: unknown group ${o.group}`);
     if (!(o.employment > 0) || !(o.wage > 0)) errors.push(`${o.id}: employment and wage must be positive`);
-    if (!Array.isArray(o.tasks) || o.tasks.length < 2 || o.tasks.length > 6) errors.push(`${o.id}: expected 2 to 6 tasks`);
+    if (!Array.isArray(o.tasks) || o.tasks.length < 2 || o.tasks.length > 7) errors.push(`${o.id}: expected 2 to 7 tasks`);
     const sum = (o.tasks || []).reduce((s, t) => s + t[2], 0);
     if (Math.abs(sum - 100) > 0.01) errors.push(`${o.id}: task shares sum to ${sum}, expected 100`);
     for (const [name, arch, share] of o.tasks || []) {
@@ -62,6 +69,7 @@ export function validate({ taxonomy, occupations, assessment }) {
   if (!isDate(a.date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
   if (a.updated !== undefined && !isDate(a.updated)) errors.push(`${tag}: updated must be YYYY-MM-DD`);
   if (!a.anchor) errors.push(`${tag}: missing anchor`);
+  if (a.report_url !== undefined && !/^https?:\/\//.test(a.report_url)) errors.push(`${tag}: report_url must be an http(s) url`);
   if (!["live", "backfill"].includes(a.kind)) errors.push(`${tag}: kind must be live or backfill`);
   const live = a.kind === "live";
   if (live) {
@@ -124,6 +132,13 @@ export function validateIndex({ taxonomy, index, assessments }) {
   if (new Set(dates).size !== dates.length) errors.push("index: two snapshots share a date");
   const byDate = [...list].sort((p, q) => p.date.localeCompare(q.date));
   if (latest && byDate[byDate.length - 1]?.id !== latest.id) errors.push("index: the latest snapshot is not the most recent by date");
+  // Highlights may cite sources by id; every snapshot resolves them against the live snapshot's list.
+  const known = new Set((latest?.sources || []).map((s) => s.id));
+  for (const a of list) for (const h of a.highlights || []) {
+    if (typeof h === "string") continue;
+    if (!h.text) errors.push(`${a.id}: highlight needs text`);
+    for (const ref of h.sources || []) if (!known.has(ref)) errors.push(`${a.id}: highlight "${h.text}" cites unknown source ${ref}`);
+  }
   for (const arch of taxonomy.archetypes) {
     let prev = null;
     for (const a of byDate) {
@@ -134,6 +149,14 @@ export function validateIndex({ taxonomy, index, assessments }) {
   }
   return errors;
 }
+
+// Averages the ends of the forecast ranges the way scores are averaged; avg(pick) applies
+// the caller's weighted average to pick(range). Adding up the task-type ranges like this
+// assumes their errors move together.
+const mixRange = (avg) => ({
+  f1: [avg((r) => r.f1[0]), avg((r) => r.f1[1])],
+  f2: [avg((r) => r.f2[0]), avg((r) => r.f2[1])],
+});
 
 // weight: "wage" (share of the covered wage bill) or "employment" (share of jobs).
 // edits: { archetypeId: { f0?, f1?, f2?, ceiling? } } applied on top of a live assessment.
@@ -148,7 +171,7 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
       : { f0: stored.f0, f1: stored.f1, f2: stored.f2, ceiling: stored.ceiling, asymptote: stored.asymptote, ...(edits[a.id] || {}) };
     const confidence = CONFIDENCE.includes(stored.confidence) ? stored.confidence : "medium";
     const band = backfill ? { f1: 0, f2: 0 } : scoreBand({ ...stored, confidence }, assessment);
-    return { ...a, ...s, confidence, band, sources: stored.sources || [], ...projectArchetype(s, horizon), share: 0 };
+    return { ...a, ...s, confidence, band, range: scoreRange(s, band), sources: stored.sources || [], ...projectArchetype(s, horizon), share: 0 };
   });
   const byId = Object.fromEntries(archetypes.map((x) => [x.id, x]));
   const overrides = assessment.overrides || {};
@@ -158,14 +181,15 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
       const base = byId[arch];
       const ov = overrides[`${o.id}:${arch}`];
       const { proj, limit } = ov ? projectArchetype({ ...base, ...ov }, horizon) : base;
-      return { name, arch, share, proj, limit, band: base.band, confidence: base.confidence };
+      const range = ov ? scoreRange({ ...base, ...ov }, base.band) : base.range;
+      return { name, arch, share, proj, limit, range, confidence: base.confidence };
     });
     const mix = (f) => tasks.reduce((s, t) => s + (t.share / 100) * f(t), 0);
     const proj = Array.from({ length: horizon + 1 }, (_, n) => mix((t) => t.proj[n]));
     return {
       ...o, tasks, proj,
       limit: mix((t) => t.limit),
-      band: { f1: mix((t) => t.band.f1), f2: mix((t) => t.band.f2) },
+      range: mixRange((f) => mix((t) => f(t.range))),
       lowShare: tasks.filter((t) => t.confidence === "low").reduce((s, t) => s + t.share, 0),
       wageBill: o.employment * o.wage,
     };
@@ -181,7 +205,7 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
 
   const proj = Array.from({ length: horizon + 1 }, (_, n) => agg(occs, (o) => o.proj[n]));
   const limit = agg(occs, (o) => o.limit);
-  const band = { f1: agg(occs, (o) => o.band.f1), f2: agg(occs, (o) => o.band.f2) };
+  const range = mixRange((f) => agg(occs, (o) => f(o.range)));
   // First generation whose gain over the previous one is under one point.
   const flat = proj.findIndex((v, n) => n > 0 && v - proj[n - 1] < 1);
   const flatAt = flat === -1 ? null : flat; // null: still gaining a point or more at the end of the horizon
@@ -195,7 +219,7 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
       ...g, weight: w,
       proj: proj.map((_, n) => agg(members, (o) => o.proj[n]) / w),
       limit: agg(members, (o) => o.limit) / w,
-      band: { f1: agg(members, (o) => o.band.f1) / w, f2: agg(members, (o) => o.band.f2) / w },
+      range: mixRange((f) => agg(members, (o) => f(o.range)) / w),
       employment: members.reduce((s, o) => s + o.employment, 0),
       count: members.length,
     };
@@ -205,10 +229,76 @@ export function computeModel({ taxonomy, occupations, assessment, weight = "wage
     archetypes,
     occupations: occs,
     groups,
-    index: { proj, limit, flatAt, f0: proj[0], f1: proj[1], f2: proj[2], band, confidence },
+    index: { proj, limit, flatAt, f0: proj[0], f1: proj[1], f2: proj[2], range, confidence },
     totals: {
       employment: occs.reduce((s, o) => s + o.employment, 0),
       wageBill: occs.reduce((s, o) => s + o.wageBill, 0),
     },
   };
+}
+
+/* ---------- Economic value ---------- */
+// Lab revenue against the wage bill of the work AI can do:
+//   revenue(t) = wage bill × index(t) × capture(t)
+// The index is the share of white-collar working time AI can do (the model above).
+// Capture is the share of the wages for that work which labs earn as revenue. It follows
+// a logistic curve from today's level toward a ceiling, starting at a stated annual
+// growth multiple, so it can grow fast early and must slow as it nears the ceiling.
+
+// Capture t years from now.
+export function captureAt(t, { c0, growth, ceiling }) {
+  if (!(c0 > 0) || !(ceiling > c0) || !(growth > 1)) return c0;
+  const k = Math.log(growth) / (1 - c0 / ceiling);
+  return ceiling / (1 + ((ceiling - c0) / c0) * Math.exp(-k * t));
+}
+
+// Linear interpolation over sorted [{ t, v }] points, held flat beyond both ends.
+export function interpolate(points, t) {
+  if (!points.length) return NaN;
+  if (t <= points[0].t) return points[0].v;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1], b = points[i];
+    if (t <= b.t) return a.v + ((b.v - a.v) * (t - a.t)) / (b.t - a.t);
+  }
+  return points[points.length - 1].v;
+}
+
+// Log-linear interpolation of one lab's revenue reports (growth is roughly exponential).
+// Returns null outside the reported span, so labs are only summed where they are covered.
+export function revenueAt(reports, t) {
+  if (!reports.length || t < reports[0].t || t > reports[reports.length - 1].t) return null;
+  for (let i = 1; i < reports.length; i++) {
+    const a = reports[i - 1], b = reports[i];
+    if (t <= b.t) return a.v * Math.pow(b.v / a.v, (t - a.t) / (b.t - a.t || 1));
+  }
+  return reports[0].v;
+}
+
+// Checks data/economics.json. Returns a list of errors.
+export function validateEconomics(econ, sourceIds = new Set()) {
+  const errors = [];
+  if (!econ) return errors;
+  if (!isDate(econ.as_of)) errors.push("economics: as_of must be YYYY-MM-DD");
+  const labs = new Set((econ.labs || []).map((l) => l.id));
+  if (!labs.size) errors.push("economics: no labs");
+  const seen = new Set();
+  for (const r of econ.revenue || []) {
+    const tag = `economics: ${r.lab} ${r.date}`;
+    if (!labs.has(r.lab)) errors.push(`${tag}: unknown lab`);
+    if (!isDate(r.date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
+    if (!(r.run_rate > 0)) errors.push(`${tag}: run_rate must be positive (USD billions)`);
+    if (seen.has(`${r.lab}|${r.date}`)) errors.push(`${tag}: duplicate report`);
+    seen.add(`${r.lab}|${r.date}`);
+    for (const s of r.sources || []) if (sourceIds.size && !sourceIds.has(s)) errors.push(`${tag}: unknown source id ${s}`);
+  }
+  for (const lab of labs) {
+    const dates = (econ.revenue || []).filter((r) => r.lab === lab).map((r) => r.date);
+    if (dates.some((d, i) => i && d < dates[i - 1])) errors.push(`economics: ${lab} reports must be in date order`);
+  }
+  const s = econ.scenarios || {};
+  for (const [id, sc] of Object.entries(s)) {
+    if (!(sc.growth >= 1)) errors.push(`economics: scenario ${id} growth must be >= 1`);
+    if (!(sc.ceiling > 0 && sc.ceiling < 1)) errors.push(`economics: scenario ${id} ceiling must be between 0 and 1`);
+  }
+  return errors;
 }

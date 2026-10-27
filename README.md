@@ -20,7 +20,7 @@ Occupations are weighted by **wages** (employment × mean wage) or by **people**
 
 ## Two versions
 
-The root site (`/`) is the original. `Opus/` is a revised version served at `/Opus/`, built from the audits in `reports/`: meetings split into live meetings and prep and follow-up, forecast ranges cut off at today's score and the ceiling, sourced snapshot highlights, a validated colour scheme, a Value page that projects frontier-lab revenue against the white-collar wage bill (`Opus/data/economics.json`), and the corrections from both source checks. Each version has its own `index.html`, `assets/` and `data/`, so they can differ without affecting each other; `Opus/tests/` holds the revision's tests. To make the revision the main site, copy `Opus/index.html`, `Opus/assets` and `Opus/data` over the root ones.
+The main site (`/`) is the revised version built from the audits in `reports/`: meetings split into live meetings and prep and follow-up, forecast ranges cut off at today's score and the ceiling, sourced snapshot highlights, a validated colour scheme, a Value page that projects frontier-lab revenue against the white-collar wage bill (`data/economics.json`), and the corrections from both source checks. It was previewed at `/Opus/`, which now redirects to `/`. The original version is kept for comparison in `original/` and served at `/original/`, with its own `index.html`, `assets/`, `data/` and `tests/`, so the two can differ without affecting each other.
 
 ## Files
 
@@ -28,28 +28,29 @@ The root site (`/`) is the original. `Opus/` is a revised version served at `/Op
 data/occupations.json          98 occupations, BLS OEWS May 2025 employment & wages, task breakdowns
                                (groups carry employment_bls, the BLS total for the major group;
                                task_basis explains where the time shares come from)
-data/taxonomy.json             29 task types
+data/taxonomy.json             30 task types
 data/assessments/index.json    list of assessment ids; "latest" is shown by default and must be kind "live"
 data/assessments/<id>.json     one snapshot (ids are the anchor model, e.g. opus-5-5): anchor, frontier,
                                scores per task type (f0, and for live snapshots f1 / f2 / ceiling,
                                confidence, sources), evidence notes, tiered sources with access dates,
                                forecast_dates, uncertainty, calibration
+data/economics.json            lab revenue reports and capture scenarios for the Value page
 reports/, research_notes/      research behind the scores
 assets/model.js                the model (shared by site, validator and tests)
 assets/app.js, style.css       the site
-scripts/validate.mjs           checks the data and prints the headline numbers (--site Opus for the revision)
-scripts/build.mjs              validates both sites, copies them into dist/ and dist/Opus/, writes data/bundle.json
+scripts/validate.mjs           checks the data and prints the headline numbers (--site original for the original)
+scripts/build.mjs              validates both sites, copies them into dist/ and dist/original/, writes data/bundle.json and the /Opus/ redirect
 scripts/smoke.mjs              browser smoke test of both sites against dist/ (needs playwright)
 scripts/og.mjs                 renders a site's share image, assets/og.png, from its data (needs playwright)
-tests/model.test.mjs           unit tests for the model (node --test runs these and Opus/tests/)
-Opus/                          the revised site: index.html, assets/, data/, tests/
+tests/model.test.mjs           unit tests for the model (node --test also runs original/tests/ and tests/astra.test.mjs)
+original/                      the original site: index.html, assets/, data/, tests/
 ```
 
 ## Running locally
 
 ```sh
 python3 -m http.server 8000   # then open http://localhost:8000 (the site falls back to the source data files)
-node scripts/validate.mjs     # validate data and print the index (add --site Opus for the revision)
+node scripts/validate.mjs     # validate data and print the index (add --site original for the original)
 node --test                   # unit tests
 node scripts/build.mjs        # validate and build dist/
 ```
@@ -63,7 +64,7 @@ The site is addressable: `#jobs/<occupation id>` opens a job, `#tasks/<task type
 3. For an occupation where a task type behaves differently, add an override: `"overrides": {"lawyer:draft": {"f0": 60, "f1": 78, "f2": 88, "ceiling": 95}}`.
 4. Change the previous live file's `kind` to `backfill` but **keep** its `f1`, `f2`, `ceiling` and `forecast_dates`: the Method tab scores each retired forecast against the snapshot closest to its due date.
 5. Add the id to `index.json`, set `latest`, and run `node scripts/validate.mjs` and `node --test`. The validator rejects a `latest` that is not live, missing evidence or confidence, unknown source ids, a score that falls between snapshots, and malformed dates.
-6. Regenerate the share image with `node scripts/og.mjs` (and `--site Opus`): it shows the headline percentage and the band split as a static picture.
+6. Regenerate the share image with `node scripts/og.mjs` (and `--site original` if the original's data changes): it shows the headline percentage and the band split as a static picture.
 
 ## Caveats
 
@@ -75,7 +76,7 @@ The site is addressable: `#jobs/<occupation id>` opens a job, `#tasks/<task type
 
 ## Deploying
 
-The site is static and deploys on Vercel. `vercel.json` runs `node scripts/build.mjs`, which validates the data (a bad data file fails the deploy), copies `index.html`, `assets/` and `data/` into `dist/` and writes `dist/data/bundle.json` so the page loads with one data request. The Opus revision goes to `dist/Opus/`; `trailingSlash` in `vercel.json` sends `/Opus` to `/Opus/` so its relative paths resolve. Research notes and reports are not deployed.
+The site is static and deploys on Vercel. `vercel.json` runs `node scripts/build.mjs`, which validates the data (a bad data file fails the deploy), copies `index.html`, `assets/` and `data/` into `dist/` and writes `dist/data/bundle.json` so the page loads with one data request. The original goes to `dist/original/`; `trailingSlash` in `vercel.json` sends `/original` to `/original/` so its relative paths resolve. `dist/Opus/index.html` sends old `/Opus/` links to `/`, keeping the view in the link. Research notes and reports are not deployed.
 
 To set it up, import the GitHub repo at https://vercel.com/new, keep the settings from `vercel.json`, and deploy. Every push to the production branch then redeploys; other branches get preview URLs. Once the domain is known, set `og:image` in `index.html` to the absolute URL of `assets/og.png` and add `og:url`.
 
@@ -83,6 +84,6 @@ To set it up, import the GitHub repo at https://vercel.com/new, keep the setting
 
 ## Astra comparison
 
-`/astra/` is a separate comparison version with explicit unrounded forecast rates, conditional scenario caps, physical/regulatory/preference constraint views, inline evidence, editable occupation mixes, and shareable scenarios. The root and `/Opus/` versions remain separate. All three are included in the standard build and browser smoke test.
+`/astra/` is a separate comparison version with explicit unrounded forecast rates, conditional scenario caps, physical/regulatory/preference constraint views, inline evidence, editable occupation mixes, and shareable scenarios. It was built against the original site's data and reads `original/data/`; its "Original version" links go to `/original/`. All three are included in the standard build and browser smoke test.
 
 See `reports/astra-comparison.md` for the model changes, primary-source checks, validation, and remaining evidence limitations. Astra's issued forecast is archived in `astra/forecast-2026-10-27.json`; preserve it when adding future forecast vintages. A deployment can be identified using `/astra/version.json`.

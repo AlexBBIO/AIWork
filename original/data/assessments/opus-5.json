@@ -4,26 +4,11 @@
   "anchor": "Claude Opus 5",
   "label": "Opus release",
   "kind": "backfill",
-  "peers": "Claude Fable 5 (public) / Mythos 5 (gated), both Jun 9; GPT-5.6 Sol (Jul 9; AA index 59 vs Fable 5's 60)",
+  "peers": "Non-Opus frontier: Claude Fable 5 (public) / Mythos 5 (gated), both Jun 9. GPT-5.6 Sol (Jul 9; AA index 59 vs Fable 5's 60)",
   "highlights": [
-    {
-      "text": "SWE-bench Pro 79.2% vs Fable 5 80.3%; OSWorld 2.0 70.6% vs GPT-5.6 Sol 62.6% (vendor, via DataCamp)",
-      "sources": [
-        "datacamp-opus-5"
-      ]
-    },
-    {
-      "text": "BrowseComp 90.8%; GDPval-AA v2 1861 vs GPT-5.6 Sol 1736",
-      "sources": [
-        "datacamp-opus-5"
-      ]
-    },
-    {
-      "text": "Fable 5 RLI 15.8%; the frontier \"more than quadrupled in under eight months\"",
-      "sources": [
-        "cais-rli"
-      ]
-    }
+    "SWE-bench Pro 79.2% vs Fable 5 80.3%; OSWorld 2.0 70.6% vs GPT-5.6 Sol 62.6% (vendor, via DataCamp)",
+    "BrowseComp 90.8%; GDPval-AA v2 1861 vs GPT-5.6 Sol 1736",
+    "Fable 5 RLI 15.8%; the frontier \"more than quadrupled in under eight months\""
   ],
   "scores": {
     "draft": {
@@ -74,9 +59,6 @@
     "project": {
       "f0": 54
     },
-    "followup": {
-      "f0": 69
-    },
     "service": {
       "f0": 80
     },
@@ -102,7 +84,7 @@
       "f0": 11
     },
     "meetings": {
-      "f0": 7
+      "f0": 17
     },
     "people": {
       "f0": 12

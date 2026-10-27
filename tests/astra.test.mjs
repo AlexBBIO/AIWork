@@ -12,13 +12,14 @@ import {
 } from "../astra/model.js";
 const json = (p) =>
   JSON.parse(readFileSync(new URL("../" + p, import.meta.url)));
-const index = json("data/assessments/index.json");
+// Astra was built against the original site's data.
+const index = json("original/data/assessments/index.json");
 const bundle = {
-  taxonomy: json("data/taxonomy.json"),
-  occupations: json("data/occupations.json"),
+  taxonomy: json("original/data/taxonomy.json"),
+  occupations: json("original/data/occupations.json"),
   index,
   assessments: Object.fromEntries(
-    index.assessments.map((id) => [id, json(`data/assessments/${id}.json`)]),
+    index.assessments.map((id) => [id, json(`original/data/assessments/${id}.json`)]),
   ),
   config: json("astra/config.json"),
   bls: json("astra/bls-verification.json"),
