@@ -55,4 +55,8 @@ The snapshots list compares assessments, so you can check whether the models tha
 
 ## Deploying
 
-`.github/workflows/pages.yml` validates the data and publishes the site to GitHub Pages on pushes to `main`. Enable Pages (Source: GitHub Actions) in the repo settings.
+The site is static and deploys on Vercel. `vercel.json` runs `node scripts/build.mjs`, which validates the data (a bad data file fails the deploy) and copies `index.html`, `assets/` and `data/` into `dist/`. Research notes and reports are not deployed.
+
+To set it up, import the GitHub repo at https://vercel.com/new, keep the settings from `vercel.json`, and deploy. Every push to the production branch then redeploys; other branches get preview URLs.
+
+`.github/workflows/validate.yml` runs the same build on every push as a check.
