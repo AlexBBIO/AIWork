@@ -195,6 +195,10 @@ function render() {
     .map((s) => ({ a: s, m: s.id === a.id ? model : computeModel({ ...data, assessment: s, weight: state.weight, horizon: HORIZON }) }));
 
   syncWeight?.();
+  // The masthead strip is the index itself: now, the next two generations, open, needs a person.
+  let at = 0;
+  document.documentElement.style.setProperty("--strip", `linear-gradient(90deg, ${bands(model.index.proj, model.index.limit)
+    .map((x) => `${x.color || (x.k === "open" ? "var(--open)" : "var(--struct)")} ${at}% ${(at += x.v)}%`).join(", ")})`);
   for (const t of document.querySelectorAll(".tabs a")) {
     if (t.dataset.view === state.view) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current");
   }

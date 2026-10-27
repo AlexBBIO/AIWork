@@ -1,27 +1,29 @@
 /* Layout: tabbed single column. Overview tells the story top-down (answer, trend, week, examples);
    Jobs, Tasks and Method hold the detail. */
 :root {
-  --bg: #f4f6f9;
+  /* Warm neutral chrome; blue carries AI capability, clay carries the human residual.
+     The tier ramp and the evidence ramp pass the dataviz ordinal checks (monotone
+     lightness, visible steps, light end above 2:1); neighbouring tiers are ΔE ≥ 19. */
+  --bg: #f6f5f2;
   --surface: #ffffff;
-  --ink: #12161c;
-  --ink-2: #3c4452;
-  --muted: #677082;
-  --rule: #dce1e8;
-  --rule-strong: #b9c1cd;
-  /* Tier ramp: each colour is at least 3:1 against the surface; bar segments are split by 2px gaps. */
-  --t0: #0d3a73;   /* Frontier (now) */
-  --t1: #1d63c2;   /* Frontier+1 */
-  --t2: #5191dc;   /* Frontier+2 */
-  --open: #c9d0da; /* open to later generations (hatched) */
-  --struct: #8a93a1; /* needs a person (solid grey) */
-  --past: #9aa3b2; /* earlier snapshots */
+  --ink: #16181d;
+  --ink-2: #464a52;
+  --muted: #6b6e76;
+  --rule: #e6e3dd;
+  --rule-strong: #cbc7bf;
+  --t0: #0d366b;   /* Frontier (now) */
+  --t1: #256abf;   /* Frontier+1 */
+  --t2: #6da7ec;   /* Frontier+2 */
+  --open: #c9c4ba; /* open to later generations (hatched) */
+  --struct: #c96f4a; /* needs a person (clay) */
+  --past: #a7a49c; /* earlier snapshots */
   --accent: #1c5cab;
-  --focus: #2a78d6;
-  --tint: #e8f0fb;
+  --focus: #256abf;
+  --tint: #eaf1fb;
   --banner-bg: #fff4d6;
   --banner-ink: #5a4300;
-  --ok: #2a6f46; --warn: #7a5200; --bad: #9c3b2e;
-  --panel: #0f2a44; --panel-ink: #ffffff; --panel-muted: #b9cbe0; --panel-rule: #2c4866; --panel-link: #cfe4ff;
+  --ev-high: #2b3442; --ev-med: #6f7887; --ev-low: #a9b0bb; /* evidence: an ordinal slate ramp, not traffic lights */
+  --panel: #0d2238; --panel-ink: #ffffff; --panel-muted: #b5c4d6; --panel-rule: #26405e; --panel-link: #a9cdf6;
 
   --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -33,24 +35,24 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1116; --surface: #161a21; --ink: #e9edf2; --ink-2: #c3cad5; --muted: #929bab;
-    --rule: #272d37; --rule-strong: #3a4250;
-    --t0: #b5d3f7; --t1: #4b95ee; --t2: #2f6cc0;
-    --open: #3a414d; --struct: #6b7484; --past: #59616e; --accent: #86b6ef; --focus: #86b6ef;
+    --bg: #0f1115; --surface: #171a20; --ink: #eceef2; --ink-2: #c5c9d1; --muted: #959ba7;
+    --rule: #262a32; --rule-strong: #3b414c;
+    --t0: #b7d3f6; --t1: #6da7ec; --t2: #256abf;
+    --open: #474b54; --struct: #d0764f; --past: #5d626c; --accent: #86b6ef; --focus: #86b6ef;
     --tint: #1a2638; --banner-bg: #3a2f10; --banner-ink: #f3dd9c;
-    --ok: #6fc78f; --warn: #e2b14a; --bad: #e58b7b;
-    --panel: #1b2a3d; --panel-ink: #e9edf2; --panel-muted: #9fb3c8; --panel-rule: #2d3e52; --panel-link: #9ec5f4;
+    --ev-high: #e3e7ed; --ev-med: #8f97a4; --ev-low: #525a66;
+    --panel: #16263a; --panel-ink: #eceef2; --panel-muted: #9fb3c8; --panel-rule: #2b3d53; --panel-link: #9ec5f4;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1116; --surface: #161a21; --ink: #e9edf2; --ink-2: #c3cad5; --muted: #929bab;
-  --rule: #272d37; --rule-strong: #3a4250;
-  --t0: #b5d3f7; --t1: #4b95ee; --t2: #2f6cc0;
-  --open: #3a414d; --struct: #6b7484; --past: #59616e; --accent: #86b6ef; --focus: #86b6ef;
+  --bg: #0f1115; --surface: #171a20; --ink: #eceef2; --ink-2: #c5c9d1; --muted: #959ba7;
+  --rule: #262a32; --rule-strong: #3b414c;
+  --t0: #b7d3f6; --t1: #6da7ec; --t2: #256abf;
+  --open: #474b54; --struct: #d0764f; --past: #5d626c; --accent: #86b6ef; --focus: #86b6ef;
   --tint: #1a2638; --banner-bg: #3a2f10; --banner-ink: #f3dd9c;
-  --ok: #6fc78f; --warn: #e2b14a; --bad: #e58b7b;
-  --panel: #1b2a3d; --panel-ink: #e9edf2; --panel-muted: #9fb3c8; --panel-rule: #2d3e52; --panel-link: #9ec5f4;
+  --ev-high: #e3e7ed; --ev-med: #8f97a4; --ev-low: #525a66;
+  --panel: #16263a; --panel-ink: #eceef2; --panel-muted: #9fb3c8; --panel-rule: #2b3d53; --panel-link: #9ec5f4;
   color-scheme: dark;
 }
 
@@ -79,7 +81,8 @@ a { color: var(--accent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Masthead: the brand row scrolls away and the nav row stays pinned. */
-.mast { position: sticky; top: calc(env(safe-area-inset-top, 0px) - var(--mast-row1) - 3px); z-index: 5; background: var(--surface); border-top: 3px solid var(--accent); border-bottom: 1px solid var(--rule); }
+.mast { position: sticky; top: calc(env(safe-area-inset-top, 0px) - var(--mast-row1) - 3px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.mast::before { content: ""; display: block; height: 3px; background: var(--strip, var(--accent)); }
 .mast-top { height: var(--mast-row1); display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
 .brand-mark { display: grid; place-items: center; width: 30px; height: 32px; border-radius: 7px; background: var(--ink); color: var(--surface); font: 700 1.1rem var(--f-display); flex: none; }
@@ -142,7 +145,7 @@ main { padding-block: var(--s-6) var(--s-7); }
 .hero-main { min-width: 0; }
 .hero h1 { font-size: clamp(2.4rem, 5.4vw, 4rem); line-height: 0.98; letter-spacing: -0.02em; max-width: 12ch; margin-top: var(--s-3); }
 .hero-score { display: flex; align-items: center; gap: var(--s-5); margin-top: var(--s-5); }
-.figure { font-family: var(--f-display); font-weight: 700; font-stretch: 75%; font-size: clamp(5rem, 11vw, 8.5rem); line-height: 0.85; letter-spacing: -0.03em; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.figure { font-family: var(--f-display); font-weight: 700; font-stretch: 75%; font-size: clamp(5rem, 11vw, 8.5rem); line-height: 0.85; letter-spacing: -0.03em; color: var(--t0); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .figure small { font-size: 0.45em; letter-spacing: 0; }
 .hero-score p { color: var(--ink-2); font-size: 1.02rem; max-width: 30ch; }
 .hero-main .def { margin-top: var(--s-5); }
@@ -182,12 +185,15 @@ main { padding-block: var(--s-6) var(--s-7); }
 .evidence { display: flex; flex-direction: column; gap: var(--s-2); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: var(--s-3) var(--s-4); }
 .panel .evidence { border: 0; padding: 0; }
 .evidence .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); font-size: 0.86rem; color: var(--ink-2); }
+.evidence .row > span { display: inline-flex; align-items: center; gap: 6px; }
 .evidence .bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; width: 100%; background: var(--rule); }
 .evidence .bar > span { height: 100%; }
-.conf-high { background: var(--ok); } .conf-medium { background: var(--warn); } .conf-low { background: var(--bad); }
+.conf-high { background: var(--ev-high); } .conf-medium { background: var(--ev-med); } .conf-low { background: var(--ev-low); }
 .chip { display: inline-block; font: 500 0.75rem var(--f-body); padding: 1px 7px; border-radius: 999px; border: 1px solid var(--rule-strong); color: var(--ink-2); vertical-align: middle; white-space: nowrap; }
-.chip.high { border-color: var(--ok); color: var(--ok); } .chip.medium { border-color: var(--warn); color: var(--warn); } .chip.low { border-color: var(--bad); color: var(--bad); }
-.chip.primary { border-color: var(--ok); color: var(--ok); } .chip.independent { border-color: var(--accent); color: var(--accent); } .chip.secondary { color: var(--muted); }
+.chip.high, .chip.medium, .chip.low { color: var(--ink-2); }
+.chip.high::before, .chip.medium::before, .chip.low::before { letter-spacing: 1px; margin-right: 4px; font-size: 0.62rem; vertical-align: 1px; color: var(--ink-2); }
+.chip.high::before { content: "●●●"; } .chip.medium::before { content: "●●○"; } .chip.low::before { content: "●○○"; }
+.chip.primary { border-color: var(--ink-2); color: var(--ink); } .chip.independent { border-color: var(--accent); color: var(--accent); } .chip.secondary { color: var(--muted); }
 
 .swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; display: inline-block; }
 .swatch.open, .fill-open { background: repeating-linear-gradient(135deg, var(--open) 0 3px, transparent 3px 6px); background-color: color-mix(in srgb, var(--open) 35%, var(--surface)); }
@@ -342,7 +348,7 @@ table.calib tr.off td { color: var(--muted); }
 .snap .frontier { font-size: 0.86rem; color: var(--ink-2); }
 .snap .cites { white-space: normal; }
 .snap .cite { font-size: 0.75rem; margin-left: var(--s-1); padding: 0 6px; border: 1px solid var(--rule-strong); border-radius: 999px; text-decoration: none; color: var(--muted); white-space: nowrap; }
-.snap .cite.primary { border-color: var(--ok); color: var(--ok); } .snap .cite.independent { border-color: var(--accent); color: var(--accent); }
+.snap .cite.primary { border-color: var(--ink-2); color: var(--ink); } .snap .cite.independent { border-color: var(--accent); color: var(--accent); }
 .snap .cite:hover { text-decoration: underline; }
 .snap .score { font-family: var(--f-display); font-weight: 700; font-stretch: 75%; font-size: 1.8rem; text-align: right; line-height: 1; }
 .snap .score small { display: block; font: 0.75rem var(--f-body); color: var(--muted); }
