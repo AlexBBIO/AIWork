@@ -253,14 +253,6 @@ function renderOverview() {
     stat("Saturation", '<span class="swatch human"></span>', flattens ? `~${tierDate(flatAt).getUTCFullYear()}` : `after ${tierDate(HORIZON).getUTCFullYear()}`,
       flattens ? `Gains fall under 1 pt a generation from ${monthYear(tierDate(flatAt))}` : "Still gaining over 1 pt a generation at the end of the projection");
 
-  const c = confidence;
-  $("evidence").innerHTML = `<div class="row"><b>Evidence behind these scores</b>
-      <span><span class="swatch conf-high"></span>High confidence ${pct(c.high)}</span>
-      <span><span class="swatch conf-medium"></span>Medium ${pct(c.medium)}</span>
-      <span><span class="swatch conf-low"></span>Low ${pct(c.low)}</span></div>
-    <div class="bar" role="img" aria-label="Share of the index by score confidence: high ${pct(c.high)}, medium ${pct(c.medium)}, low ${pct(c.low)}"><span class="conf-high" style="width:${c.high}%"></span><span class="conf-medium" style="width:${c.medium}%"></span><span class="conf-low" style="width:${c.low}%"></span></div>
-    <p class="note">${pct(c.low)} of this index sits in task types scored with low confidence: no benchmark measures them, so their scores rest on labor-side studies and judgment. Only ${pct(c.high)} sits in types with a direct benchmark. The ranges above widen with low confidence; see the Tasks tab for each type.</p>`;
-
   renderTimeline();
   renderWeek();
 
@@ -276,6 +268,7 @@ function renderOverview() {
     ["", "Can do", "AI can do the task at the quality of a competent professional, with no more than light review. This measures capability, not whether employers have adopted it."],
     ['<span class="swatch line"></span>', "Ceiling", "The most of a task AI could ever take, even with unlimited intelligence. Above it sits work that needs physical presence, legal accountability, or a human relationship."],
     ["", "Wages or people", "Wages weights each job by its total pay, so the index reads as a share of what employers spend. People weights by headcount, so it reads as a share of working time."],
+    ["", "Evidence", `${pct(confidence.high)} of the index rests on task types with a direct benchmark, ${pct(confidence.medium)} on adjacent evidence and ${pct(confidence.low)} on labor studies and judgment. The Tasks tab shows each type's confidence; the Method tab has the breakdown.`],
     ["", "Coverage", `${model.occupations.length} occupations covering ${jobs(model.totals.employment)} U.S. jobs (BLS OEWS, May 2025) in twelve white-collar groups, each split into 2 to 6 tasks. Registered nurses, retail sales and the self-employed are not covered.`],
   ];
   $("glossary").innerHTML = g.map(([s, t, d]) => `<div><dt>${s}${t}</dt><dd>${esc(d)}</dd></div>`).join("");
@@ -590,6 +583,15 @@ function renderMethod() {
   </div>`).join("");
 
   renderForecastCheck();
+
+  const c = model.index.confidence;
+  $("evidence").innerHTML = `<div class="row"><b>Evidence behind these scores</b>
+      <span><span class="swatch conf-high"></span>High confidence ${pct(c.high)}</span>
+      <span><span class="swatch conf-medium"></span>Medium ${pct(c.medium)}</span>
+      <span><span class="swatch conf-low"></span>Low ${pct(c.low)}</span></div>
+    <div class="bar" role="img" aria-label="Share of the index by score confidence: high ${pct(c.high)}, medium ${pct(c.medium)}, low ${pct(c.low)}"><span class="conf-high" style="width:${c.high}%"></span><span class="conf-medium" style="width:${c.medium}%"></span><span class="conf-low" style="width:${c.low}%"></span></div>
+    <p class="note">${pct(c.low)} of this index sits in task types scored with low confidence: no benchmark measures them, so their scores rest on labor-side studies and judgment. Only ${pct(c.high)} sits in types with a direct benchmark. Forecast ranges widen with low confidence; the Tasks tab shows each type.</p>`;
+
 
   const blocks = [
     ["What's measured", [a.definition, a.method_note].filter(Boolean)],
